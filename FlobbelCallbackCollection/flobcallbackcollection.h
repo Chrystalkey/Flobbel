@@ -12,33 +12,8 @@
 #include <vector>
 #include <set>
 
-#include "../global_functions.h"
+#include "global_functions.h"
 #include <map>
-
-typedef struct{
-    ComputerHandle ch;
-    std::string filename;
-    std::string description;
-    std::string timestamp_on;
-    std::string timestamp_off;
-    uint32_t PID = 0;
-    bool done = false;
-} ProcessInfo;
-
-typedef struct{
-    ComputerHandle ch;
-    uint8_t updown = 0; // down == updown%2 == 0; up == updown%2 == 1
-    uint32_t scancode = 0;
-    uint32_t vkcode = 0;
-    char descr[4] = {0};
-    std::string timestamp;
-} KeypressInfo;
-
-typedef struct{
-    ComputerHandle ch;
-    std::string timestamp_on;
-    std::string timestamp_off;
-} Screentime;
 
 typedef void (*ProcessCallback)(ProcessInfo);
 typedef void (*KeyboardCallback)(KeypressInfo);
@@ -69,6 +44,12 @@ private:
     void updateProcessList();
     void detectChanges(std::map<uint32_t, ProcessInfo> *list);
     void finishProcessList();
+
+    // Screentime
+    void wmshutdownCallback();
+    void windowsStartup();
+
+    Screentime screentimeTracker;
 
     // Message Loop termination boolean
     bool _terminate = false;

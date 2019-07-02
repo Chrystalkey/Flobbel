@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <thread>
+#include <windows.h>
 #include "flobcallbackcollection.h"
 
 ProcessCallback FlobCallbackCollection::pc = nullptr;
@@ -17,12 +18,13 @@ FlobCallbackCollection::FlobCallbackCollection(ProcessCallback _pc, KeyboardCall
     sc = sc!=nullptr?sc:_sc;
 
     keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook,NULL,0);
+    windowsStartup();
 
 }
 
 FlobCallbackCollection::~FlobCallbackCollection() {
-
     UnhookWindowsHookEx(keyboardHook);
+    wmshutdownCallback();
 }
 
 
@@ -30,7 +32,7 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
     if(nCode != HC_ACTION) return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
     KeypressInfo info;
     KBDLLHOOKSTRUCT *further = (KBDLLHOOKSTRUCT*)lParam;
-    char *time = timestamp();
+    std::string time = timestamp();
 
     switch(wParam){
         case WM_KEYDOWN:
@@ -50,7 +52,7 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
     }
     info.scancode = (unsigned)further->scanCode;
     info.vkcode = (unsigned)further->vkCode;
-    info.timestamp = std::string(time);
+    info.timestamp = time;
     strncpy(info.descr,map(info.vkcode).c_str(),4);
     info.ch = globalHandle;
     kc(info);
@@ -60,17 +62,17 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
 void FlobCallbackCollection::run(){
     MSG msg;
     std::thread prcProcessThread(&FlobCallbackCollection::updateProcessList, this);
-    while(GetMessage(&msg,NULL,0,0) && !_terminate){
+    while(GetMessage(&msg,NULL,0,0)){
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
+    _terminate = true;
+    prcProcessThread.join();
 }
 
 std::map<uint32_t, ProcessInfo> *FlobCallbackCollection::getProcessList(){
     HANDLE hProcessSnap;
-    HANDLE hProcess;
     PROCESSENTRY32 pe32;
-    DWORD dwPriorityClass;
     static std::map<uint32_t, ProcessInfo> pl; // PID, pi
     pl.clear();
 
@@ -116,36 +118,28 @@ void FlobCallbackCollection::updateProcessList() {
 }
 
 void FlobCallbackCollection::detectChanges(std::map<uint32_t, ProcessInfo> *list) {
-    try{
-        for(auto x = list->begin(); x != list->end();++x){
-            auto running_process = processList.find(x->first);
-            if(running_process == processList.end()){
-                processList.emplace(x->first,x->second);
-            }
-            processList[x->first].done = true;
+    for(auto &x : *list){
+        auto running_process = processList.find(x.first);
+        if(running_process == processList.end()){
+            processList.emplace(x.first,x.second);
         }
-    }catch(std::exception e){
-        std::cout << "ERROR_1 : " << e.what() << "\n";
+        processList[x.first].done = true;
     }
-    try{
-        for(auto x = processList.begin(); x != processList.end(); ++x){
-            if(!x->second.done){
-                x->second.timestamp_off = timestamp();
-                pc(x->second);
-                processList.erase(x);
-            }
-            x->second.done = false;
+    for(auto &x: processList){
+        if(!x.second.done){
+            x.second.timestamp_off = timestamp();
+            pc(x.second);
+            processList.erase(x.first);
         }
-    }catch(std::exception e){
-        std::cout << "ERROR_2 : " << e.what() << "\n";
+        x.second.done = false;
     }
 }
 
 void FlobCallbackCollection::finishProcessList() {
     std::string timestmp = timestamp();
-    for(auto x = processList.begin(); x != processList.end(); ++x){
-        x->second.timestamp_off = timestmp;
-        pc(x->second);
+    for(auto &x: processList){
+        x.second.timestamp_off = timestmp;
+        pc(x.second);
     }
 }
 
@@ -153,5 +147,29 @@ void FlobCallbackCollection::setProgramBlacklist(std::set<std::string> &_blackli
     blacklist = _blacklist;
 }
 void FlobCallbackCollection::terminate(){
-    _terminate = true;
+    PostQuitMessage(EXIT_SUCCESS);
+}
+
+void FlobCallbackCollection::windowsStartup() {
+    std::chrono::milliseconds elapsed(GetTickCount());
+    auto start = std::chrono::system_clock::now()-elapsed;
+    time_t time = std::chrono::system_clock::to_time_t(start);
+    char timestamp[20];
+    struct tm *tm;
+    tm = gmtime(&time);
+    sprintf(timestamp,"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
+            tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    screentimeTracker.ch = globalHandle;
+    screentimeTracker.timestamp_on = std::string(timestamp);
+    screentimeTracker.on = time;
+}
+
+void FlobCallbackCollection::wmshutdownCallback() {
+    screentimeTracker.timestamp_off = timestamp();
+    auto duration = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(screentimeTracker.on);
+    auto d = std::chrono::duration_cast<std::chrono::minutes>(duration);
+    char temp[6];
+    sprintf(temp, "%05d", d.count());
+    screentimeTracker.duration = std::string(temp);
+    sc(screentimeTracker);
 }

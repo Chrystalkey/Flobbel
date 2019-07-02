@@ -8,16 +8,17 @@
 #include "global_constants.h"
 #include <time.h>
 
-char *timestamp();
+#define repeat_i(x) for(int i = 0; i < x; i++)
+
+std::string timestamp();
 std::string map(uint32_t vkc);
 void initMap();
 
 ComputerHandle getComputerHandle(std::string lookupFile);
 std::string computerName();
 MAC mac();
+tm *now();
 
 std::string hexStr(u_char *data, size_t len);
-
-void initialize_flobbel();
 
 #endif //FLOBBEL_GLOBAL_FUNCTIONS_H
