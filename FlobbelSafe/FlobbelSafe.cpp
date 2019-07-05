@@ -9,39 +9,31 @@
 #include <windows.h>
 #include "FlobbelSafe.h"
 
-
 FlobbelSafe::FlobbelSafe(std::string _safedir):safedir(_safedir) {
-    find_files();
-}
-
-FlobbelSafe::~FlobbelSafe() {
-    finalize_files();
-}
-
-void FlobbelSafe::find_files() {
-    char cpHandle[5];
-    sprintf(cpHandle,"%04d",globalHandle);
-
     //Screentime
-    screenOut.open(safedir+"SCREENTIME;"+std::string(cpHandle)+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    screenOut.open(safedir+"SCREENTIME;"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
     if(!screenOut.is_open()){
-        std::cerr << "ERROR opening " << "SCREENTIME;"+std::string(cpHandle)+";CPACTIVITY.flob\n";
+        std::cerr << "ERROR opening " << "SCREENTIME;"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
     }
 
     char date[11];
     auto n = now();
     sprintf(date,"%02d.%02d.%04d",n->tm_mday, n->tm_mon, n->tm_year+1900);
     //keys
-    keyOut.open(safedir+"KEYS;"+std::string(date)+";"+std::string(cpHandle)+";CPACTIVITY.flob", std::ios::out|std::ios::app);
-    if(!screenOut.is_open()){
-        std::cerr << "ERROR opening " << "KEYS;"+std::string(date)+";"+std::string(cpHandle)+";CPACTIVITY.flob\n";
+    keyOut.open(safedir+"KEYS;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    if(!keyOut.is_open()){
+        std::cerr << "ERROR opening " << "KEYS;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
     }
 
     //processes
-    procOut.open(safedir+"PROC;"+std::string(date)+";"+std::string(cpHandle)+";CPACTIVITY.flob", std::ios::out|std::ios::app);
-    if(!screenOut.is_open()){
-        std::cerr << "ERROR opening " << "PROC;"+std::string(date)+";"+std::string(cpHandle)+";CPACTIVITY.flob\n";
+    procOut.open(safedir+"PROC;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    if(!procOut.is_open()){
+        std::cerr << "ERROR opening " << "PROC;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
     }
+}
+
+FlobbelSafe::~FlobbelSafe() {
+    finalize_files();
 }
 
 void FlobbelSafe::finalize_files() {
@@ -84,8 +76,11 @@ void FlobbelSafe::add_prc(ProcessInfo &info) {
         }
     }
 }
+
 void FlobbelSafe::add_screentime(Screentime &info) {
     if(!screenOut.is_open()) return;
-    screenOut << std::setfill('0') << std::setw(4) << info.ch << "|" << info.timestamp_on
-              << "|" << info.timestamp_off << "|" << info.duration<<'\n';
+    char buffer[128];
+    sprintf(buffer, "%s|%s|%s|%s\n", computerHandleStr().c_str(),info.timestamp_on.c_str(), info.timestamp_off.c_str(),info.duration.c_str());
+    screenOut << buffer;
+
 }

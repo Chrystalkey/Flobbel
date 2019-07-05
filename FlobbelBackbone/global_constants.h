@@ -54,6 +54,8 @@ typedef struct{
 
 extern std::unordered_map<UINT, std::string> keys;
 extern ComputerHandle globalHandle;
+extern std::string savedirectory;
+extern std::string lookup_filepath;
 
 
 #endif //FLOBBEL_GLOBAL_CONSTANTS_H

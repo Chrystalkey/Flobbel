@@ -14,7 +14,6 @@ class FlobbelSafe {
 public:
     FlobbelSafe(std::string _safedir);
     ~FlobbelSafe();
-    void find_files();
     void finalize_files();
 public:
     void add_key(KeypressInfo &);

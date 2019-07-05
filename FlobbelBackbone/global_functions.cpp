@@ -33,7 +33,7 @@ ComputerHandle getComputerHandle(std::string lookupFile){
     bool append = false;
     ComputerHandle retHandle;
 
-    while(lookup >> line){ // fixed line-size: at least 19 characters (1 character cpname)
+    while(std::getline(lookup,line)){ // fixed line-size: at least 19 characters (1 character cpname)
         lineNumber++;
         if(line.find(macadr,0) != std::string::npos){
             if(line.find(cpname,0) != std::string::npos){
@@ -106,6 +106,16 @@ std::string hexStr(u_char *data, size_t len){
         s[2*i+1]   = hexmap[(data[i]&0x0F)];
     }
     return s;
+}
+std::string computerHandleStr(){
+    static std::string handle;
+    static char temp[6] = {0};
+    if((int)temp[5] != 0xFF){
+        sprintf(temp,"%04d",globalHandle);
+        handle = std::string(temp);
+        temp[5] = 0xFF;
+    }
+    return handle;
 }
 MAC mac(){
     std::vector<MAC> addresses;

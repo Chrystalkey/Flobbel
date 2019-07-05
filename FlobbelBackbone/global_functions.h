@@ -16,9 +16,9 @@ void initMap();
 
 ComputerHandle getComputerHandle(std::string lookupFile);
 std::string computerName();
+std::string computerHandleStr();
+std::string hexStr(u_char *data, size_t len);
 MAC mac();
 tm *now();
-
-std::string hexStr(u_char *data, size_t len);
 
 #endif //FLOBBEL_GLOBAL_FUNCTIONS_H

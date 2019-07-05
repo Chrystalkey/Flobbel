@@ -125,13 +125,13 @@ void FlobCallbackCollection::detectChanges(std::map<uint32_t, ProcessInfo> *list
         }
         processList[x.first].done = true;
     }
-    for(auto &x: processList){
-        if(!x.second.done){
-            x.second.timestamp_off = timestamp();
-            pc(x.second);
-            processList.erase(x.first);
+    for(auto x = processList.begin(); x != processList.end(); x++){
+        if(!x->second.done){
+            x->second.timestamp_off = timestamp();
+            pc(x->second);
+            x = processList.erase(x);
         }
-        x.second.done = false;
+        x->second.done = false;
     }
 }
 

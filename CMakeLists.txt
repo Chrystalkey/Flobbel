@@ -10,13 +10,18 @@ include_directories(FlobbelBackbone)
 include_directories(FlobbelCallbackCollection)
 include_directories(FlobbelSafe)
 
+add_definitions("-DUNICODE")
+add_definitions("-D_UNICODE")
+
 if(${TEST})
     add_executable(Flobbel testmain.cpp)
+elseif(CMAKE_BUILD_TYPE STREQUAL Release)
+    set(Flobbel_SRC )
+    add_executable(Flobbel WIN32 main.cpp)
 else()
     set(Flobbel_SRC )
     add_executable(Flobbel main.cpp)
 endif()
-
 
 
 target_link_libraries(Flobbel FlobbelSafe)
