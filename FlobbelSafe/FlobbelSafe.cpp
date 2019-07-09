@@ -9,27 +9,29 @@
 #include <windows.h>
 #include "FlobbelSafe.h"
 
-FlobbelSafe::FlobbelSafe(std::string _safedir):safedir(_safedir) {
+FlobbelSafe::FlobbelSafe(std::wstring _safedir):safedir(_safedir) {
     //Screentime
-    screenOut.open(safedir+"SCREENTIME;"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    screenOut.open(converter.to_bytes(safedir+L"SCREENTIME;"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob"), std::ios::out|std::ios::app);
     if(!screenOut.is_open()){
-        std::cerr << "ERROR opening " << "SCREENTIME;"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
+        std::wcerr << L"ERROR opening " << L"SCREENTIME;"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob\n";
     }
 
-    char date[11];
+    wchar_t date[11];
     auto n = now();
-    sprintf(date,"%02d.%02d.%04d",n->tm_mday, n->tm_mon, n->tm_year+1900);
+    wsprintfW(date,L"%02d.%02d.%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
     //keys
-    keyOut.open(safedir+"KEYS;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    keyOut.open(converter.to_bytes(safedir+L"KEYS;"+std::wstring(date)+L";"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob"), std::ios::out|std::ios::app);
     if(!keyOut.is_open()){
-        std::cerr << "ERROR opening " << "KEYS;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
+        std::wcerr << L"ERROR opening " << L"KEYS;"+std::wstring(date)+L";"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob\n";
     }
 
     //processes
-    procOut.open(safedir+"PROC;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob", std::ios::out|std::ios::app);
+    procOut.open(converter.to_bytes(safedir+L"PROC;"+std::wstring(date)+L";"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob"), std::ios::out|std::ios::app);
     if(!procOut.is_open()){
-        std::cerr << "ERROR opening " << "PROC;"+std::string(date)+";"+std::string(computerHandleStr())+";CPACTIVITY.flob\n";
+        std::wcerr << L"ERROR opening " << L"PROC;"+std::wstring(date)+L";"+std::wstring(computerHandleStr())+L";CPACTIVITY.flob\n";
     }
+    keyOut  << L"<<<New Program Startup---" << timestamp() << L">>>\n";
+    procOut << L"<<<New Program Startup---" << timestamp() << L">>>\n";
 }
 
 FlobbelSafe::~FlobbelSafe() {
@@ -52,8 +54,8 @@ void FlobbelSafe::finalize_files() {
 
 void FlobbelSafe::add_key(KeypressInfo &info) {
     if(!keyOut.is_open()) return;
-    char line[128];
-    sprintf(line,"%c;%08x;%08x;%s;%s\n",info.updown%2?'u':'d',info.vkcode,info.scancode,info.descr,info.timestamp.c_str());
+    wchar_t line[128];
+    wsprintfW(line,L"%c;%08x;%08x;%s;%s\n",info.updown%2?L'u':L'd',info.vkcode,info.scancode,info.descr,info.timestamp.c_str());
     keyQueue.push(line);
     if(keyQueue.size() == 20){
         while(keyQueue.size() >0){
@@ -65,9 +67,9 @@ void FlobbelSafe::add_key(KeypressInfo &info) {
 
 void FlobbelSafe::add_prc(ProcessInfo &info) {
     if(!procOut.is_open()) return;
-    std::stringstream s;
-    s << std::setw(8) << std::setfill('0') << info.PID << ";" << info.timestamp_on
-      << ";" << info.timestamp_off << "|" << info.filename << "\n";
+    std::wstringstream s;
+    s << std::setw(8) << std::setfill(L'0') << info.PID << L";" << info.timestamp_on
+      << L";" << info.timestamp_off << L"|" << info.filename << L"\n";
     prcQueue.push(s.str());
     if(prcQueue.size() == 10){
         while(prcQueue.size() >0){
@@ -79,8 +81,8 @@ void FlobbelSafe::add_prc(ProcessInfo &info) {
 
 void FlobbelSafe::add_screentime(Screentime &info) {
     if(!screenOut.is_open()) return;
-    char buffer[128];
-    sprintf(buffer, "%s|%s|%s|%s\n", computerHandleStr().c_str(),info.timestamp_on.c_str(), info.timestamp_off.c_str(),info.duration.c_str());
+    wchar_t buffer[128];
+    wsprintfW(buffer, L"%s|%s|%s|%s\n", computerHandleStr().c_str(),info.timestamp_on.c_str(), info.timestamp_off.c_str(),info.duration.c_str());
     screenOut << buffer;
 
 }

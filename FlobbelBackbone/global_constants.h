@@ -6,8 +6,10 @@
 #define FLOBBEL_GLOBAL_CONSTANTS_H
 
 #include <unordered_map>
+#include <locale>
+#include <codecvt>
 
-#define fucked_up_directory "D:/Temp/"
+#define fucked_up_directory L"D:/Temp/"
 
 typedef unsigned char u_char;
 typedef unsigned int UINT;
@@ -27,10 +29,10 @@ typedef uint16_t ComputerHandle;
 
 typedef struct{
     ComputerHandle ch;
-    std::string filename;
-    std::string description;
-    std::string timestamp_on;
-    std::string timestamp_off;
+    std::wstring filename;
+    std::wstring description;
+    std::wstring timestamp_on;
+    std::wstring timestamp_off;
     uint32_t PID = 0;
     bool done = false;
 } ProcessInfo;
@@ -40,22 +42,23 @@ typedef struct{
     uint8_t updown = 0; // down == updown%2 == 0; up == updown%2 == 1
     uint32_t scancode = 0;
     uint32_t vkcode = 0;
-    char descr[5] = {0};
-    std::string timestamp;
+    wchar_t descr[5] = {0};
+    std::wstring timestamp;
 } KeypressInfo;
 
 typedef struct{
     ComputerHandle ch;
-    std::string timestamp_on;
-    std::string timestamp_off;
+    std::wstring timestamp_on;
+    std::wstring timestamp_off;
     time_t on;
-    std::string duration;
+    std::wstring duration;
 } Screentime;
 
-extern std::unordered_map<UINT, std::string> keys;
+extern std::unordered_map<UINT, std::wstring> keys;
 extern ComputerHandle globalHandle;
-extern std::string savedirectory;
-extern std::string lookup_filepath;
+extern std::wstring savedirectory;
+extern std::wstring lookup_filepath;
+extern std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
 
 
 #endif //FLOBBEL_GLOBAL_CONSTANTS_H

@@ -25,7 +25,7 @@ public:
     ~FlobCallbackCollection();
     void run();
     void terminate();
-    void setProgramBlacklist(std::set<std::string> &_blacklist);
+    void setProgramBlacklist(std::set<std::wstring> &_blacklist);
 
 private:
     // Callbacks
@@ -40,7 +40,7 @@ private:
     // Processes
     std::map<uint32_t, ProcessInfo> *getProcessList();
     std::map<uint32_t, ProcessInfo> processList;
-    std::set<std::string> blacklist;
+    std::set<std::wstring> blacklist;
     void updateProcessList();
     void detectChanges(std::map<uint32_t, ProcessInfo> *list);
     void finishProcessList();
@@ -54,7 +54,7 @@ private:
     // Message Loop termination boolean
     bool _terminate = false;
 
-    std::string placeholder = "platzhalterwobbel";
+    std::wstring placeholder = L"platzhalterwobbel";
 };
 
 

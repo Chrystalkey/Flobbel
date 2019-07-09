@@ -14,40 +14,44 @@
 #include <iphlpapi.h>
 #include <chrono>
 
-ComputerHandle getComputerHandle(std::string lookupFile){
-    std::fstream lookup;
-    lookup.open(lookupFile, std::ios::out);
+
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
+
+ComputerHandle getComputerHandle(std::wstring lookupFile){
+    std::string lookupFile_S = converter.to_bytes(lookupFile);
+    std::wfstream lookup;
+    lookup.open(lookupFile_S, std::ios::out);
     lookup.close();
-    lookup.open(lookupFile, std::ios::in|std::ios::out);
-    std::stringstream buffer;
+    lookup.open(lookupFile_S, std::ios::in|std::ios::out);
+    std::wstringstream buffer;
 
 
     if(!lookup.is_open()){
-        std::cerr << "ERROR opening computer_handle lookup file\n";
-        return 0;
+        std::wcerr << L"ERROR opening computer_handle lookup file\n";
+        return -1;
     }
-    std::string macadr = hexStr((u_char*)mac().data,6);
-    std::string cpname = computerName();
-    std::string line;
+    std::wstring macadr = hexStr((u_char*)mac().data,6);
+    std::wstring cpname = computerName();
+    std::wstring line;
     size_t lineNumber = 0;
     bool append = false;
     ComputerHandle retHandle;
 
     while(std::getline(lookup,line)){ // fixed line-size: at least 19 characters (1 character cpname)
         lineNumber++;
-        if(line.find(macadr,0) != std::string::npos){
-            if(line.find(cpname,0) != std::string::npos){
+        if(line.find(macadr,0) != std::wstring::npos){
+            if(line.find(cpname,0) != std::wstring::npos){
                 line.replace(18,line.size()-19,cpname);
             }
-            std::stringstream s;
+            std::wstringstream s;
             ComputerHandle ch;
             s << line.substr(0,4);
             s >> retHandle;
-        }else if(line.find(cpname,0) != std::string::npos){
-            if(line.find(macadr,0) != std::string::npos){
+        }else if(line.find(cpname,0) != std::wstring::npos){
+            if(line.find(macadr,0) != std::wstring::npos){
                 line.replace(5,12,macadr);
             }
-            std::stringstream s;
+            std::wstringstream s;
             s << line.substr(0,4);
             s >> retHandle;
         }else{
@@ -57,27 +61,27 @@ ComputerHandle getComputerHandle(std::string lookupFile){
     }
     if(!append && lineNumber == 0) append = true;
     if(append){
-        buffer << std::setfill('0') << std::setw(4) << std::hex << lineNumber;
-        buffer << ";" << macadr << ";" << cpname << "\n";
+        buffer << std::setfill(L'0') << std::setw(4) << std::hex << lineNumber;
+        buffer << L";" << macadr << L";" << cpname << "\n";
     }
     lookup.close();
 
-    lookup.open(lookupFile, std::ios::out|std::ios::trunc);
+    lookup.open(converter.to_bytes(lookupFile), std::ios::out|std::ios::trunc);
     lookup << buffer.str();
     lookup.close();
 
     return lineNumber;
 }
-std::string computerName(){
+std::wstring computerName(){
 #define INFO_BUFFER_SIZE 32767
-    TCHAR infoBuf[INFO_BUFFER_SIZE];
+    wchar_t infoBuf[INFO_BUFFER_SIZE];
     DWORD bufCharCount = INFO_BUFFER_SIZE;
 
-    if(!GetComputerName(infoBuf,&bufCharCount)){
-        std::cerr << "ERROR While retrieving Computer Name\n";
-        return "";
+    if(!GetComputerNameW(infoBuf,&bufCharCount)){
+        std::wcerr << L"ERROR While retrieving Computer Name\n";
+        return L"";
     }
-    return std::string(infoBuf);
+    return std::wstring(infoBuf);
 #undef INFO_BUFFER_SIZE
 }
 tm *now(){
@@ -87,33 +91,32 @@ tm *now(){
     tm=gmtime(&ltime);
     return tm;
 }
-std::string timestamp(){
-    char timestamp[20];
+std::wstring timestamp(){
+    wchar_t timestamp[20];
     auto tm = now();
-    sprintf(timestamp,"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
+    wsprintfW(timestamp,L"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
             tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    std::string retour(timestamp);
+    std::wstring retour(timestamp);
     return retour;
 }
 
 constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-std::string hexStr(u_char *data, size_t len){
-    if(data == nullptr) return "";
+std::wstring hexStr(u_char *data, size_t len){
+    if(data == nullptr) return L"";
     std::string s(len*2,' ');
     for(int i = 0; i < len; ++i){
         s[2*i]     = hexmap[(data[i]&0xF0)>>4];
         s[2*i+1]   = hexmap[(data[i]&0x0F)];
     }
-    return s;
+    return converter.from_bytes(s);
 }
-std::string computerHandleStr(){
-    static std::string handle;
-    static char temp[6] = {0};
-    if((int)temp[5] != 0xFF){
-        sprintf(temp,"%04d",globalHandle);
-        handle = std::string(temp);
-        temp[5] = 0xFF;
+std::wstring computerHandleStr(){
+    static std::wstring handle;
+    static wchar_t temp[6] = {0};
+    if((int)temp[0] == 0){
+        wsprintfW(temp,L"%05d",globalHandle);
+        handle = std::wstring(temp);
     }
     return handle;
 }
@@ -124,7 +127,7 @@ MAC mac(){
     DWORD dwStatus = GetAdaptersInfo(adapterInfo,&dwBufLen);
     PIP_ADAPTER_INFO pipAdapterInfo = adapterInfo;
     if(dwStatus != ERROR_SUCCESS){
-        std::cerr << "ERROR getting adapterInfo\n";
+        std::wcerr << L"ERROR getting adapterInfo\n";
         return MAC();
     }
     while(pipAdapterInfo){
@@ -137,118 +140,118 @@ MAC mac(){
     }
     return addresses.front();
 }
-std::string map(uint32_t vkc) {
+std::wstring map(uint32_t vkc) {
     if (keys.count(vkc) == 0) {
-        char chr = (char)MapVirtualKey(vkc, MAPVK_VK_TO_CHAR);
-        if(chr==0) return "mist";
-        return std::string("___") + chr;
+        wchar_t chr = (wchar_t)MapVirtualKeyW(vkc, MAPVK_VK_TO_CHAR);
+        if(chr==0) return L"mist";
+        return std::wstring(L"___") + chr;
     }
     return keys[vkc];
 }
 void initMap(){
-    keys[VK_TAB]				= "_TAB";
-    keys[VK_CAPITAL]			= "CAPS";
-    keys[VK_F1]					= "__F1";
-    keys[VK_F2]					= "__F2";
-    keys[VK_F3]					= "__F3";
-    keys[VK_F4]					= "__F4";
-    keys[VK_F5]					= "__F5";
-    keys[VK_F6]					= "__F6";
-    keys[VK_F7]					= "__F7";
-    keys[VK_F8]					= "__F8";
-    keys[VK_F9]					= "__F9";
-    keys[VK_F10]				= "_F10";
-    keys[VK_F11]				= "_F11";
-    keys[VK_F12]				= "_F12";
-    keys[VK_F13]				= "_F13";
-    keys[VK_F14]				= "_F14";
-    keys[VK_F15]				= "_F15";
-    keys[VK_F16]				= "_F16";
-    keys[VK_F17]				= "_F17";
-    keys[VK_F18]				= "_F18";
-    keys[VK_F19]				= "_F19";
-    keys[VK_F20]				= "_F20";
-    keys[VK_F21]				= "_F21";
-    keys[VK_F22]				= "_F22";
-    keys[VK_F23]				= "_F23";
-    keys[VK_F24]				= "_F24";
-    keys[VK_BACK]				= "BACK";
-    keys[VK_RETURN]				= "RETU";
-    keys[VK_ESCAPE]				= "ESCA";
-    keys[VK_LMENU]				= "LMEN";
-    keys[VK_RMENU]				= "RMEN";
-    keys[VK_LCONTROL]			= "LCTR";
-    keys[VK_RCONTROL]			= "RCTR";
-    keys[VK_RSHIFT]				= "RSHI";
-    keys[VK_LSHIFT]				= "LSHI";
-    keys[VK_LBUTTON]			= "LMBU";
-    keys[VK_RBUTTON]			= "RMBU";
-    keys[VK_CANCEL]				= "CANC";
-    keys[VK_MBUTTON]			= "MBUT";
-    keys[VK_XBUTTON1]			= "XBU1";
-    keys[VK_XBUTTON2]			= "XBU2";
-    keys[VK_CLEAR]				= "CLEA";
-    keys[VK_PAUSE]				= "PAUS";
-    keys[VK_FINAL]				= "FINA";
-    keys[VK_CONVERT]			= "CONV";
-    keys[VK_NONCONVERT]			= "NCVT";
-    keys[VK_ACCEPT]				= "ACCE";
-    keys[VK_MODECHANGE]			= "MODC";
-    keys[VK_SPACE]				= "SPAC";
-    keys[VK_PRIOR]				= "PRIO";
-    keys[VK_NEXT]				= "NEXT";
-    keys[VK_END]				= "_END";
-    keys[VK_HOME]				= "HOME";
-    keys[VK_LEFT]				= "LEFT";
-    keys[VK_UP]					= "__UP";
-    keys[VK_RIGHT]				= "RIGH";
-    keys[VK_DOWN]				= "DOWN";
-    keys[VK_SELECT]				= "SELE";
-    keys[VK_PRINT]				= "PRNT";
-    keys[VK_EXECUTE]			= "EXEC";
-    keys[VK_SNAPSHOT]			= "SNAP";
-    keys[VK_INSERT]				= "INSR";
-    keys[VK_DELETE]				= "DELE";
-    keys[VK_HELP]				= "HELP";
-    keys[VK_LWIN]				= "LWIN";
-    keys[VK_RWIN]				= "RWIN";
-    keys[VK_APPS]				= "APPS";
-    keys[VK_SLEEP]				= "SLEE";
-    keys[VK_NUMPAD0]			= "NUM0";
-    keys[VK_NUMPAD1]			= "NUM1";
-    keys[VK_NUMPAD2]			= "NUM2";
-    keys[VK_NUMPAD3]			= "NUM3";
-    keys[VK_NUMPAD4]			= "NUM4";
-    keys[VK_NUMPAD5]			= "NUM5";
-    keys[VK_NUMPAD6]			= "NUM6";
-    keys[VK_NUMPAD7]			= "NUM7";
-    keys[VK_NUMPAD8]			= "NUM8";
-    keys[VK_NUMPAD9]			= "NUM9";
-    keys[VK_MULTIPLY]			= "MULT";
-    keys[VK_ADD]				= "_ADD";
-    keys[VK_SEPARATOR]			= "_SEP";
-    keys[VK_SUBTRACT]			= "_SUB";
-    keys[VK_DECIMAL]			= "DECI";
-    keys[VK_DIVIDE]				= "_DIV";
-    keys[VK_NUMLOCK]			= "NLCK";
-    keys[VK_SCROLL]				= "SROL";
-    keys[VK_BROWSER_BACK]		= "BBCK";
-    keys[VK_BROWSER_FORWARD]	= "BFWD";
-    keys[VK_BROWSER_REFRESH]	= "BREF";
-    keys[VK_BROWSER_STOP]		= "BSTP";
-    keys[VK_BROWSER_SEARCH]		= "BSEA";
-    keys[VK_BROWSER_FAVORITES]	= "BFAV";
-    keys[VK_BROWSER_HOME]		= "BHOM";
-    keys[VK_VOLUME_MUTE]		= "VMUT";
-    keys[VK_VOLUME_DOWN]		= "VDWN";
-    keys[VK_VOLUME_UP]			= "_VUP";
-    keys[VK_MEDIA_NEXT_TRACK]	= "MENX";
-    keys[VK_MEDIA_PREV_TRACK]	= "MEPR";
-    keys[VK_MEDIA_STOP]			= "MEST";
-    keys[VK_MEDIA_PLAY_PAUSE]	= "MEPP";
-    keys[VK_LAUNCH_APP1]		= "APP1";
-    keys[VK_LAUNCH_APP2]		= "APP2";
-    keys[VK_LAUNCH_MAIL]		= "LMAI";
+    keys[VK_TAB]				= L"_TAB";
+    keys[VK_CAPITAL]			= L"CAPS";
+    keys[VK_F1]					= L"__F1";
+    keys[VK_F2]					= L"__F2";
+    keys[VK_F3]					= L"__F3";
+    keys[VK_F4]					= L"__F4";
+    keys[VK_F5]					= L"__F5";
+    keys[VK_F6]					= L"__F6";
+    keys[VK_F7]					= L"__F7";
+    keys[VK_F8]					= L"__F8";
+    keys[VK_F9]					= L"__F9";
+    keys[VK_F10]				= L"_F10";
+    keys[VK_F11]				= L"_F11";
+    keys[VK_F12]				= L"_F12";
+    keys[VK_F13]				= L"_F13";
+    keys[VK_F14]				= L"_F14";
+    keys[VK_F15]				= L"_F15";
+    keys[VK_F16]				= L"_F16";
+    keys[VK_F17]				= L"_F17";
+    keys[VK_F18]				= L"_F18";
+    keys[VK_F19]				= L"_F19";
+    keys[VK_F20]				= L"_F20";
+    keys[VK_F21]				= L"_F21";
+    keys[VK_F22]				= L"_F22";
+    keys[VK_F23]				= L"_F23";
+    keys[VK_F24]				= L"_F24";
+    keys[VK_BACK]				= L"BACK";
+    keys[VK_RETURN]				= L"RETU";
+    keys[VK_ESCAPE]				= L"ESCA";
+    keys[VK_LMENU]				= L"LMEN";
+    keys[VK_RMENU]				= L"RMEN";
+    keys[VK_LCONTROL]			= L"LCTR";
+    keys[VK_RCONTROL]			= L"RCTR";
+    keys[VK_RSHIFT]				= L"RSHI";
+    keys[VK_LSHIFT]				= L"LSHI";
+    keys[VK_LBUTTON]			= L"LMBU";
+    keys[VK_RBUTTON]			= L"RMBU";
+    keys[VK_CANCEL]				= L"CANC";
+    keys[VK_MBUTTON]			= L"MBUT";
+    keys[VK_XBUTTON1]			= L"XBU1";
+    keys[VK_XBUTTON2]			= L"XBU2";
+    keys[VK_CLEAR]				= L"CLEA";
+    keys[VK_PAUSE]				= L"PAUS";
+    keys[VK_FINAL]				= L"FINA";
+    keys[VK_CONVERT]			= L"CONV";
+    keys[VK_NONCONVERT]			= L"NCVT";
+    keys[VK_ACCEPT]				= L"ACCE";
+    keys[VK_MODECHANGE]			= L"MODC";
+    keys[VK_SPACE]				= L"SPAC";
+    keys[VK_PRIOR]				= L"PRIO";
+    keys[VK_NEXT]				= L"NEXT";
+    keys[VK_END]				= L"_END";
+    keys[VK_HOME]				= L"HOME";
+    keys[VK_LEFT]				= L"LEFT";
+    keys[VK_UP]					= L"__UP";
+    keys[VK_RIGHT]				= L"RIGH";
+    keys[VK_DOWN]				= L"DOWN";
+    keys[VK_SELECT]				= L"SELE";
+    keys[VK_PRINT]				= L"PRNT";
+    keys[VK_EXECUTE]			= L"EXEC";
+    keys[VK_SNAPSHOT]			= L"SNAP";
+    keys[VK_INSERT]				= L"INSR";
+    keys[VK_DELETE]				= L"DELE";
+    keys[VK_HELP]				= L"HELP";
+    keys[VK_LWIN]				= L"LWIN";
+    keys[VK_RWIN]				= L"RWIN";
+    keys[VK_APPS]				= L"APPS";
+    keys[VK_SLEEP]				= L"SLEE";
+    keys[VK_NUMPAD0]			= L"NUM0";
+    keys[VK_NUMPAD1]			= L"NUM1";
+    keys[VK_NUMPAD2]			= L"NUM2";
+    keys[VK_NUMPAD3]			= L"NUM3";
+    keys[VK_NUMPAD4]			= L"NUM4";
+    keys[VK_NUMPAD5]			= L"NUM5";
+    keys[VK_NUMPAD6]			= L"NUM6";
+    keys[VK_NUMPAD7]			= L"NUM7";
+    keys[VK_NUMPAD8]			= L"NUM8";
+    keys[VK_NUMPAD9]			= L"NUM9";
+    keys[VK_MULTIPLY]			= L"MULT";
+    keys[VK_ADD]				= L"_ADD";
+    keys[VK_SEPARATOR]			= L"_SEP";
+    keys[VK_SUBTRACT]			= L"_SUB";
+    keys[VK_DECIMAL]			= L"DECI";
+    keys[VK_DIVIDE]				= L"_DIV";
+    keys[VK_NUMLOCK]			= L"NLCK";
+    keys[VK_SCROLL]				= L"SROL";
+    keys[VK_BROWSER_BACK]		= L"BBCK";
+    keys[VK_BROWSER_FORWARD]	= L"BFWD";
+    keys[VK_BROWSER_REFRESH]	= L"BREF";
+    keys[VK_BROWSER_STOP]		= L"BSTP";
+    keys[VK_BROWSER_SEARCH]		= L"BSEA";
+    keys[VK_BROWSER_FAVORITES]	= L"BFAV";
+    keys[VK_BROWSER_HOME]		= L"BHOM";
+    keys[VK_VOLUME_MUTE]		= L"VMUT";
+    keys[VK_VOLUME_DOWN]		= L"VDWN";
+    keys[VK_VOLUME_UP]			= L"_VUP";
+    keys[VK_MEDIA_NEXT_TRACK]	= L"MENX";
+    keys[VK_MEDIA_PREV_TRACK]	= L"MEPR";
+    keys[VK_MEDIA_STOP]			= L"MEST";
+    keys[VK_MEDIA_PLAY_PAUSE]	= L"MEPP";
+    keys[VK_LAUNCH_APP1]		= L"APP1";
+    keys[VK_LAUNCH_APP2]		= L"APP2";
+    keys[VK_LAUNCH_MAIL]		= L"LMAI";
     /*
 #define VK_OEM_1 0xBA
 #define VK_OEM_PLUS 0xBB

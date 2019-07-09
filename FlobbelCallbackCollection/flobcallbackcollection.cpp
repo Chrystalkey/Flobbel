@@ -32,7 +32,7 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
     if(nCode != HC_ACTION) return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
     KeypressInfo info;
     KBDLLHOOKSTRUCT *further = (KBDLLHOOKSTRUCT*)lParam;
-    std::string time = timestamp();
+    std::wstring time = timestamp();
 
     switch(wParam){
         case WM_KEYDOWN:
@@ -53,7 +53,7 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
     info.scancode = (unsigned)further->scanCode;
     info.vkcode = (unsigned)further->vkCode;
     info.timestamp = time;
-    strncpy(info.descr,map(info.vkcode).c_str(),4);
+    wcsncpy(info.descr,map(info.vkcode).c_str(),(size_t)4);
     info.ch = globalHandle;
     kc(info);
     return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
@@ -72,28 +72,28 @@ void FlobCallbackCollection::run(){
 
 std::map<uint32_t, ProcessInfo> *FlobCallbackCollection::getProcessList(){
     HANDLE hProcessSnap;
-    PROCESSENTRY32 pe32;
+    PROCESSENTRY32W pe32;
     static std::map<uint32_t, ProcessInfo> pl; // PID, pi
     pl.clear();
 
     hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if(hProcessSnap == INVALID_HANDLE_VALUE){
-        std::cerr << "ERROR while taking snapshot of processes\n";
+        std::wcerr << L"ERROR while taking snapshot of processes\n";
         return &pl;
     }
-    pe32.dwSize = sizeof(PROCESSENTRY32);
+    pe32.dwSize = sizeof(PROCESSENTRY32W);
 
-    if(!Process32First(hProcessSnap, &pe32)){
-        std::cerr << "ERROR while executing Process32First\n";
+    if(!Process32FirstW(hProcessSnap, &pe32)){
+        std::wcerr << L"ERROR while executing Process32First\n";
         CloseHandle(hProcessSnap);
         return &pl;
     }
 
     do{
         ProcessInfo pinfo;
-        pinfo.filename = std::string(pe32.szExeFile);
+        pinfo.filename = std::wstring(pe32.szExeFile);
         if(blacklist.find(pinfo.filename) != blacklist.end()){
-            if(!Process32Next(hProcessSnap, &pe32))
+            if(!Process32NextW(hProcessSnap, &pe32))
                 break;
             continue;
         }
@@ -103,7 +103,7 @@ std::map<uint32_t, ProcessInfo> *FlobCallbackCollection::getProcessList(){
         pinfo.timestamp_off = placeholder;
         pinfo.description = placeholder;
         pl.emplace(pinfo.PID, pinfo);
-    }while(Process32Next(hProcessSnap, &pe32));
+    }while(Process32NextW(hProcessSnap, &pe32));
 
     CloseHandle( hProcessSnap);
     return &pl;
@@ -136,14 +136,14 @@ void FlobCallbackCollection::detectChanges(std::map<uint32_t, ProcessInfo> *list
 }
 
 void FlobCallbackCollection::finishProcessList() {
-    std::string timestmp = timestamp();
+    std::wstring timestmp = timestamp();
     for(auto &x: processList){
         x.second.timestamp_off = timestmp;
         pc(x.second);
     }
 }
 
-void FlobCallbackCollection::setProgramBlacklist(std::set<std::string> &_blacklist) {
+void FlobCallbackCollection::setProgramBlacklist(std::set<std::wstring> &_blacklist) {
     blacklist = _blacklist;
 }
 void FlobCallbackCollection::terminate(){
@@ -154,13 +154,13 @@ void FlobCallbackCollection::windowsStartup() {
     std::chrono::milliseconds elapsed(GetTickCount());
     auto start = std::chrono::system_clock::now()-elapsed;
     time_t time = std::chrono::system_clock::to_time_t(start);
-    char timestamp[20];
+    wchar_t timestamp[20];
     struct tm *tm;
     tm = gmtime(&time);
-    sprintf(timestamp,"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
+    wsprintfW(timestamp,L"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
             tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
     screentimeTracker.ch = globalHandle;
-    screentimeTracker.timestamp_on = std::string(timestamp);
+    screentimeTracker.timestamp_on = std::wstring(timestamp);
     screentimeTracker.on = time;
 }
 
@@ -168,8 +168,8 @@ void FlobCallbackCollection::wmshutdownCallback() {
     screentimeTracker.timestamp_off = timestamp();
     auto duration = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(screentimeTracker.on);
     auto d = std::chrono::duration_cast<std::chrono::minutes>(duration);
-    char temp[6];
-    sprintf(temp, "%05d", d.count());
-    screentimeTracker.duration = std::string(temp);
+    wchar_t temp[6];
+    wsprintfW(temp, L"%05d", d.count());
+    screentimeTracker.duration = std::wstring(temp);
     sc(screentimeTracker);
 }

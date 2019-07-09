@@ -10,14 +10,14 @@
 
 #define repeat_i(x) for(int i = 0; i < x; i++)
 
-std::string timestamp();
-std::string map(uint32_t vkc);
+std::wstring timestamp();
+std::wstring map(uint32_t vkc);
 void initMap();
 
-ComputerHandle getComputerHandle(std::string lookupFile);
-std::string computerName();
-std::string computerHandleStr();
-std::string hexStr(u_char *data, size_t len);
+ComputerHandle getComputerHandle(std::wstring lookupFile);
+std::wstring computerName();
+std::wstring computerHandleStr();
+std::wstring hexStr(u_char *data, size_t len);
 MAC mac();
 tm *now();
 

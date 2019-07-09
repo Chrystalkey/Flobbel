@@ -4,11 +4,11 @@
 #include "flobcallbackcollection.h"
 #include "FlobbelSafe.h"
 
-std::unordered_map<UINT, std::string> keys;
+std::unordered_map<UINT, std::wstring> keys;
 ComputerHandle globalHandle = -1;
-std::set<std::string> blacklist;
-std::string savedirectory;
-std::string lookup_filepath;
+std::set<std::wstring> blacklist;
+std::wstring savedirectory;
+std::wstring lookup_filepath;
 
 void process(ProcessInfo);
 void keypress(KeypressInfo);
@@ -35,71 +35,71 @@ int main(int argc, char**argv) {
 }
 
 void process(ProcessInfo info){
-    std::cout << info.filename << "|" << info.timestamp_on << " to " << info.timestamp_off << "\n";
+    std::wcout << info.filename << L"|" << info.timestamp_on << L" to " << info.timestamp_off << L"\n";
     safe->add_prc(info);
 }
 
 void keypress(KeypressInfo info){
-    std::string d(info.descr,4);
+    std::wstring d(info.descr,4);
     if(info.updown %2 == 0) {
-        std::cout << d << " " << std::hex << info.ch << "\n";
+        std::wcout << d << L" " << std::hex << info.ch << L"\n";
         keySequence(info.vkcode);
     }
     safe->add_key(info);
 }
 
 void screentime(Screentime info){
-    std::cout << "Screentime: <on> " << info.timestamp_on << " <off> " << info.timestamp_off << " <duration> " << info.duration << " minutes\n";
+    std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> " << info.duration << L" minutes\n";
     safe->add_screentime(info);
 }
 
 bool processArguments(int argc, char **argv){
-    std::vector<std::string> arguments(argc-1);
+    std::vector<std::wstring> arguments(argc-1);
     for(int i = 1; i < argc; i++){
-        arguments[i-1] =  std::string(argv[i]);
+        arguments[i-1] =  converter.from_bytes(std::string(argv[i]));
     }
     for(auto it = arguments.begin(); it != arguments.end();it++){
-        if(*it == "-bl" || *it == "--blacklist"){
-            std::ifstream black;
+        if(*it == L"-bl" || *it == L"--blacklist"){
+            std::wifstream black;
             if((it+1) == arguments.end()){
-                std::cerr << "No blacklist file specified. Please try again\n";
+                std::wcerr << L"No blacklist file specified. Please try again\n";
                 return false;
             }
             try{
-                black.open((*(it+1)));
+                black.open(converter.to_bytes((*(it+1))));
             }catch(std::ios::failure fail){
-                std::cerr << "Error Opening Blacklist File: " << fail.what() << "\n";
+                std::wcerr << L"Error Opening Blacklist File: " << fail.what() << L"\n";
                 return false;
             }catch(...){
-                std::cerr << "Unknown error\n";
+                std::wcerr << L"Unknown error\n";
                 return false;
             }
-            std::string line;
+            std::wstring line;
             try{
                 while(std::getline(black,line)){
                     if(!line.empty()) blacklist.insert(line);
                 }
             }catch(...){
-                std::cerr << "Error reading blacklist file. Please try again.\n";
+                std::wcerr << L"Error reading blacklist file. Please try again.\n";
                 return false;
             }
         }
-        if(*it == "-h"){
-            std::cout << "Specify Blacklist File with -bl <filepath> or --blacklist <filepath>\n"
-                      << "Show Help with -h\n"
-                      << "Specify save directory with -sd <path> or --savedir <path>\n"
-                      << "Specify computername Lookup File with -lu <filepath> or --lookup <filepath>\n";
+        if(*it == L"-h"){
+            std::wcout << L"Specify Blacklist File with -bl <filepath> or --blacklist <filepath>\n"
+                      << L"Show Help with -h\n"
+                      << L"Specify save directory with -sd <path> or --savedir <path>\n"
+                      << L"Specify computername Lookup File with -lu <filepath> or --lookup <filepath>\n";
         }
-        if(*it == "-sd" || *it == "--savedir"){
+        if(*it == L"-sd" || *it == L"--savedir"){
             if((it+1) == arguments.end()){
-                std::cerr << "Probably no savedirectory specified. Please restart.\n";
+                std::wcerr << L"Probably no savedirectory specified. Please restart.\n";
                 return false;
             }
             savedirectory = *(it + 1);
         }
-        if(*it == "-lu" || *it == "--lookup"){
+        if(*it == L"-lu" || *it == L"--lookup"){
             if((it+1) == arguments.end())
-                std::cerr << "No lookup file specified. Please try again.\n";
+                std::wcerr << L"No lookup file specified. Please try again.\n";
             lookup_filepath = *(it+1);
         }
     }
@@ -128,18 +128,18 @@ void keySequence(DWORD vkCode){
 void initialize_flobbel() {
     initMap();
     if(savedirectory.empty()) savedirectory = fucked_up_directory;
-    safe = new FlobbelSafe(savedirectory);
-    if(lookup_filepath.empty()) lookup_filepath = savedirectory+"lookupfile.data";
+    if(lookup_filepath.empty()) lookup_filepath = savedirectory+L"lookupfile.data";
     globalHandle = getComputerHandle(lookup_filepath);
+    safe = new FlobbelSafe(savedirectory);
     callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
     if(blacklist.empty()){
-        blacklist.insert("svchost.exe");
-        blacklist.insert("ctfmon.exe");
-        blacklist.insert("RuntimeBroker.exe");
-        blacklist.insert("conhost.exe");
-        blacklist.insert("System");
-        blacklist.insert("[System Process]");
-        blacklist.insert("winlogon.exe");
+        blacklist.insert(L"svchost.exe");
+        blacklist.insert(L"ctfmon.exe");
+        blacklist.insert(L"RuntimeBroker.exe");
+        blacklist.insert(L"conhost.exe");
+        blacklist.insert(L"System");
+        blacklist.insert(L"[System Process]");
+        blacklist.insert(L"winlogon.exe");
     }
     callbackCollection->setProgramBlacklist(blacklist);
 }
