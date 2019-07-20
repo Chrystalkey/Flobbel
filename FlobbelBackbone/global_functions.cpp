@@ -13,9 +13,31 @@
 #include <iptypes.h>
 #include <iphlpapi.h>
 #include <chrono>
+#include "../sqlite/sqlite3.h"
 
 
 std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
+
+void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
+    if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
+        return;
+    else{
+        std::wcerr << "[ERROR] SQLITE failed " << additional << L" ERROR CODE: " << rc << L"\n";
+        if(dbcon)
+            sqlite3_close(dbcon);
+    }
+}
+
+void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused){
+    int rc = sqlite3_prepare16_v2(dbcon,(void*)stmt.c_str(),(stmt.size()+1)*sizeof(wchar_t), statement,(const void**)&unused);
+    sqlErrCheck(rc,L"preparing "+stmt+L" unused: "+unused);
+}
+void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt){
+    wchar_t unused[256];
+    prep_statement(dbcon,stmt,statement,unused);
+    int rc = sqlite3_step(*statement);
+    sqlErrCheck(rc,L"stepping stmt: " + stmt+L" Unused: " + unused);
+}
 
 ComputerHandle getComputerHandle(std::wstring lookupFile){
     std::string lookupFile_S = converter.to_bytes(lookupFile);
@@ -94,8 +116,8 @@ tm *now(){
 std::wstring timestamp(){
     wchar_t timestamp[20];
     auto tm = now();
-    wsprintfW(timestamp,L"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
-            tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    wsprintfW(timestamp,L"%04d-%02d-%02d %02d:%02d:%02d", tm->tm_year+1900, tm->tm_mon+1,
+            tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
     std::wstring retour(timestamp);
     return retour;
 }

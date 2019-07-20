@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <windows.h>
+#include <lm.h>
 #include "flobcallbackcollection.h"
 
 ProcessCallback FlobCallbackCollection::pc = nullptr;
@@ -151,14 +152,25 @@ void FlobCallbackCollection::terminate(){
 }
 
 void FlobCallbackCollection::windowsStartup() {
+    /*
     std::chrono::milliseconds elapsed(GetTickCount());
     auto start = std::chrono::system_clock::now()-elapsed;
     time_t time = std::chrono::system_clock::to_time_t(start);
+     */
+    NET_API_STATUS nStatus;
+    LPUSER_INFO_2 ui2 = NULL;
+    WCHAR uName[256];
+    DWORD uNamen = sizeof(uName);
+
+    GetUserNameW(uName,&uNamen);
+    nStatus = NetUserGetInfo(NULL,uName,2,(LPBYTE*)&ui2);
+    time_t time = ui2->usri2_last_logon;
+    NetApiBufferFree(ui2);
     wchar_t timestamp[20];
     struct tm *tm;
     tm = gmtime(&time);
-    wsprintfW(timestamp,L"%02d.%02d.%04d-%02d:%02d:%02d", tm->tm_mday, tm->tm_mon+1,
-            tm->tm_year+1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    wsprintfW(timestamp,L"%04d-%02d-%02d %02d:%02d:%02d", tm->tm_year+1900, tm->tm_mon+1,
+              tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
     screentimeTracker.ch = globalHandle;
     screentimeTracker.timestamp_on = std::wstring(timestamp);
     screentimeTracker.on = time;
@@ -167,9 +179,7 @@ void FlobCallbackCollection::windowsStartup() {
 void FlobCallbackCollection::wmshutdownCallback() {
     screentimeTracker.timestamp_off = timestamp();
     auto duration = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(screentimeTracker.on);
-    auto d = std::chrono::duration_cast<std::chrono::minutes>(duration);
-    wchar_t temp[6];
-    wsprintfW(temp, L"%05d", d.count());
-    screentimeTracker.duration = std::wstring(temp);
+    auto d = std::chrono::duration_cast<std::chrono::seconds>(duration);
+    screentimeTracker.duration = d.count();
     sc(screentimeTracker);
 }

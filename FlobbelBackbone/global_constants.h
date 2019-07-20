@@ -51,7 +51,7 @@ typedef struct{
     std::wstring timestamp_on;
     std::wstring timestamp_off;
     time_t on;
-    std::wstring duration;
+    uint32_t duration;
 } Screentime;
 
 extern std::unordered_map<UINT, std::wstring> keys;

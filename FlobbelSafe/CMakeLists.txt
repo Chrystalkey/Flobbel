@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(../FlobbelBackbone/)
 include_directories(../cryptopp/include)
+include_directories(../sqlite/)
 
 add_library(FlobbelSafe FlobbelSafe.cpp FlobbelSafe.h)
 

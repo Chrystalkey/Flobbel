@@ -49,7 +49,7 @@ void keypress(KeypressInfo info){
 }
 
 void screentime(Screentime info){
-    std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> " << info.duration << L" minutes\n";
+    std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
     safe->add_screentime(info);
 }
 
