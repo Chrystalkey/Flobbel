@@ -44,10 +44,8 @@ private:
 private:
     void encrypt_n_copy(const std::wstring &file);
     void decrypt_n_copy(const std::wstring &file);
-    CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption cfbEncrypt;
-    CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption cfbDecrypt;
-    CryptoPP::SecByteBlock key;
-    CryptoPP::SecByteBlock iv;
+    void encrypt_file(const std::wstring &file);
+    void decrypt_file(const std::wstring &file);
     std::vector<CryptoPP::byte> buffer;
 private:
     sqlite3 *dbcon;

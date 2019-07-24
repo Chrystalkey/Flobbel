@@ -12,13 +12,6 @@
 
 FlobbelSafe::FlobbelSafe(std::wstring &_safedir):
     safedir(_safedir){
-
-    key.Assign(_key,32);
-    iv.Assign(_iv,16);
-
-    cfbEncrypt = CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption(key,key.size(),iv);
-    cfbDecrypt = CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption(key,key.size(),iv);
-
     wchar_t date[11];
     auto n = now();
     int rc = 0;
@@ -27,7 +20,8 @@ FlobbelSafe::FlobbelSafe(std::wstring &_safedir):
     keyTable = L"KEYS_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
     proTable = L"PROC_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
 
-    //decrypt_n_copy(safedir+L"flobsafe.db");
+    if(PathFileExistsW((safedir+L"flobsafe.db").c_str()))
+        decrypt_file(safedir+L"flobsafe.db");
     rc = sqlite3_open16((safedir+L"flobsafe.db").c_str(),&dbcon);
     sqlErrCheck(rc,L"opening Database "+safedir+L"flobsafe.db",dbcon);
     //execStmt(dbcon,&uniState,L"CREATE DATABASE \"flobbel\";");
@@ -86,72 +80,76 @@ void FlobbelSafe::add_screentime(Screentime &info){
 }
 FlobbelSafe::~FlobbelSafe() {
     std::wstring vals;
-    if(!prcQueue.empty()){
-        while(!prcQueue.empty()){
+    if (!prcQueue.empty()) {
+        while (!prcQueue.empty()) {
             vals += prcQueue.front();
             prcQueue.pop();
         }
-        *(vals.end()-1) = L';';
+        *(vals.end() - 1) = L';';
         sqlite3_stmt *prcState = nullptr;
-        execStmt(dbcon,&prcState,L"INSERT INTO "+proTable+L" (pid,timestamp_on,timestamp_off,filename) VALUES "+vals);
+        execStmt(dbcon, &prcState,
+                 L"INSERT INTO " + proTable + L" (pid,timestamp_on,timestamp_off,filename) VALUES " + vals);
         sqlite3_finalize(prcState);
     }
-    if(!keyQueue.empty()){
+    if (!keyQueue.empty()) {
         vals = L"";
-        while(!keyQueue.empty()){
+        while (!keyQueue.empty()) {
             vals += keyQueue.front();
             keyQueue.pop();
         }
-        *(vals.end()-1) = L';';
+        *(vals.end() - 1) = L';';
         sqlite3_stmt *keyState = nullptr;
-        execStmt(dbcon,&keyState,L"INSERT INTO "+keyTable+L" (updown,vkcode,scancode,description,timestamp) VALUES" + vals);
+        execStmt(dbcon, &keyState,
+                 L"INSERT INTO " + keyTable + L" (updown,vkcode,scancode,description,timestamp) VALUES" + vals);
         sqlite3_finalize(keyState);
     }
     sqlite3_close(dbcon);
     //encrypt_n_copy(safedir+L"flobsafe.db");
+    encrypt_file(safedir + L"flobsafe.db");
 }
-
-void FlobbelSafe::decrypt_n_copy(const std::wstring &file) {
-    std::ifstream in(converter.to_bytes(file+L"enc"), std::ios::in|std::ios::binary|std::ios::ate);
+void FlobbelSafe::encrypt_file(const std::wstring &file) {
+    std::ifstream in(converter.to_bytes(file), std::ios::binary|std::ios::ate);
     if(!in.is_open()){
-        std::wcerr << "ERROR Infile(" << file << ") not opened\n";
+        std::wcerr << "ERROR opening Infile(" << file << ") not opened\n";
         return;
     }
     std::streamsize size = in.tellg();
-    in.seekg(0, std::ios::beg);
+    in.seekg(0,std::ios::beg);
 
-    buffer.resize(size+1,0x00);
+    buffer.resize(size, 0x00);
     if(in.read((char*)buffer.data(),size)){
         in.close();
-        cfbDecrypt.ProcessData(buffer.data(),buffer.data(),buffer.size());
-        std::ofstream out(converter.to_bytes(file), std::ios::binary);
+        CryptoPP::SecByteBlock key(_key,32);
+        CryptoPP::SecByteBlock iv(_iv,16);
+        CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption enc(key,key.size(),iv);
+        enc.ProcessData(buffer.data(),buffer.data(),buffer.size());
+        std::ofstream out(converter.to_bytes(file),std::ios::binary|std::ios::trunc);
         out.write((char*)buffer.data(),buffer.size());
         out.close();
-        DeleteFileW((file+L"enc").c_str());
     }else{
-        std::wcerr << "ERROR reading encrypted db file\n";
-        //throw std::ios::failure("ERROR reading encrypted db file\n");
+        std::wcout << "ERROR reading file(" << file+L"flobsafe.db" << ")\n";
     }
 }
-void FlobbelSafe::encrypt_n_copy(const std::wstring &file) {
-    std::ifstream in(converter.to_bytes(file), std::ios::in|std::ios::binary|std::ios::ate);
+void FlobbelSafe::decrypt_file(const std::wstring &file) {
+    std::ifstream in(converter.to_bytes(file), std::ios::binary|std::ios::ate);
     if(!in.is_open()){
-        std::wcerr << "ERROR Infile(" << file << ") not opened\n";
+        std::wcerr << "ERROR opening Infile(" << file << ") not opened\n";
         return;
     }
     std::streamsize size = in.tellg();
-    in.seekg(0, std::ios::beg);
+    in.seekg(0,std::ios::beg);
 
-    buffer.resize(size,0x00);
+    buffer.resize(size, 0x00);
     if(in.read((char*)buffer.data(),size)){
         in.close();
-        cfbEncrypt.ProcessData(buffer.data(),buffer.data(),buffer.size());
-        std::ofstream out(converter.to_bytes(file+L"enc"), std::ios::binary);
+        CryptoPP::SecByteBlock key(_key,32);
+        CryptoPP::SecByteBlock iv(_iv,16);
+        CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption dec(key,key.size(),iv);
+        dec.ProcessData(buffer.data(),buffer.data(),buffer.size());
+        std::ofstream out(converter.to_bytes(file),std::ios::binary|std::ios::trunc);
         out.write((char*)buffer.data(),buffer.size());
         out.close();
-        DeleteFileW((file).c_str());
     }else{
-        std::wcerr << "ERROR reading decrypted db file\n";
-        throw std::ios::failure("ERROR reading decrypted db file\n");
+        std::wcout << "ERROR reading file(" << file+L"flobsafe.db" << ")\n";
     }
 }
