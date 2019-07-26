@@ -17,7 +17,7 @@ FlobbelSafe::FlobbelSafe(std::wstring &_safedir):
     int rc = 0;
     init_map();
     db_file = _safedir+L"flobsafe.db";
-    find(); // TODO: add check wether sysLog.log exists, add fallback
+    //find(); // TODO: add check whether sysLog.log exists, add fallback
     if(PathFileExistsW(db_file.c_str())) {
         decrypt_file(db_file);
     }
@@ -201,5 +201,6 @@ uint32_t FlobbelSafe::hash(std::wstring &text) { //256 bit/32 byte
     sumtotal += (uint32_t)*(digest+20);
     sumtotal += (uint32_t)*(digest+24);
     sumtotal += (uint32_t)*(digest+28);
+    for(;rnd_directories.count(sumtotal)!=0;sumtotal++);
     return sumtotal;
 }

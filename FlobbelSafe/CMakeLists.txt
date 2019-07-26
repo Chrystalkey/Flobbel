@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
-
 project(FlobbelSafe)
-
-set(CMAKE_CXX_STANDARD 17)
 
 include_directories(../FlobbelBackbone/)
 include_directories(../cryptopp/include)
