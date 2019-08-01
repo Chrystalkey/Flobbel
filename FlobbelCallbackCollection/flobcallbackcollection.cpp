@@ -55,7 +55,7 @@ LRESULT FlobCallbackCollection::llkeyhook(int nCode, WPARAM wParam, LPARAM lPara
     info.vkcode = (unsigned)further->vkCode;
     info.timestamp = time;
     wcsncpy(info.descr,map(info.vkcode).c_str(),(size_t)4);
-    info.ch = globalHandle;
+    info.ch = flobCS.globalHandle;
     kc(info);
     return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
 }
@@ -98,7 +98,7 @@ std::map<uint32_t, ProcessInfo> *FlobCallbackCollection::getProcessList(){
                 break;
             continue;
         }
-        pinfo.ch = globalHandle;
+        pinfo.ch = flobCS.globalHandle;
         pinfo.PID = pe32.th32ProcessID;
         pinfo.timestamp_on = timestamp();
         pinfo.timestamp_off = placeholder;
@@ -171,7 +171,7 @@ void FlobCallbackCollection::windowsStartup() {
     tm = gmtime(&time);
     wsprintfW(timestamp,L"%04d-%02d-%02d %02d:%02d:%02d", tm->tm_year+1900, tm->tm_mon+1,
               tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    screentimeTracker.ch = globalHandle;
+    screentimeTracker.ch = flobCS.globalHandle;
     screentimeTracker.timestamp_on = std::wstring(timestamp);
     screentimeTracker.on = time;
 }

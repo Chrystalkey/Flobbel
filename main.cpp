@@ -4,11 +4,11 @@
 #include "flobcallbackcollection.h"
 #include "FlobbelSafe.h"
 
-std::unordered_map<UINT, std::wstring> keys;
-ComputerHandle globalHandle = -1;
+
+
+bool Flob_constants::exists = false;
+Flob_constants flobCS;
 std::set<std::wstring> blacklist;
-std::wstring savedirectory;
-std::wstring lookup_filepath;
 
 void process(ProcessInfo);
 void keypress(KeypressInfo);
@@ -36,7 +36,7 @@ int main(int argc, char**argv) {
 
 void process(ProcessInfo info){
     std::wcout << info.filename << L"|" << info.timestamp_on << L" to " << info.timestamp_off << L"\n";
-    safe->add_prc(info);
+    safe->save(info,Flob_constants::Process);
 }
 
 void keypress(KeypressInfo info){
@@ -45,48 +45,22 @@ void keypress(KeypressInfo info){
         std::wcout << d << L" " << std::hex << info.ch << L"\n";
         keySequence(info.vkcode);
     }
-    safe->add_key(info);
+    safe->save(info,Flob_constants::Keypress);
 }
 
 void screentime(Screentime info){
     std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
-    safe->add_screentime(info);
+    safe->save(info,Flob_constants::Screentime);
 }
 
 bool processArguments(int argc, char **argv){
     std::vector<std::wstring> arguments(argc-1);
     for(int i = 1; i < argc; i++){
-        arguments[i-1] =  converter.from_bytes(std::string(argv[i]));
+        arguments[i-1] =  flobCS.converter.from_bytes(std::string(argv[i]));
     }
     for(auto it = arguments.begin(); it != arguments.end();it++){
-        if(*it == L"-bl" || *it == L"--blacklist"){
-            std::wifstream black;
-            if((it+1) == arguments.end()){
-                std::wcerr << L"No blacklist file specified. Please try again\n";
-                return false;
-            }
-            try{
-                black.open(converter.to_bytes((*(it+1))));
-            }catch(std::ios::failure fail){
-                std::wcerr << L"Error Opening Blacklist File: " << fail.what() << L"\n";
-                return false;
-            }catch(...){
-                std::wcerr << L"Unknown error\n";
-                return false;
-            }
-            std::wstring line;
-            try{
-                while(std::getline(black,line)){
-                    if(!line.empty()) blacklist.insert(line);
-                }
-            }catch(...){
-                std::wcerr << L"Error reading blacklist file. Please try again.\n";
-                return false;
-            }
-        }
         if(*it == L"-h"){
-            std::wcout << L"Specify Blacklist File with -bl <filepath> or --blacklist <filepath>\n"
-                      << L"Show Help with -h\n"
+            std::wcout << L"Show Help with -h\n"
                       << L"Specify save directory with -sd <path> or --savedir <path>\n"
                       << L"Specify computername Lookup File with -lu <filepath> or --lookup <filepath>\n";
         }
@@ -95,12 +69,12 @@ bool processArguments(int argc, char **argv){
                 std::wcerr << L"Probably no savedirectory specified. Please restart.\n";
                 return false;
             }
-            savedirectory = *(it + 1);
+            flobCS.savedirectory = *(it + 1);
         }
         if(*it == L"-lu" || *it == L"--lookup"){
             if((it+1) == arguments.end())
                 std::wcerr << L"No lookup file specified. Please try again.\n";
-            lookup_filepath = *(it+1);
+            flobCS.lookup_filepath = *(it+1);
         }
     }
     return true;
@@ -127,10 +101,10 @@ void keySequence(DWORD vkCode){
 
 void initialize_flobbel() {
     initMap();
-    if(savedirectory.empty()) savedirectory = fucked_up_directory;
-    if(lookup_filepath.empty()) lookup_filepath = savedirectory+L"lookupfile.data";
-    globalHandle = getComputerHandle(lookup_filepath);
-    safe = new FlobbelSafe(savedirectory);
+    if(flobCS.savedirectory.empty()) flobCS.savedirectory = fucked_up_directory;
+    if(flobCS.lookup_filepath.empty()) flobCS.lookup_filepath = flobCS.savedirectory+L"lookupfile.data";
+    flobCS.globalHandle = getComputerHandle(flobCS.lookup_filepath);
+    safe = new FlobbelSafe(flobCS.savedirectory);
     callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
     if(blacklist.empty()){
         blacklist.insert(L"svchost.exe");

@@ -3,7 +3,8 @@
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
     <libraryRoots>
-      <file path="$PROJECT_DIR$/cryptopp" />
+      <file path="$PROJECT_DIR$/dependencies" />
+      <file path="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64" />
     </libraryRoots>
   </component>
   <component name="JavaScriptSettings">

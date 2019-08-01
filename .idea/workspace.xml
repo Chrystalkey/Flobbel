@@ -4,6 +4,7 @@
     <generated>
       <config projectName="Flobbel" targetName="FlobbelSafe" />
       <config projectName="Flobbel" targetName="sqlite" />
+      <config projectName="Flobbel" targetName="FlobbelWebStuff" />
       <config projectName="Flobbel" targetName="FlobbelCC" />
       <config projectName="Flobbel" targetName="FlobbelBackbone" />
       <config projectName="Flobbel" targetName="Flobbel" />
@@ -18,11 +19,263 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d06fd318-0f26-4bbd-a1ee-f348c8c08bc7" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelBackbone/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelCallbackCollection/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSync/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/3way.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/3way.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/adler32.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/adler32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/adv_simd.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/adv_simd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/aes.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/aes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/aes_armv4.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/aes_armv4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/algebra.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/algebra.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/algparam.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/algparam.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/arc4.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/arc4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/argnames.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/argnames.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/aria.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/aria.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/arm_simd.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/arm_simd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/asn.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/asn.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/authenc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/authenc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/base32.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/base32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/base64.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/base64.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/basecode.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/basecode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/bench.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/bench.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/blake2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/blake2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/blowfish.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/blowfish.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/blumshub.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/blumshub.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/camellia.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/camellia.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cast.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cast.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cbcmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cbcmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ccm.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ccm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/chacha.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/chacha.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/chachapoly.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/chachapoly.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cham.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cham.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/channels.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/channels.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/config.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cpu.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cpu.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/crc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/crc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/cryptlib.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/cryptlib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/darn.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/darn.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/default.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/default.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/des.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/des.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/dh.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/dh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/dh2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/dh2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/dll.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/dll.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/dmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/dmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/donna.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/donna.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/donna_32.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/donna_32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/donna_64.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/donna_64.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/donna_sse.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/donna_sse.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/drbg.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/drbg.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/dsa.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/dsa.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/eax.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/eax.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ec2n.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ec2n.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/eccrypto.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/eccrypto.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ecp.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ecp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ecpoint.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ecpoint.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/elgamal.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/elgamal.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/emsa2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/emsa2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/eprecomp.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/eprecomp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/esign.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/esign.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/factory.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/factory.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/fhmqv.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/fhmqv.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/files.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/files.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/filters.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/filters.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/fips140.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/fips140.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/fltrimpl.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/fltrimpl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gcm.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gcm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gf256.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gf256.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gf2_32.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gf2_32.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gf2n.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gf2n.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gfpcrypt.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gfpcrypt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gost.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gost.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/gzip.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/gzip.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hashfwd.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hashfwd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hc128.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hc128.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hc256.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hc256.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hex.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hight.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hight.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hkdf.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hkdf.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hmqv.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hmqv.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/hrtimer.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/hrtimer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ida.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ida.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/idea.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/idea.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/integer.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/integer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/iterhash.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/iterhash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/kalyna.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/kalyna.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/keccak.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/keccak.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/lea.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/lea.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/lubyrack.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/lubyrack.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/luc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/luc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/mars.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/mars.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/md2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/md2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/md4.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/md4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/md5.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/md5.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/mdc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/mdc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/mersenne.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/mersenne.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/misc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/misc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/modarith.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/modarith.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/modes.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/modes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/modexppc.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/modexppc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/mqueue.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/mqueue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/mqv.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/mqv.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/naclite.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/naclite.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/nbtheory.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/nbtheory.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/nr.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/nr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/oaep.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/oaep.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/oids.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/oids.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/osrng.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/osrng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ossig.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ossig.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/padlkrng.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/padlkrng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/panama.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/panama.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/pch.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/pch.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/pkcspad.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/pkcspad.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/poly1305.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/poly1305.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/polynomi.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/polynomi.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ppc_simd.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ppc_simd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/pssr.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/pssr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/pubkey.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/pubkey.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/pwdbased.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/pwdbased.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/queue.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/queue.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rabbit.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rabbit.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rabin.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rabin.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/randpool.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/randpool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rc2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rc2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rc5.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rc5.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rc6.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rc6.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rdrand.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rdrand.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/resource.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/resource.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rijndael.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rijndael.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ripemd.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ripemd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rng.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rng.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rsa.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rsa.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/rw.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/rw.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/safer.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/safer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/salsa.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/salsa.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/scrypt.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/scrypt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/seal.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/seal.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/secblock.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/secblock.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/seckey.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/seckey.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/seed.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/seed.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/serpent.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/serpent.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/serpentp.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/serpentp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/sha.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/sha.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/sha3.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/sha3.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/shacal2.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/shacal2.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/shake.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/shake.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/shark.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/shark.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/simeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/simeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/simon.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/simon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/simple.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/simple.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/siphash.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/siphash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/skipjack.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/skipjack.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/sm3.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/sm3.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/sm4.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/sm4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/smartptr.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/smartptr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/sosemanuk.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/sosemanuk.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/speck.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/speck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/square.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/square.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/stdcpp.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/stdcpp.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/strciphr.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/strciphr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/tea.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/tea.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/threefish.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/threefish.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/tiger.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/tiger.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/trap.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/trap.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/trunhash.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/trunhash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/ttmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/ttmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/tweetnacl.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/tweetnacl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/twofish.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/twofish.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/validate.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/validate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/vmac.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/vmac.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/wake.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/wake.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/whrlpool.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/whrlpool.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/words.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/words.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/xed25519.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/xed25519.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/xtr.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/xtr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/xtrcrypt.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/xtrcrypt.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/zdeflate.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/zdeflate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/zinflate.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/zinflate.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/include/zlib.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/include/zlib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/library/libcryptopp64_dbg.a" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/library/libcryptopp64_dbg.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cryptopp/library/libcryptopp64_rel.a" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/cryptopp/library/libcryptopp64_rel.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/INFO_BIN" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/INFO_SRC" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/build_config.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/config.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/connection.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/datatype.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/driver.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/exception.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/metadata.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/parameter_metadata.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/prepared_statement.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/resultset.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/resultset_metadata.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/sqlstring.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/statement.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/variant.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/version_info.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/cppconn/warning.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/mysql_connection.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/mysql_driver.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/jdbc/mysql_error.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysql/jdbc.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/api.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/error.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/op_if.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/settings.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/util.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common/value.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/common_constants.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/collations.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/collection_crud.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/common.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/crud.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/crud.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/error.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/result.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/row.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/session.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/detail/settings.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/document.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/error.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/executable.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/mysql_charsets.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/mysql_collations.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/result.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/row.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/settings.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/devapi/table_crud.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/xapi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/include/mysqlx/xdevapi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/libeay32.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/mysqlcppconn-7-vs14.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/mysqlcppconn8-2-vs14.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/ssleay32.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/libeay32.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/mysqlcppconn-static.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/mysqlcppconn.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/mysqlcppconn8-static.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/mysqlcppconn8.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql-connector-c++-8.0.17-winx64/lib64/vs14/ssleay32.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlite/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/sqlite/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlite/shell.c" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/sqlite/shell.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlite/sqlite3.c" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/sqlite/sqlite3.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlite/sqlite3.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/sqlite/sqlite3.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sqlite/sqlite3ext.h" beforeDir="false" afterPath="$PROJECT_DIR$/dependencies/sqlite/sqlite3ext.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,35 +294,10 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>flo</find>
-      <find>std::cerr</find>
-      <find>std::cout</find>
-      <find>std::string</find>
-      <find>&quot;</find>
-      <find>:</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>std::wcerr</replace>
-      <replace>std::wout</replace>
-      <replace>std::wstring</replace>
-      <replace>L&quot;</replace>
-    </replaceStrings>
-    <dirStrings>
-      <dir>D:\dev\projects\Flobbel</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="92" />
-    <option name="y" value="-8" />
-    <option name="width" value="1836" />
-    <option name="height" value="1096" />
-  </component>
   <component name="ProjectId" id="1OYQKx8yNjlPuDPHRvrRceiIegW" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -77,7 +305,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../cryptopp820/CMakeLists.txt" />
+    <property name="last_opened_file_path" value="D:/Downloads/curl-7.65.3/CMakeLists.txt" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -85,6 +313,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\dev\projects\Flobbel\FlobbelSafe" />
+      <recent name="D:\dev\projects\Flobbel\dependencies" />
       <recent name="D:\dev\projects\Flobbel" />
       <recent name="D:\dev\projects\Flobbel\FlobbelBackbone" />
     </key>
@@ -122,6 +352,11 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="FlobbelWebStuff" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FlobbelWebStuff" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="sqlite" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="sqlite" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -131,6 +366,7 @@
       <item itemvalue="CMake Application.FlobbelBackbone" />
       <item itemvalue="CMake Application.FlobbelCC" />
       <item itemvalue="CMake Application.FlobbelSafe" />
+      <item itemvalue="CMake Application.FlobbelWebStuff" />
       <item itemvalue="CMake Application.Flobbel" />
       <item itemvalue="CMake Application.sqlite" />
     </list>
@@ -163,6 +399,11 @@
       <workItem from="1564151490874" duration="83000" />
       <workItem from="1564151996747" duration="17000" />
       <workItem from="1564152199012" duration="1363000" />
+      <workItem from="1564328277344" duration="735000" />
+      <workItem from="1564333955098" duration="198000" />
+      <workItem from="1564334181963" duration="7198000" />
+      <workItem from="1564677076176" duration="1796000" />
+      <workItem from="1564682804643" duration="2802000" />
     </task>
     <servers />
   </component>

