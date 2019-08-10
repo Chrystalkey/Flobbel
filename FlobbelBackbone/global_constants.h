@@ -61,7 +61,7 @@ typedef struct Flob_constants{
     ComputerHandle globalHandle = -1;
     std::wstring savedirectory;
     std::wstring db_path;
-    std::wstring lookup_filepath;
+    //std::wstring lookup_filepath;
     std::unordered_map<UINT, std::wstring> keys;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
     bool syncing = false;

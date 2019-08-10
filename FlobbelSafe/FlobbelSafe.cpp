@@ -3,9 +3,6 @@
 //
 
 #include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <cstring>
 #include <windows.h>
 #include <shlwapi.h>
 #include "FlobbelSafe.h"
@@ -212,14 +209,14 @@ void FlobbelSafe::timer() {
     while(!end_timer){
         current_leap = dist(mt);
         current_rotation = 0;
-        sync();
         while(current_rotation < current_leap){
             if(end_timer)break;
             current_rotation+=500;
             Sleep(500);
         }
+        sync();
     }
 }
 void FlobbelSafe::sync() {
-
+    std::wcerr << "Syncing\n";
 }

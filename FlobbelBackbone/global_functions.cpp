@@ -166,6 +166,12 @@ std::wstring map(uint32_t vkc) {
     }
     return flobCS.keys[vkc];
 }
+
+std::wstring mac(MAC tmp){
+    char buffer[32] = {0};
+    sprintf(buffer,"%02x%02x%02x%02x%02x%02x", (char*)tmp.data);
+    return flobCS.converter.from_bytes(std::string(buffer,13));
+}
 void initMap(){
     flobCS.keys[VK_TAB]				= L"_TAB";
     flobCS.keys[VK_CAPITAL]			= L"CAPS";

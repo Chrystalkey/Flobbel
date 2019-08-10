@@ -16,7 +16,7 @@
 #include "modes.h"
 #include "filters.h"
 
-#include "../dependencies/sqlite/sqlite3.h"
+#include "sqlite3.h"
 
 #include "global_functions.h"
 

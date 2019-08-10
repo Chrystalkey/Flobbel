@@ -1,3 +1,5 @@
 project(FlobbelWebStuff)
 
-add_library(FlobbelWebStuff FlobWS.cpp FlobWS.h)
+include_directories(../FlobbelBackbone)
+
+add_library(FlobbelWebStuff STATIC FlobWS.cpp FlobWS.h)

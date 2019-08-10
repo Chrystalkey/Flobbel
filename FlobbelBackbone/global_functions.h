@@ -22,6 +22,7 @@ std::wstring computerName();
 std::wstring computerHandleStr();
 std::wstring hexStr(u_char *data, size_t len);
 MAC mac();
+std::wstring mac(MAC tmp);
 tm *now();
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon = nullptr);
 void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused);

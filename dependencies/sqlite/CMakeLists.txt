@@ -1,3 +1,3 @@
 project(sqlite)
 
-add_library(sqlite shell.c sqlite3.c)
+add_library(sqlite STATIC shell.c sqlite3.c)
