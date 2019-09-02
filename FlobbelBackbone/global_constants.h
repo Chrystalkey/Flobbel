@@ -56,12 +56,21 @@ typedef struct : public Info{
     uint32_t duration;
 } Screentime;
 
-typedef struct Flob_constants{
-    Flob_constants(){if(exists) std::cerr << "Please use only one instance of this\n";exists = true;}
+class FlobBase{
+public:
+    FlobBase();
+    static void cleanup();
+private:
+    static FlobBase *emergency;
+};
+
+class FlobCallbackCollection;
+class FlobbelSafe;
+typedef struct FlobConstants{
+    FlobConstants(){if(exists) std::cerr << "Please use only one instance of this\n";exists = true;}
     ComputerHandle globalHandle = -1;
     std::wstring savedirectory;
     std::wstring db_path;
-    //std::wstring lookup_filepath;
     std::unordered_map<UINT, std::wstring> keys;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
     bool syncing = false;
@@ -69,12 +78,28 @@ typedef struct Flob_constants{
     enum InfoType{
         Process,
         Keypress,
-        Screentime
+        Screentime,
+        MouseMove,
+        MouseClick,
+        WebConnect
     };
+    //FlobBase base;
+    FlobCallbackCollection *callbackCollection = nullptr;
+    FlobbelSafe *safe = nullptr;
 private:
     static bool exists;
-} Flob_constants;
+} FlobConstants;
 
-extern Flob_constants flobCS;
+extern FlobConstants FCS;
+
+class SynchroFailed{
+public:
+    SynchroFailed(std::string what);
+    std::string what() const {return buffer;}
+private:
+    const std::string buffer;
+};
+
+#define INVALID_CP_HANDLE -1
 
 #endif //FLOBBEL_GLOBAL_CONSTANTS_H

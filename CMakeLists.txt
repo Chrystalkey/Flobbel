@@ -9,12 +9,6 @@ add_definitions("-DCURL_STATICLIB")
 add_definitions("-DUNICODE")
 add_definitions("-D_UNICODE")
 
-add_subdirectory(dependencies/sqlite)
-add_subdirectory(FlobbelBackbone)
-add_subdirectory(FlobbelCallbackCollection)
-add_subdirectory(FlobbelSafe)
-add_subdirectory(FlobbelWebStuff)
-
 include_directories(FlobbelBackbone)
 include_directories(FlobbelCallbackCollection)
 include_directories(FlobbelSafe)
@@ -22,7 +16,13 @@ include_directories(FlobbelWebStuff)
 include_directories(dependencies/cryptopp/include)
 include_directories(dependencies/sqlite)
 include_directories(dependencies/curl/include/curl)
+include_directories(dependencies/)
 
+add_subdirectory(dependencies/sqlite)
+add_subdirectory(FlobbelBackbone)
+add_subdirectory(FlobbelCallbackCollection)
+add_subdirectory(FlobbelSafe)
+add_subdirectory(FlobbelWebStuff)
 
 link_directories("D:/dev/projects/Flobbel/dependencies/libs" ".")
 

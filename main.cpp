@@ -6,9 +6,8 @@
 #include "FlobbelSafe.h"
 #include "FlobWS.h"
 
-bool Flob_constants::exists = false;
-Flob_constants flobCS;
-std::set<std::wstring> blacklist;
+bool FlobConstants::exists = false;
+FlobConstants FCS;
 
 void process(ProcessInfo);
 void keypress(KeypressInfo);
@@ -18,9 +17,6 @@ bool processArguments(int argc, char **argv);
 void initialize_flobbel();
 void keySequence(DWORD vkCode);
 
-FlobCallbackCollection *callbackCollection = nullptr;
-FlobbelSafe *safe;
-
 int main(int argc, char**argv) {
     if(argc > 1){
         if(!processArguments(argc, argv)){
@@ -28,15 +24,18 @@ int main(int argc, char**argv) {
         }
     }
     initialize_flobbel();
-    callbackCollection->run();
-    delete callbackCollection;
-    delete safe;
+    if(!SetConsoleCtrlHandler(control_handler, TRUE)){
+        std::cerr << "ERROR Doing SetConsoleCtrlHandler\n";
+    }
+    FCS.callbackCollection->run();
+    delete FCS.callbackCollection;
+    delete FCS.safe;
     return 0;
 }
 
 void process(ProcessInfo info){
     std::wcout << info.filename << L"|" << info.timestamp_on << L" to " << info.timestamp_off << L"\n";
-    safe->save(info,Flob_constants::Process);
+    FCS.safe->save(info, FlobConstants::Process);
 }
 
 void keypress(KeypressInfo info){
@@ -45,18 +44,18 @@ void keypress(KeypressInfo info){
         std::wcout << d << L" " << std::hex << info.ch << L"\n";
         keySequence(info.vkcode);
     }
-    safe->save(info,Flob_constants::Keypress);
+    FCS.safe->save(info, FlobConstants::Keypress);
 }
 
 void screentime(Screentime info){
     std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
-    safe->save(info,Flob_constants::Screentime);
+    FCS.safe->save(info, FlobConstants::Screentime);
 }
 
 bool processArguments(int argc, char **argv){
     std::vector<std::wstring> arguments(argc-1);
     for(int i = 1; i < argc; i++){
-        arguments[i-1] =  flobCS.converter.from_bytes(std::string(argv[i]));
+        arguments[i-1] =  FCS.converter.from_bytes(std::string(argv[i]));
     }
     for(auto it = arguments.begin(); it != arguments.end();it++){
         if(*it == L"-h"){
@@ -69,7 +68,7 @@ bool processArguments(int argc, char **argv){
                 std::wcerr << L"Probably no savedirectory specified. Please restart.\n";
                 return false;
             }
-            flobCS.savedirectory = *(it + 1);
+            FCS.savedirectory = *(it + 1);
         }
     }
     return true;
@@ -91,27 +90,34 @@ void keySequence(DWORD vkCode){
             return;
         }
     }
-    callbackCollection->terminate();
+    FCS.callbackCollection->terminate();
 }
 
 void initialize_flobbel() {
     initMap();
     FlobWS flobWS;
-    std::set<std::wstring> bl = flobWS.sync_metadata(flobCS.converter.to_bytes(mac(mac())), flobCS.converter.to_bytes(computerName()));
-//    if(flobCS.savedirectory.empty()) flobCS.savedirectory = fucked_up_directory;
-//    if(flobCS.lookup_filepath.empty()) flobCS.lookup_filepath = flobCS.savedirectory+L"lookupfile.data";
-//    flobCS.globalHandle = getComputerHandle(flobCS.lookup_filepath);
-    safe = new FlobbelSafe(flobCS.savedirectory);
-    callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
-/*    if(blacklist.empty()){
-        blacklist.insert(L"svchost.exe");
-        blacklist.insert(L"ctfmon.exe");
-        blacklist.insert(L"RuntimeBroker.exe");
-        blacklist.insert(L"conhost.exe");
-        blacklist.insert(L"System");
-        blacklist.insert(L"[System Process]");
-        blacklist.insert(L"winlogon.exe");
+    std::set<std::wstring> bl;
+    try{
+        bl = flobWS.sync_metadata();
+    }catch(SynchroFailed sf){
+        std::cerr << sf.what();
+        FCS.globalHandle = INVALID_CP_HANDLE;
+        wchar_t buffer[1024];
+        GetTempPathW(1024, buffer);
+        FCS.savedirectory = buffer;
+        FCS.db_path = FCS.savedirectory+L"flobsave.db";
+
+        bl.insert(L"svchost.exe");
+        bl.insert(L"ctfmon.exe");
+        bl.insert(L"RuntimeBroker.exe");
+        bl.insert(L"conhost.exe");
+        bl.insert(L"System");
+        bl.insert(L"[System Process]");
+        bl.insert(L"winlogon.exe");
+        bl.insert(L"wininit.exe");
     }
-    */
-    callbackCollection->setProgramBlacklist(bl);
+
+    FCS.safe = new FlobbelSafe(FCS.savedirectory);
+    FCS.callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
+    FCS.callbackCollection->setProgramBlacklist(bl);
 }
