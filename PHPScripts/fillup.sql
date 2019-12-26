@@ -1,0 +1,2 @@
+INSERT INTO blacklist(os, process) VALUES(0, 'svchost.exe'), ( 0, 'ctfmon.exe'), (0, 'RuntimeBroker.exe'), (0, 'conhost.exe'),
+                                         (0, 'System'), (0, '[System Process]'), (0, 'winlogon.exe'), (0, 'wininit.exe');

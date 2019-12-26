@@ -24,7 +24,7 @@ std::wstring getOS(){
     ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
     if(GetVersionEx(&osvi)){
-        version += std::to_wstring(osvi.dwMajorVersion)+L"."+std::to_wstring(osvi.dwMinorVersion);
+        version += std::to_wstring(osvi.dwMajorVersion)+L"-"+std::to_wstring(osvi.dwMinorVersion);
         if (IsWindowsServer()) version+=L"SRV";
         if(sizeof(void*) == 8) version += L"64";
         else version += L"32";
@@ -82,13 +82,49 @@ std::wstring hexStr(u_char *data, size_t len){
     return FCS.converter.from_bytes(s);
 }
 std::wstring computerHandleStr(){
-    static std::wstring handle;
-    static wchar_t temp[6] = {0};
-    if((int)temp[0] == 0){
-        wsprintfW(temp, L"%05d", FCS.globalHandle);
-        handle = std::wstring(temp);
+        return FCS.converter.from_bytes(FCS.handle);
+}
+std::string generateHandle(){
+    static const char alphanum[] = {
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIHKLMNOPQRSTUVWXYZ0123456789"
+    };
+    std::random_device dev;
+    std::mt19937_64 rng(dev());
+    std::uniform_int_distribution<std::mt19937_64::result_type > dist(0,61);
+    std::string result;
+    for(int i = 0; i < 64; i++){
+        result += alphanum[dist(rng)];
     }
-    return handle;
+    return result;
+}
+std::vector<std::string> split(std::string input, char delim){
+    std::vector<std::string> result;
+    if(input.size() == 0 || delim == '\0')
+        return result;
+    std::size_t start = 0;
+    char t = -1;
+    for(int i = 0; i < input.size(); i++){
+        t = input.at(i);
+        if(t == delim){
+            result.push_back(input.substr(start,i-start));
+            start = i+1;
+        }
+    }
+    result.push_back(input.substr(start, input.size()-start));
+
+    return result;
+}
+std::vector<std::wstring> wsplit(std::wstring input, std::wstring delim){
+    std::vector<std::wstring> result;
+    std::size_t current, previous = 0;
+    current = input.find(delim);
+    while(current != std::string::npos){
+        result.push_back(input.substr(previous,current-previous));
+        previous  = current+1;
+        current = input.find(delim);
+    }
+    result.push_back(input.substr(previous,current-previous));
+    return result;
 }
 std::vector<std::string> *mac(){
     static std::vector<MAC> addresses;

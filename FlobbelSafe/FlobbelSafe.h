@@ -11,10 +11,10 @@
 #include <random>
 #include <thread>
 
-#include "../dependencies/cryptopp/include/osrng.h"
-#include "../dependencies/cryptopp/include/aes.h"
-#include "../dependencies/cryptopp/include/modes.h"
-#include "../dependencies/cryptopp/include/filters.h"
+#include <cryptopp/osrng.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
 
 #include "../dependencies/sqlite/sqlite3.h"
 
@@ -49,13 +49,13 @@ private:
     void decrypt_file(const std::wstring &file);
     std::vector<CryptoPP::byte> buffer;
 private:
-    void init_map();
-    uint32_t hash(std::wstring &text);
-    std::map<uint32_t, std::wstring> rnd_directories;
+    //void init_map();
+    //uint32_t hash(std::wstring &text);
+    //std::map<uint32_t, std::wstring> rnd_directories;
 private:
-    sqlite3 *dbcon;
+    sqlite3 *dbcon, *uploadDBCon = nullptr;
     std::wstring keyTable, proTable;
-
+    bool crtNInitDB(const std::wstring &path, sqlite3 **dbptr);
 
 public:
     void timer();

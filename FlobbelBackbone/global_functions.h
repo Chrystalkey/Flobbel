@@ -23,6 +23,9 @@ std::wstring computerHandleStr();
 std::wstring hexStr(u_char *data, size_t len);
 std::vector<std::string> *mac();
 tm *now();
+std::string generateHandle();
+std::vector<std::wstring> wsplit(std::wstring input, std::wstring delim = L" ");
+std::vector<std::string> split(std::string input, char delim = ';');
 
 std::wstring getOS();
 

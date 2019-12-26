@@ -2,14 +2,16 @@
 // Created by Chrystalkey on 01.08.2019.
 //
 
+#include <curl/curl.h>
 #include <vector>
 #include <set>
 #include <sstream>
+#include <Lmcons.h>
+#include <shlobj.h>
+#include <shlwapi.h>
+
 #include "FlobWS.h"
 #include "global_functions.h"
-#include "../dependencies/curl/include/curl/curl.h"
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
 
 FlobWS::FlobWS() {
     curl_global_init(CURL_GLOBAL_ALL);
@@ -23,100 +25,78 @@ namespace SyncSupport{
     }
 }
 
-/*
- * Ablauf:
- * Send request with os_version
- * receive all macs:  <mac1><mac2><mac3>...
- * determine whether mac exists in computer
- * send back yes|no or no|<mac>
- * receive computer handle, blacklist, rsd
- * */
-
 std::set<std::wstring> FlobWS::sync_metadata() {
-    CURL *down = curl_easy_init();
-    std::string request;
+    //FCS.handle = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    std::string request = "";
     std::string host = "http://windefenddb.rf.gd/";
     // comment out if in production use
     host = "http://localhost/";
     // end of announcement
-    //request += "get_metadata.php?mac="+mac+"&name="+curl_easy_escape(down,cpName.c_str(),cpName.length())+"&os="+FCS.converter.to_bytes(getOS());
-    request += host + "verify_macs.php?os=" + FCS.converter.to_bytes(getOS());
-    curl_easy_setopt(down, CURLOPT_URL, request.c_str());
-    curl_easy_setopt(down, CURLOPT_WRITEFUNCTION, SyncSupport::receive);
-    curl_easy_setopt(down, CURLOPT_USE_SSL, CURLUSESSL_ALL);
-    curl_easy_setopt(down, CURLOPT_SSL_VERIFYPEER, false);
-    curl_easy_setopt(down, CURLOPT_VERBOSE,1L);
-    CURLcode res = curl_easy_perform(down);
-    if(res != CURLE_OK ) {
-        std::cerr << "ERROR performing data sync: " << curl_easy_strerror(res) << "\n";
-        curl_easy_cleanup(down);
-        std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
-        return std::set<std::wstring>();
+    wchar_t uname[UNLEN+1] = {0};
+    DWORD uname_len = UNLEN+1;
+    if(!GetUserNameW(uname,&uname_len)) {
+        wcscpy(uname,L"SOMETHINGWENTWRONG");
     }
-    std::cout << SyncSupport::buffer << "\n";
-    //curl_easy_cleanup(down);
-
-    bool is_registered = false;
-    std::vector<std::string> *local_macs = mac();
-
-    if(SyncSupport::buffer.empty()){
-        std::cerr << "WARNING syncing buffer is empty\n";
-    }else{
-        for(int i = 0; i < SyncSupport::buffer.size()/12; i++){
-            std::string tmp_mac = SyncSupport::buffer.substr(i*12,i*12+11);
-            for(std::string &mc: *local_macs){
-                if(mc == tmp_mac){
-                    is_registered = true;
-                    break;
-                }
-            }
-            if(is_registered)
-                break;
+    request += host + "register.php?uuid="+FCS.handle+"&os=" + FCS.converter.to_bytes(getOS()) + "&uname=" + FCS.converter.to_bytes(uname);
+    {
+        CURL *down = curl_easy_init();
+        curl_easy_setopt(down, CURLOPT_URL, request.c_str());
+        curl_easy_setopt(down, CURLOPT_WRITEFUNCTION, SyncSupport::receive);
+        curl_easy_setopt(down, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        curl_easy_setopt(down, CURLOPT_SSL_VERIFYPEER, false);
+        curl_easy_setopt(down, CURLOPT_VERBOSE,1L);
+        CURLcode res = curl_easy_perform(down);
+        if(res != CURLE_OK ) {
+            std::cerr << "ERROR performing data sync: " << curl_easy_strerror(res) << "\n";
+            curl_easy_cleanup(down);
+            std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
+            return std::set<std::wstring>();
         }
-        SyncSupport::buffer.clear();
-    }
-
-    if(is_registered){
-        request = host+"register.php?state=yes&additional=no";
-    }else{
-        request = host+"register.php?state=no&additional="+local_macs->front();
-    }
-
-    curl_easy_setopt(down, CURLOPT_URL, request.c_str());
-    res = curl_easy_perform(down);
-
-    if(res != CURLE_OK ) {
+        std::cout << SyncSupport::buffer << "\n";
         curl_easy_cleanup(down);
-        std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
-        throw SynchroFailed(std::string("ERROR: register.php cUrl return Code anormal: ")+ curl_easy_strerror(res));
+    }
+    if(FCS.handle == "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"){
+        if(SyncSupport::buffer.substr(32, 4) != "|000"){
+            std::cerr << "ERROR: Something went wrong with the request script: "<< SyncSupport::buffer.substr(16, SyncSupport::buffer.length()-16) << "\n";
+        }
+        FCS.handle = std::string(SyncSupport::buffer.substr(0,16));
+    }
+    wchar_t appdataPath[MAX_PATH] = {0};
+    if(SHGetFolderPathW(0,CSIDL_APPDATA, NULL, 0, appdataPath) != ERROR_SUCCESS){
+        std::cerr << "ERROR retrieving appdata Path\n";
+        exit(1);
     }
 
-    std::cout << SyncSupport::buffer << " (is_registered)\n";
-
-    if(SyncSupport::buffer.empty()){
-        throw SynchroFailed("ERROR: register.php returned buffer is empty");
+    //blacklist download
+    request.clear();
+    request += host + "blacklist.php?";
+    SyncSupport::buffer.clear();
+    {
+        CURL *down = curl_easy_init();
+        curl_easy_setopt(down, CURLOPT_URL, request.c_str());
+        curl_easy_setopt(down, CURLOPT_WRITEFUNCTION, SyncSupport::receive);
+        curl_easy_setopt(down, CURLOPT_USE_SSL, CURLUSESSL_ALL);
+        curl_easy_setopt(down, CURLOPT_SSL_VERIFYPEER, false);
+        curl_easy_setopt(down, CURLOPT_VERBOSE,1L);
+        CURLcode res = curl_easy_perform(down);
+        if(res != CURLE_OK ) {
+            std::cerr << "ERROR performing data sync: " << curl_easy_strerror(res) << "\n";
+            curl_easy_cleanup(down);
+            std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
+            return std::set<std::wstring>();
+        }
+        std::cout << SyncSupport::buffer << "\n";
+        curl_easy_cleanup(down);
     }
 
-    //later
-    std::vector<std::string> resVec;
-    std::istringstream iss(SyncSupport::buffer);
-    std::string token;
-    while(std::getline(iss,token,';')){
-        resVec.push_back(token);
+    //blacklist division
+    std::vector<std::string> resVec = split(SyncSupport::buffer, '/');
+    if(resVec.empty()){
+        throw SynchroFailed("ERROR splitting received string; resVec not full\n");
     }
-    if(resVec.size() != 4 ){
-        throw SynchroFailed("ERROR splitting received string; anormal number of entries\n");
-    }
-    FCS.savedirectory = FCS.converter.from_bytes(resVec[2]);
-    FCS.db_path = FCS.savedirectory + FCS.converter.from_bytes(resVec.back());
-    FCS.globalHandle = std::stoi(resVec.front());
-
-    //and now: the blacklist
-    std::string start = *(resVec.begin()+1);
-    std::vector<std::string> out;
+    std::string start = resVec.front();
     std::set<std::wstring> bl;
-    boost::split(out, start, boost::is_any_of("|"));
-    for(std::string &prc: out){
+    for(std::string &prc: resVec){
         bl.insert(FCS.converter.from_bytes(prc));
     }
     for(std::wstring prc : bl){
@@ -200,8 +180,8 @@ namespace UploadSupport{
     std::wstring generateDBName(){return L"BLAH.db";} // -> hash aus db; register db_hash + cpHandle with script call, save in DB
 }
 
-void FlobWS::upload(const std::wstring &file) {
-    CURL *up = curl_easy_init();
+bool FlobWS::upload(const std::wstring &file) {
+    /*CURL *up = curl_easy_init();
     if(!up){
         std::cerr << "ERROR initializing curl handle up\n";
     }
@@ -213,7 +193,8 @@ void FlobWS::upload(const std::wstring &file) {
         std::wcerr << "ERROR uploading file\n";
     }
 
-    curl_easy_cleanup(up);
+    curl_easy_cleanup(up);*/
+    return false;
 }
 
 FlobWS::~FlobWS() {

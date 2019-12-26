@@ -26,7 +26,7 @@ typedef union {
         u_char b5;
     };
 } MAC;
-typedef uint16_t ComputerHandle;
+typedef std::string ComputerHandle;
 
 typedef struct {
     ComputerHandle ch;
@@ -66,9 +66,11 @@ private:
 
 class FlobCallbackCollection;
 class FlobbelSafe;
+class FlobWS;
 typedef struct FlobConstants{
     FlobConstants(){if(exists) std::cerr << "Please use only one instance of this\n";exists = true;}
-    ComputerHandle globalHandle = -1;
+    //ComputerHandle globalHandle = -1;
+    std::string handle = "";
     std::wstring savedirectory;
     std::wstring db_path;
     std::unordered_map<UINT, std::wstring> keys;
@@ -86,6 +88,7 @@ typedef struct FlobConstants{
     //FlobBase base;
     FlobCallbackCollection *callbackCollection = nullptr;
     FlobbelSafe *safe = nullptr;
+    FlobWS *flobWS = nullptr;
 private:
     static bool exists;
 } FlobConstants;
