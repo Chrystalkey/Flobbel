@@ -6,9 +6,6 @@ include_directories(../dependencies/)
 
 add_library(FlobbelWebStuff STATIC FlobWS.cpp FlobWS.h)
 
-
-set(LIBDIR "D:/developement/msys2_64/mingw64/lib")
-
 set(WSLIBS ${WSLIBS} ${PROJECT_SOURCE_DIR}/../dependencies/curl/lib/libcurl.a)
 set(WSLIBS ${WSLIBS} ${LIBDIR}/libidn2.a)
 set(WSLIBS ${WSLIBS} ${LIBDIR}/libpsl.a)

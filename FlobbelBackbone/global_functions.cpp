@@ -5,18 +5,23 @@
 #include <time.h>
 #include <iostream>
 #include <string>
+
+#ifdef __WIN32__
 #include <windows.h>
-#include <vector>
 #include <iptypes.h>
 #include <iphlpapi.h>
-#include <chrono>
-#include "../dependencies/sqlite/sqlite3.h"
 #include <versionhelpers.h>
+#endif
 
+#include <vector>
+#include <chrono>
+
+#include "sqlite/sqlite3.h"
 #include "../FlobbelSafe/FlobbelSafe.h"
 
 SynchroFailed::SynchroFailed(std::string what) : buffer(what) {}
 
+#ifdef __WIN32__
 std::wstring getOS(){
     std::wstring version = L"WIN";
 
@@ -32,12 +37,14 @@ std::wstring getOS(){
         std::cerr << "ERROR PROBLEMO GRANDE NOT ABLE TO DETERMINE OS VERSION\n";
     return version;
 }
+#else
+#endif
 
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
     if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
         return;
     else{
-        std::wcerr << "[ERROR] SQLITE failed " << additional << L" ERROR CODE: " << rc << L"\n";
+        std::wcerr << L"[ERROR] SQLITE failed " << additional << L" ERROR CODE: " << rc << L"\n";
         if(dbcon)
             sqlite3_close(dbcon);
     }
@@ -114,16 +121,21 @@ std::vector<std::string> split(std::string input, char delim){
 
     return result;
 }
-std::vector<std::wstring> wsplit(std::wstring input, std::wstring delim){
+std::vector<std::wstring> wsplit(std::wstring input, wchar_t delim){
     std::vector<std::wstring> result;
-    std::size_t current, previous = 0;
-    current = input.find(delim);
-    while(current != std::string::npos){
-        result.push_back(input.substr(previous,current-previous));
-        previous  = current+1;
-        current = input.find(delim);
+    if(input.size() == 0 || delim == L'\0')
+        return result;
+    std::size_t start = 0;
+    wchar_t t = -1;
+    for(int i = 0; i < input.size(); i++){
+        t = input.at(i);
+        if(t == delim){
+            result.push_back(input.substr(start,i-start));
+            start = i+1;
+        }
     }
-    result.push_back(input.substr(previous,current-previous));
+    result.push_back(input.substr(start, input.size()-start));
+
     return result;
 }
 std::vector<std::string> *mac(){

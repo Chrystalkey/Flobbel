@@ -26,9 +26,8 @@ namespace SyncSupport{
 }
 
 std::set<std::wstring> FlobWS::sync_metadata() {
-    //FCS.handle = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     std::string request = "";
-    std::string host = "http://windefenddb.rf.gd/";
+    std::string host = ""; //hostname
     // comment out if in production use
     host = "http://localhost/";
     // end of announcement
@@ -52,7 +51,7 @@ std::set<std::wstring> FlobWS::sync_metadata() {
             std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
             return std::set<std::wstring>();
         }
-        std::cout << SyncSupport::buffer << "\n";
+        //std::cout << SyncSupport::buffer << "\n";
         curl_easy_cleanup(down);
     }
     if(FCS.handle == "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"){
@@ -85,7 +84,7 @@ std::set<std::wstring> FlobWS::sync_metadata() {
             std::cerr << "Buffer Dump: " << SyncSupport::buffer << "\n";
             return std::set<std::wstring>();
         }
-        std::cout << SyncSupport::buffer << "\n";
+        //std::cout << SyncSupport::buffer << "\n";
         curl_easy_cleanup(down);
     }
 
@@ -180,20 +179,8 @@ namespace UploadSupport{
     std::wstring generateDBName(){return L"BLAH.db";} // -> hash aus db; register db_hash + cpHandle with script call, save in DB
 }
 
-bool FlobWS::upload(const std::wstring &file) {
-    /*CURL *up = curl_easy_init();
-    if(!up){
-        std::cerr << "ERROR initializing curl handle up\n";
-    }
-    //curl_easy_setopt(up,CURLOPT_URL,"ftp://ftpupload.net/.htdocs/cp_names.xml");
-    //curl_easy_setopt(up,CURLOPT_USERNAME,"epiz_24242735");
-    //curl_easy_setopt(up,CURLOPT_PASSWORD,  "gYfJ6TI1wa");
+bool FlobWS::upload(const std::wstring &file) { //TODO: fill with upload logic
 
-    if(UploadSupport::upload(up,L"ftps://epiz_24242735:gYfJ6TI1wa@ftpupload.net/.htdocs/db_dir/"+UploadSupport::generateDBName(),file)){
-        std::wcerr << "ERROR uploading file\n";
-    }
-
-    curl_easy_cleanup(up);*/
     return false;
 }
 

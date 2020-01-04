@@ -20,7 +20,6 @@ FlobCallbackCollection::FlobCallbackCollection(ProcessCallback _pc, KeyboardCall
 
     keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook,NULL,0);
     windowsStartup();
-
 }
 
 FlobCallbackCollection::~FlobCallbackCollection() {
@@ -90,21 +89,41 @@ std::map<uint32_t, ProcessInfo> *FlobCallbackCollection::getProcessList(){
         return &pl;
     }
 
-    do{
-        ProcessInfo pinfo;
-        pinfo.filename = std::wstring(pe32.szExeFile);
-        if(blacklist.find(pinfo.filename) != blacklist.end()){
-            if(!Process32NextW(hProcessSnap, &pe32))
-                break;
-            continue;
-        }
-        pinfo.ch = FCS.handle;
-        pinfo.PID = pe32.th32ProcessID;
-        pinfo.timestamp_on = timestamp();
-        pinfo.timestamp_off = placeholder;
-        pinfo.description = placeholder;
-        pl.emplace(pinfo.PID, pinfo);
-    }while(Process32NextW(hProcessSnap, &pe32));
+    if(runsAtPrgmStart){
+        do{
+            ProcessInfo pinfo;
+            pinfo.filename = std::wstring(pe32.szExeFile);
+            if(blacklist.find(pinfo.filename) != blacklist.end()){
+                if(!Process32NextW(hProcessSnap, &pe32))
+                    break;
+                continue;
+            }
+            pinfo.ch = FCS.handle;
+            pinfo.PID = pe32.th32ProcessID;
+            pinfo.timestamp_on = timestamp();
+            pinfo.timestamp_off = placeholder;
+            pinfo.description = placeholder;
+            pinfo.execAtPrgmStart = true;
+            pl.emplace(pinfo.PID, pinfo);
+        }while(Process32NextW(hProcessSnap, &pe32));
+    }
+    else{
+        do{
+            ProcessInfo pinfo;
+            pinfo.filename = std::wstring(pe32.szExeFile);
+            if(blacklist.find(pinfo.filename) != blacklist.end()){
+                if(!Process32NextW(hProcessSnap, &pe32))
+                    break;
+                continue;
+            }
+            pinfo.ch = FCS.handle;
+            pinfo.PID = pe32.th32ProcessID;
+            pinfo.timestamp_on = timestamp();
+            pinfo.timestamp_off = placeholder;
+            pinfo.description = placeholder;
+            pl.emplace(pinfo.PID, pinfo);
+        }while(Process32NextW(hProcessSnap, &pe32));
+    }
 
     CloseHandle( hProcessSnap);
     return &pl;
@@ -140,6 +159,7 @@ void FlobCallbackCollection::finishProcessList() {
     std::wstring timestmp = timestamp();
     for(auto &x: processList){
         x.second.timestamp_off = timestmp;
+        x.second.execAtPrgmStop = true;
         pc(x.second);
     }
 }
@@ -152,11 +172,6 @@ void FlobCallbackCollection::terminate(){
 }
 
 void FlobCallbackCollection::windowsStartup() {
-    /*
-    std::chrono::milliseconds elapsed(GetTickCount());
-    auto start = std::chrono::system_clock::now()-elapsed;
-    time_t time = std::chrono::system_clock::to_time_t(start);
-     */
     NET_API_STATUS nStatus;
     LPUSER_INFO_2 ui2 = NULL;
     WCHAR uName[256];
@@ -164,6 +179,8 @@ void FlobCallbackCollection::windowsStartup() {
 
     GetUserNameW(uName,&uNamen);
     nStatus = NetUserGetInfo(NULL,uName,2,(LPBYTE*)&ui2);
+    if(nStatus == ERROR_ACCESS_DENIED)
+        std::cerr << "ERROR NetUserGetInfo failed becaus of access_denied error\n";
     time_t time = ui2->usri2_last_logon;
     NetApiBufferFree(ui2);
     wchar_t timestamp[20];

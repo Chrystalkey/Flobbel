@@ -10,10 +10,10 @@
 #include <codecvt>
 #include <iostream>
 
-#define fucked_up_directory L"D:/Temp/"
-
 typedef unsigned char u_char;
 typedef unsigned int UINT;
+
+typedef std::string ComputerHandle;
 
 typedef union {
     u_char* data[6] = {0};
@@ -26,17 +26,25 @@ typedef union {
         u_char b5;
     };
 } MAC;
-typedef std::string ComputerHandle;
 
 typedef struct {
     ComputerHandle ch;
 } Info;
 
 typedef struct:public Info{
+#ifdef __WIN32__
     std::wstring filename;
     std::wstring description;
     std::wstring timestamp_on;
     std::wstring timestamp_off;
+#else
+    std::string filename;
+    std::string description;
+    std::string timestamp_on;
+    std::string timestamp_off;
+#endif
+    bool execAtPrgmStart = false;
+    bool execAtPrgmStop = false;
     uint32_t PID = 0;
     bool done = false;
 } ProcessInfo;
@@ -45,24 +53,26 @@ typedef struct:public Info{
     uint8_t updown = 0; // down == updown%2 == 0; up == updown%2 == 1
     uint32_t scancode = 0;
     uint32_t vkcode = 0;
+#ifdef __WIN32__
     wchar_t descr[5] = {0};
     std::wstring timestamp;
+#else
+    char descr[5] = {0};
+    std::string timestamp;
+#endif
 } KeypressInfo;
 
 typedef struct : public Info{
+#ifdef __WIN32__
     std::wstring timestamp_on;
     std::wstring timestamp_off;
+#else
+    std::string timestamp_on;
+    std::string timestamp_off;
+#endif
     time_t on;
     uint32_t duration;
 } Screentime;
-
-class FlobBase{
-public:
-    FlobBase();
-    static void cleanup();
-private:
-    static FlobBase *emergency;
-};
 
 class FlobCallbackCollection;
 class FlobbelSafe;
@@ -71,16 +81,24 @@ typedef struct FlobConstants{
     FlobConstants(){if(exists) std::cerr << "Please use only one instance of this\n";exists = true;}
     //ComputerHandle globalHandle = -1;
     std::string handle = "";
+#ifdef __WIN32__
     std::wstring savedirectory;
     std::wstring db_path;
     std::unordered_map<UINT, std::wstring> keys;
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
+#else
+    std::string savedirectory;
+    std::string db_path;
+    std::unordered_map<UINT, std::string> keys;
+#endif
+    bool cleanup = false;
     bool syncing = false;
     uint16_t ready_for_sync = 0; //0=ready, writing functions add up when writing, subtract when finished
     enum InfoType{
         Process,
         Keypress,
         Screentime,
+        WLANList,
         MouseMove,
         MouseClick,
         WebConnect

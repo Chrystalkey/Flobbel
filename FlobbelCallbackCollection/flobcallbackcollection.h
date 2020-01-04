@@ -54,7 +54,9 @@ private:
     // Message Loop termination boolean
     bool _terminate = false;
 
-    std::wstring placeholder = L"platzhalterwobbel";
+    const std::wstring placeholder = L"platzhalterwobbel"; // platzhalterkonstante
+
+    bool runsAtPrgmStart = false;
 };
 
 

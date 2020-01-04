@@ -5,15 +5,22 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_EXE_LINKER_FLAGS "-static -static-libgcc -static-libstdc++")
 
+if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
+    set(LIBDIR "D:/development/msys2_64/mingw32/lib")
+else()
+    set(LIBDIR "D:/development/msys2_64/mingw64/lib")
+endif()
+
 add_definitions("-DCURL_STATICLIB")
 add_definitions("-DUNICODE")
 add_definitions("-D_UNICODE")
+add_definitions("-ggdb")
+add_definitions("-g")
 
 include_directories(FlobbelBackbone)
 include_directories(FlobbelCallbackCollection)
 include_directories(FlobbelSafe)
 include_directories(FlobbelWebStuff)
-include_directories(dependencies/sqlite)
 include_directories(dependencies/)
 include_directories(dependencies/curl/include/)
 
@@ -22,7 +29,6 @@ add_subdirectory(FlobbelBackbone)
 add_subdirectory(FlobbelCallbackCollection)
 add_subdirectory(FlobbelSafe)
 add_subdirectory(FlobbelWebStuff)
-add_subdirectory(FileServerBackend)
 
 if(${TEST})
     add_executable(Flobbel testmain.cpp)
@@ -35,19 +41,12 @@ else()
     add_executable(Flobbel main.cpp ${Flobbel_SRC})
 endif()
 
-set(LIBDIR "D:/developement/msys2_64/mingw64/lib")
-
 set(LIBS ${LIBS} FlobbelWebStuff)
 set(LIBS ${LIBS} FlobbelSafe)
 set(LIBS ${LIBS} FlobbelCC)
 set(LIBS ${LIBS} FlobbelBackbone)
 
-set(LIBS ${LIBS} ${LIBDIR}/libcryptopp.a)
-
 set(LIBS ${LIBS} gdi32)
 set(LIBS ${LIBS} shlwapi)
 
-set(LIBS ${LIBS} sqlite)
-
-
-target_link_libraries(Flobbel ${LIBS} ${LIBS})
+target_link_libraries(Flobbel ${LIBS})

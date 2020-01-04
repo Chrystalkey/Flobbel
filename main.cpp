@@ -19,19 +19,14 @@ void initialize_flobbel();
 void keySequence(DWORD vkCode);
 
 int main(int argc, char**argv) {
-    if(argc > 1){
-        if(!processArguments(argc, argv)){
-            return 1;
-        }
-    }
+    if(argc > 1)
+        if(!processArguments(argc, argv)) return 1;
     initialize_flobbel();
-    if(!SetConsoleCtrlHandler(control_handler, TRUE)){
-        std::cerr << "ERROR Doing SetConsoleCtrlHandler in main()\n";
-    }
+    if(!SetConsoleCtrlHandler(control_handler, TRUE)) std::cerr << "ERROR Doing SetConsoleCtrlHandler in main()\n";
     FCS.callbackCollection->run();
+    delete FCS.flobWS;
     delete FCS.callbackCollection;
     delete FCS.safe;
-    delete FCS.flobWS;
     return 0;
 }
 
@@ -71,6 +66,9 @@ bool processArguments(int argc, char **argv){
                 return false;
             }
             FCS.savedirectory = *(it + 1);
+        }
+        if(*it == L"--cleanup"){
+            FCS.cleanup = true;
         }
     }
     return true;
@@ -141,6 +139,13 @@ void initialize_flobbel() {
         std::ofstream out(FCS.converter.to_bytes(appdataPath), std::ios::trunc|std::ios::out);
         out << FCS.handle;
         out.close();
+    }
+
+    if(FCS.cleanup){
+        DeleteFileW(FCS.db_path.c_str());
+        DeleteFileW(appdataPath);
+        delete FCS.flobWS;
+        exit(0);
     }
 
     FCS.safe = new FlobbelSafe(FCS.savedirectory);
