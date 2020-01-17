@@ -8,9 +8,6 @@
 #include <fileapi.h>
 #include <global_constants.h>
 
-//#include <cryptopp/aes.h>
-//#include <cryptopp/filters.h>
-//#include <cryptopp/gcm.h>
 #include <cryptopp/files.h>
 #include <cryptopp/gzip.h>
 using namespace CryptoPP;

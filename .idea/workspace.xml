@@ -33,12 +33,8 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Flobbel" targetName="FlobbelSafe" />
+      <config projectName="Flobbel" targetName="FileServerBackend" />
       <config projectName="Flobbel" targetName="sqlite" />
-      <config projectName="Flobbel" targetName="FlobbelWebStuff" />
-      <config projectName="Flobbel" targetName="FlobbelCC" />
-      <config projectName="Flobbel" targetName="FlobbelBackbone" />
-      <config projectName="Flobbel" targetName="Flobbel" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -50,25 +46,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d06fd318-0f26-4bbd-a1ee-f348c8c08bc7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/system_information.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelBackbone/global_functions.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FileServerBackend/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testmain.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/testmain.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +92,13 @@
     <setting file="file://$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/CMakeLists.txt" root0="SKIP_INSPECTION" />
   </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="UWiJycfV" />
+  </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-FlobbelSafe" />
+  </component>
   <component name="ProjectId" id="1OYQKx8yNjlPuDPHRvrRceiIegW" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -122,42 +113,24 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/FileServerBackend" />
       <recent name="D:\dev\projects\Flobbel\FlobbelSafe" />
       <recent name="D:\dev\projects\Flobbel\dependencies" />
       <recent name="D:\dev\projects\Flobbel" />
       <recent name="D:\dev\projects\Flobbel\FlobbelBackbone" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.Flobbel">
-    <configuration name="Flobbel" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="Flobbel" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Flobbel" RUN_TARGET_NAME="Flobbel">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FlobbelBackbone" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FlobbelBackbone" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FlobbelCC" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FlobbelCC" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FlobbelSafe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FlobbelSafe" CONFIG_NAME="Debug">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FlobbelWebStuff" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FlobbelWebStuff" CONFIG_NAME="Debug">
+  <component name="RunManager" selected="CMake Application.FileServerBackend">
+    <configuration name="FileServerBackend" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FileServerBackend" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Flobbel" RUN_TARGET_NAME="FileServerBackend">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -168,12 +141,8 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="CMake Application.Flobbel" />
       <item itemvalue="CMake Application.sqlite" />
-      <item itemvalue="CMake Application.FlobbelBackbone" />
-      <item itemvalue="CMake Application.FlobbelCC" />
-      <item itemvalue="CMake Application.FlobbelSafe" />
-      <item itemvalue="CMake Application.FlobbelWebStuff" />
+      <item itemvalue="CMake Application.FileServerBackend" />
     </list>
   </component>
   <component name="ServiceViewManager">
@@ -258,6 +227,7 @@
       <workItem from="1577351897272" duration="8529000" />
       <workItem from="1577729827979" duration="2552000" />
       <workItem from="1578137388767" duration="17167000" />
+      <workItem from="1579267289607" duration="13999000" />
     </task>
     <servers />
   </component>
@@ -281,14 +251,23 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="602" y="199" key="#SQL_Dialects" timestamp="1577730007406">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="530" y="190" width="804" height="674" key="#SQL_Dialects" timestamp="1579298836259">
+      <screen x="0" y="0" width="1920" height="1033" />
     </state>
+    <state x="530" y="190" width="804" height="674" key="#SQL_Dialects/0.0.1920.1033@0.0.1920.1033" timestamp="1579298836259" />
     <state x="602" y="199" key="#SQL_Dialects/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577730007406" />
     <state x="602" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577359863886">
       <screen x="100" y="0" width="1820" height="1080" />
     </state>
     <state x="602" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577359863886" />
+    <state x="699" y="321" width="514" height="386" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1579298790224">
+      <screen x="0" y="0" width="1920" height="1033" />
+    </state>
+    <state x="699" y="321" width="514" height="386" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1033@0.0.1920.1033" timestamp="1579298790224" />
+    <state x="693" y="266" width="526" height="496" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1579267554495">
+      <screen x="0" y="0" width="1920" height="1033" />
+    </state>
+    <state x="693" y="266" width="526" height="496" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1033@0.0.1920.1033" timestamp="1579267554495" />
     <state x="919" y="292" width="329" height="495" key="#xdebugger.XInspectDialog" timestamp="1578161457892">
       <screen x="100" y="0" width="1820" height="1080" />
     </state>
@@ -337,14 +316,19 @@
       <screen x="100" y="0" width="1820" height="1080" />
     </state>
     <state width="1777" height="364" key="GridCell.Tab.1.right/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161672638" />
-    <state x="508" y="201" width="992" height="712" key="SettingsEditor" timestamp="1578159196204">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="430" y="192" width="1047" height="725" key="SettingsEditor" timestamp="1579274579078">
+      <screen x="0" y="0" width="1920" height="1033" />
     </state>
+    <state x="430" y="192" width="1047" height="725" key="SettingsEditor/0.0.1920.1033@0.0.1920.1033" timestamp="1579274579078" />
     <state x="508" y="201" width="992" height="712" key="SettingsEditor/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578159196204" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1577369247230">
       <screen x="100" y="0" width="1820" height="1080" />
     </state>
     <state width="498" height="446" key="SwitcherDM/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577369247230" />
+    <state x="653" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1579267295121">
+      <screen x="0" y="0" width="1920" height="1033" />
+    </state>
+    <state x="653" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1033@0.0.1920.1033" timestamp="1579267295121" />
     <state x="819" y="456" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578154191158">
       <screen x="100" y="0" width="1820" height="1080" />
     </state>
@@ -367,20 +351,6 @@
     <state x="673" y="235" width="672" height="678" key="search.everywhere.popup/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577369244234" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp</url>
-          <line>78</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp</url>
-          <line>64</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
         <watch expression="FCS" language="ObjectiveC" />

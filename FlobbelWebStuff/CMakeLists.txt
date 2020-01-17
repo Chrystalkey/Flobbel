@@ -1,5 +1,5 @@
 project(FlobbelWebStuff)
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 
 include_directories(../FlobbelBackbone/)
 include_directories(../dependencies/)
