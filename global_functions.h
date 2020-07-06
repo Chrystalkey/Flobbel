@@ -6,9 +6,11 @@
 #define FLOBBEL_GLOBAL_FUNCTIONS_H
 
 #include "global_constants.h"
-#include <time.h>
+#include <ctime>
 #include <vector>
 #include <windef.h>
+#include <exception>
+#include <stdexcept>
 
 typedef struct sqlite3 sqlite3;
 typedef struct sqlite3_stmt sqlite3_stmt;

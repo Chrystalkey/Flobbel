@@ -17,9 +17,7 @@
 #include <chrono>
 
 #include "sqlite/sqlite3.h"
-#include "../FlobbelSafe/FlobbelSafe.h"
-
-SynchroFailed::SynchroFailed(std::string what) : buffer(what) {}
+#include "FlobbelSafe.h"
 
 #ifdef __WIN32__
 std::wstring getOS(){

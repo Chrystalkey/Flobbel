@@ -3,10 +3,12 @@
   <component name="BuildServerSettings">
     <option name="LOGIN" value="101crystalkey010@web.de" />
     <option name="SERVER_URL" value="http://buildserver" />
+    <option name="COMMIT_PATTERN" value="{message}" />
     <option name="REMEMBER_ME" value="true" />
     <option name="USE_IDEA_PROXY_SETTINGS" value="true" />
     <option name="INSPECTIONS_BUILD_TYPE_IDS" />
     <option name="DUPLICATES_BUILD_TYPE_IDS" />
+    <option name="ENABLE_SUITABLE_CONFIGURATION_CACHING" value="true" />
     <option name="COVERAGE_SETTINGS" />
     <option name="TEST_STATUS_ENABLED" value="true" />
     <option name="TEST_STATUS_SHOW_SUCCESSFUL" value="false" />
@@ -18,10 +20,7 @@
     <option name="PRE_TESTED_COMMIT" value="true" />
     <option name="FILTER_BY_STATUS" value="false" />
     <option name="FILTER_MARKED_AS_FIXED" value="false" />
-    <option name="SHOW_CLOSE_PROMPT" value="true" />
     <option name="TOOL_WINDOW_SELECTED_CONTENT_INDEX" value="0" />
-    <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
-    <option name="showStatusBarWidget" value="true" />
     <treeState key="project">
       <selectedPath>
         <pathElement>
@@ -33,27 +32,61 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Flobbel" targetName="FileServerBackend" />
+      <config projectName="Flobbel" targetName="CaptureCollection" />
       <config projectName="Flobbel" targetName="sqlite" />
+      <config projectName="Flobbel" targetName="Flobbel" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DTEST=FALSE" BUILD_OPTIONS="-j 8" />
-      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DTEST=FALSE" BUILD_OPTIONS="-j 8" />
-      <configuration PROFILE_NAME="Test" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DTEST=TRUE" BUILD_OPTIONS="-j 8" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DTEST=FALSE" BUILD_OPTIONS="-- -j 12" />
+      <configuration PROFILE_NAME="Release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DTEST=FALSE" BUILD_OPTIONS="-- -j 12" />
+      <configuration PROFILE_NAME="Test" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Debug -DTEST=TRUE" BUILD_OPTIONS="-- -j 12" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d06fd318-0f26-4bbd-a1ee-f348c8c08bc7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FileServerBackend/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileManagement.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileManagement.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileServerDB.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/NetworkRequests.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/NetworkRequests.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileServerBackend/main.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/PHPScripts.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/php.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/sqldialects.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/blacklist.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/dbstructure.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/fillup.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PHPScripts/register.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +110,7 @@
     <expand />
     <select />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -89,23 +122,19 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/global_functions.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/CMakeLists.txt" root0="SKIP_INSPECTION" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="UWiJycfV" />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-Debug-FlobbelSafe" />
-  </component>
   <component name="ProjectId" id="1OYQKx8yNjlPuDPHRvrRceiIegW" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -113,49 +142,44 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Alltheotherthings\Archiv\projekte\Programmieren\Flobbel" />
+      <recent name="D:\Alltheotherthings\Archiv\projekte\Programmieren\Flobbel\FlobbelCallbackCollection" />
+      <recent name="D:\Alltheotherthings\Archiv\projekte\Programmieren\Flobbel\CaptureTypes" />
       <recent name="$PROJECT_DIR$/FileServerBackend" />
       <recent name="D:\dev\projects\Flobbel\FlobbelSafe" />
-      <recent name="D:\dev\projects\Flobbel\dependencies" />
-      <recent name="D:\dev\projects\Flobbel" />
-      <recent name="D:\dev\projects\Flobbel\FlobbelBackbone" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.FileServerBackend">
-    <configuration name="FileServerBackend" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="FileServerBackend" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Flobbel" RUN_TARGET_NAME="FileServerBackend">
+  <component name="RunManager" selected="CMake Application.Flobbel">
+    <configuration name="CaptureCollection" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="CaptureCollection" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="sqlite" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="sqlite" CONFIG_NAME="Debug">
+    <configuration name="Flobbel" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="Flobbel" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Flobbel" RUN_TARGET_NAME="Flobbel">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="sqlite" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Flobbel" TARGET_NAME="sqlite" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <list>
+      <item itemvalue="CMake Application.Flobbel" />
+      <item itemvalue="CMake Application.CaptureCollection" />
       <item itemvalue="CMake Application.sqlite" />
-      <item itemvalue="CMake Application.FileServerBackend" />
     </list>
-  </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -228,11 +252,21 @@
       <workItem from="1577729827979" duration="2552000" />
       <workItem from="1578137388767" duration="17167000" />
       <workItem from="1579267289607" duration="13999000" />
+      <workItem from="1593429807356" duration="6847000" />
+      <workItem from="1593437552111" duration="2096000" />
+      <workItem from="1593684559445" duration="1490000" />
+      <workItem from="1593686074942" duration="929000" />
+      <workItem from="1593687028666" duration="823000" />
+      <workItem from="1593689060241" duration="1491000" />
+      <workItem from="1593691323915" duration="2925000" />
+      <workItem from="1593718221755" duration="5130000" />
+      <workItem from="1593961621298" duration="4957000" />
+      <workItem from="1594043968016" duration="5741000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.php" />
@@ -242,113 +276,70 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="530" y="190" width="804" height="674" key="#SQL_Dialects" timestamp="1579298836259">
-      <screen x="0" y="0" width="1920" height="1033" />
+    <state x="742" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1594047136557">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="530" y="190" width="804" height="674" key="#SQL_Dialects/0.0.1920.1033@0.0.1920.1033" timestamp="1579298836259" />
-    <state x="602" y="199" key="#SQL_Dialects/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577730007406" />
-    <state x="602" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1577359863886">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="742" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047136557" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1593692409190">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="602" y="198" key="#com.intellij.execution.impl.EditConfigurationsDialog/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577359863886" />
-    <state x="699" y="321" width="514" height="386" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1579298790224">
-      <screen x="0" y="0" width="1920" height="1033" />
+    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593692409190" />
+    <state width="1400" height="345" key="GridCell.Tab.0.bottom" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="699" y="321" width="514" height="386" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1033@0.0.1920.1033" timestamp="1579298790224" />
-    <state x="693" y="266" width="526" height="496" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1579267554495">
-      <screen x="0" y="0" width="1920" height="1033" />
+    <state width="1400" height="345" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.0.center" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="693" y="266" width="526" height="496" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1033@0.0.1920.1033" timestamp="1579267554495" />
-    <state x="919" y="292" width="329" height="495" key="#xdebugger.XInspectDialog" timestamp="1578161457892">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.0.left" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="919" y="292" width="329" height="495" key="#xdebugger.XInspectDialog/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161457892" />
-    <state x="2126" y="355" key="#xdebugger.evaluate" timestamp="1578161558573">
-      <screen x="1982" y="52" width="1218" height="1024" />
+    <state width="1400" height="345" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.0.right" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="2126" y="355" key="#xdebugger.evaluate/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161558573" />
-    <state x="790" y="294" key="FileChooserDialogImpl" timestamp="1576571476345">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.1.bottom" timestamp="1594048147626">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="790" y="294" key="FileChooserDialogImpl/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1576571476345" />
-    <state width="1777" height="321" key="GridCell.Tab.0.bottom" timestamp="1578161821754">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147626" />
+    <state width="1400" height="345" key="GridCell.Tab.1.center" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="321" key="GridCell.Tab.0.bottom/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161821754" />
-    <state width="1777" height="295" key="GridCell.Tab.0.bottom/100.0.1820.1080/1982.52.1218.1024@1982.52.1218.1024" timestamp="1577131807350" />
-    <state width="1777" height="321" key="GridCell.Tab.0.center" timestamp="1578161821753">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.1.left" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="321" key="GridCell.Tab.0.center/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161821753" />
-    <state width="1777" height="295" key="GridCell.Tab.0.center/100.0.1820.1080/1982.52.1218.1024@1982.52.1218.1024" timestamp="1577131807349" />
-    <state width="1777" height="321" key="GridCell.Tab.0.left" timestamp="1578161821753">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1400" height="345" key="GridCell.Tab.1.right" timestamp="1594048147625">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="321" key="GridCell.Tab.0.left/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161821753" />
-    <state width="1777" height="295" key="GridCell.Tab.0.left/100.0.1820.1080/1982.52.1218.1024@1982.52.1218.1024" timestamp="1577131807349" />
-    <state width="1777" height="321" key="GridCell.Tab.0.right" timestamp="1578161821753">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state width="1400" height="345" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1594048253821">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="321" key="GridCell.Tab.0.right/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161821753" />
-    <state width="1777" height="295" key="GridCell.Tab.0.right/100.0.1820.1080/1982.52.1218.1024@1982.52.1218.1024" timestamp="1577131807350" />
-    <state width="1777" height="364" key="GridCell.Tab.1.bottom" timestamp="1578161672638">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048253821" />
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1593692409191">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="364" key="GridCell.Tab.1.bottom/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161672638" />
-    <state width="1777" height="364" key="GridCell.Tab.1.center" timestamp="1578161672638">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593692409191" />
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594047794744">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="364" key="GridCell.Tab.1.center/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161672638" />
-    <state width="1777" height="364" key="GridCell.Tab.1.left" timestamp="1578161672638">
-      <screen x="100" y="0" width="1820" height="1080" />
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047794744" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1593435529692">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1777" height="364" key="GridCell.Tab.1.left/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161672638" />
-    <state width="1777" height="364" key="GridCell.Tab.1.right" timestamp="1578161672638">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state width="1777" height="364" key="GridCell.Tab.1.right/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161672638" />
-    <state x="430" y="192" width="1047" height="725" key="SettingsEditor" timestamp="1579274579078">
-      <screen x="0" y="0" width="1920" height="1033" />
-    </state>
-    <state x="430" y="192" width="1047" height="725" key="SettingsEditor/0.0.1920.1033@0.0.1920.1033" timestamp="1579274579078" />
-    <state x="508" y="201" width="992" height="712" key="SettingsEditor/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578159196204" />
-    <state width="498" height="446" key="SwitcherDM" timestamp="1577369247230">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state width="498" height="446" key="SwitcherDM/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577369247230" />
-    <state x="653" y="344" key="com.intellij.ide.util.TipDialog" timestamp="1579267295121">
-      <screen x="0" y="0" width="1920" height="1033" />
-    </state>
-    <state x="653" y="344" key="com.intellij.ide.util.TipDialog/0.0.1920.1033@0.0.1920.1033" timestamp="1579267295121" />
-    <state x="819" y="456" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1578154191158">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state x="819" y="456" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578154191158" />
-    <state x="327" y="432" width="1303" height="528" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1578161534831">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state x="327" y="432" width="1303" height="528" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578161534831" />
-    <state x="706" y="145" width="607" height="789" key="find.popup" timestamp="1577137893245">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state x="706" y="145" width="607" height="789" key="find.popup/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577137893245" />
-    <state x="666" y="250" width="672" height="677" key="run.anything.popup" timestamp="1578155246139">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state x="666" y="250" width="672" height="677" key="run.anything.popup/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1578155246139" />
-    <state x="673" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1577369244234">
-      <screen x="100" y="0" width="1820" height="1080" />
-    </state>
-    <state x="673" y="235" width="672" height="678" key="search.everywhere.popup/100.0.1820.1080/1982.52.1218.1024@100.0.1820.1080" timestamp="1577369244234" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593435529692" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

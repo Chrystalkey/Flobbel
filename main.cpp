@@ -3,16 +3,18 @@
 
 #include <shlwapi.h>
 #include <shlobj.h>
-#include "flobcallbackcollection.h"
+#include <memory>
+
+#include "capturecollection.h"
 #include "FlobbelSafe.h"
-#include "FlobWS.h"
+#include "capturetypes.h"
 
 bool FlobConstants::exists = false;
 FlobConstants FCS;
 
-void process(ProcessInfo);
-void keypress(KeypressInfo);
-void screentime(Screentime);
+void run();
+
+void infoCallback(std::shared_ptr<Info> info_struct);
 
 bool processArguments(int argc, char **argv);
 void initialize_flobbel();
@@ -23,16 +25,18 @@ int main(int argc, char**argv) {
         if(!processArguments(argc, argv)) return 1;
     initialize_flobbel();
     if(!SetConsoleCtrlHandler(control_handler, TRUE)) std::cerr << "ERROR Doing SetConsoleCtrlHandler in main()\n";
-    FCS.callbackCollection->run();
-    delete FCS.flobWS;
+
+    run();
+
     delete FCS.callbackCollection;
     delete FCS.safe;
     return 0;
 }
 
+/*
 void process(ProcessInfo info){
     std::wcout << info.filename << L"|" << info.timestamp_on << L" to " << info.timestamp_off << L"\n";
-    FCS.safe->save(info, FlobConstants::Process);
+    FCS.safe->save(info, FlobGlobal::Process);
 }
 
 void keypress(KeypressInfo info){
@@ -41,14 +45,17 @@ void keypress(KeypressInfo info){
         std::wcout << d << L" " << FCS.converter.from_bytes(info.ch) << L"\n";
         keySequence(info.vkcode);
     }
-    FCS.safe->save(info, FlobConstants::Keypress);
+    FCS.safe->save(info, FlobGlobal::Keypress);
 }
+*/
 
-void screentime(Screentime info){
-    std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
-    FCS.safe->save(info, FlobConstants::Screentime);
+void run(){
+    MSG msg;
+    while(GetMessage(&msg, NULL, 0, 0)){
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 }
-
 bool processArguments(int argc, char **argv){
     std::vector<std::wstring> arguments(argc-1);
     for(int i = 1; i < argc; i++){
@@ -74,6 +81,15 @@ bool processArguments(int argc, char **argv){
     return true;
 }
 
+void safe_info_callback(const Info& info){
+    if(info.infotype == FlobGlobal::Keypress){
+        auto keypress = static_cast<const KeypressInfo&>(info);
+        if(!(keypress.updown%2)){
+            keySequence(keypress.vkcode);
+        }
+    }
+}
+
 void keySequence(DWORD vkCode){
     static std::deque<DWORD> sequence;
     if(sequence.size()<4){
@@ -85,18 +101,16 @@ void keySequence(DWORD vkCode){
         sequence.pop_front();
         sequence.push_back(vkCode);
     }
-    for(DWORD &x : sequence){
-        if(x != VK_ESCAPE){
+
+    for(DWORD x : sequence)
+        if(x != VK_ESCAPE)
             return;
-        }
-    }
+
     FCS.callbackCollection->terminate();
 }
 
 void initialize_flobbel() {
     initMap();
-    FCS.flobWS = new FlobWS();
-    std::set<std::wstring> bl;
 
     //get uuid
     wchar_t appdataPath[MAX_PATH] = {0};
@@ -117,24 +131,7 @@ void initialize_flobbel() {
         FCS.handle = "REQUEST";
         writeHandleToFile = true;
     }
-    try{
-        bl = FCS.flobWS->sync_metadata();
-    }
-    catch(SynchroFailed sf){
-        std::cerr << "ERROR: SYNCHRO FAILED: " << sf.what();
 
-        bl.insert(L"svchost.exe");
-        bl.insert(L"ctfmon.exe");
-        bl.insert(L"RuntimeBroker.exe");
-        bl.insert(L"conhost.exe");
-        bl.insert(L"System");
-        bl.insert(L"[System Process]");
-        bl.insert(L"winlogon.exe");
-        bl.insert(L"wininit.exe");
-    }
-    catch(...){
-        std::cerr << "ERROR: Unknown error while syncing\n";
-    }
     if(writeHandleToFile){
         std::ofstream out(FCS.converter.to_bytes(appdataPath), std::ios::trunc|std::ios::out);
         out << FCS.handle;
@@ -144,11 +141,12 @@ void initialize_flobbel() {
     if(FCS.cleanup){
         DeleteFileW(FCS.db_path.c_str());
         DeleteFileW(appdataPath);
-        delete FCS.flobWS;
         exit(0);
     }
 
-    FCS.safe = new FlobbelSafe(FCS.savedirectory);
-    FCS.callbackCollection = new FlobCallbackCollection(process,keypress, screentime);
-    FCS.callbackCollection->setProgramBlacklist(bl);
+    FCS.safe = new FlobbelSafe(FCS.savedirectory, safe_info_callback);
+
+    FCS.callbackCollection = new CaptureCollection();
 }
+
+//TODO: correctly destruct captureClasses

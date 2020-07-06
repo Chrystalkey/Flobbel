@@ -6,19 +6,18 @@
 #include <windows.h>
 #include <shlwapi.h>
 #include "FlobbelSafe.h"
-#include "FlobWS.h"
-#include "rawdataprocessing.h"
+//#include "FlobWS.h"
 
-FlobbelSafe::FlobbelSafe(std::wstring &_safedir):mt(rd()),dist(60000,180000){
+FlobbelSafe::FlobbelSafe(std::wstring &_safedir, InfoCallback ic):mt(rd()),dist(60000,180000), ic(ic){
     wchar_t date[11];
     auto n = now();
-    tmrThread = new std::thread(&FlobbelSafe::sync_timer, this);
+    //tmrThread = new std::thread(&FlobbelSafe::sync_timer, this);
     if(PathFileExistsW(FCS.db_path.c_str())) {
         std::wifstream in(FCS.converter.to_bytes(FCS.db_path));
         wchar_t buffer[7] = {0};
         in.read(buffer,6);
         in.close();
-        if(wcscmp(buffer,L"SQLite") != 0) RawDataProcessing::processFromRubbish(FCS.db_path);
+        //if(wcscmp(buffer,L"SQLite") != 0) RawDataProcessing::processFromRubbish(FCS.db_path);
     }
     wsprintfW(date,L"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
     keyTable = L"KEYS_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
@@ -38,7 +37,7 @@ FlobbelSafe::~FlobbelSafe() {
     //sync();
     sqlite3_close(dbcon);
     //tmrThread->join();
-    RawDataProcessing::processToRubbish(FCS.db_path);
+    //RawDataProcessing::processToRubbish(FCS.db_path);
     //hide();
 }
 void FlobbelSafe::finalize_queues() {
@@ -108,7 +107,7 @@ void FlobbelSafe::add_prc(const ProcessInfo &info){
         sqlite3_finalize(prcState);
     }
 }
-void FlobbelSafe::add_screentime(const Screentime &info){
+void FlobbelSafe::add_screentime(const ScreentimeInfo &info){
     sqlite3_stmt *scrState = nullptr;
     execStmt(dbcon,&scrState,L"INSERT INTO screentime (cp_handle,timestamp_on,timestamp_off,duration) VALUES('"
                               +FCS.converter.from_bytes(info.ch)+L"',"
@@ -119,25 +118,27 @@ void FlobbelSafe::add_screentime(const Screentime &info){
     sqlite3_finalize(scrState);
 }
 
-void FlobbelSafe::save(const Info &info, FlobConstants::InfoType it) {
+void FlobbelSafe::save(const Info &info) {
     while(FCS.syncing)Sleep(500);
     FCS.ready_for_sync++;
-    switch(it){
-        case FlobConstants::Process:
+    ic(info);
+    switch(info.infotype){
+        case FlobGlobal::Process:
             add_prc(reinterpret_cast<const ProcessInfo&>(info));
             break;
-        case FlobConstants::Keypress:
+        case FlobGlobal::Keypress:
             add_key(reinterpret_cast<const KeypressInfo&>(info));
             break;
-        case FlobConstants::Screentime:
-            add_screentime(reinterpret_cast<const Screentime&>(info));
+        case FlobGlobal::Screentime:
+            //std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
+            add_screentime(reinterpret_cast<const ScreentimeInfo&>(info));
             break;
         default:
             std::cerr << "ERROR no other type possible @FlobbelSafe::save \n";
     }
     FCS.ready_for_sync--;
 }
-
+/*
 void FlobbelSafe::sync_timer() {
     uint32_t current_leap = 0;
     uint32_t current_rotation = 0;
@@ -152,6 +153,7 @@ void FlobbelSafe::sync_timer() {
         sync();
     }
 }
+
 void FlobbelSafe::sync() {
     while(FCS.ready_for_sync) Sleep(100);
     FCS.syncing = true; //lock
@@ -206,7 +208,7 @@ void FlobbelSafe::sync() {
     std::wcerr << "Syncing\n";
     FCS.syncing = false; // unlock
 }
-
+*/
 bool FlobbelSafe::createNInitDB(const std::wstring &path, sqlite3 **dbptr) {
     int rc = 0;
     sqlite3_stmt *uniState = nullptr;
