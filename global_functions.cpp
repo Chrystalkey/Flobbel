@@ -18,6 +18,7 @@
 
 #include "sqlite/sqlite3.h"
 #include "FlobbelSafe.h"
+#include "logging.h"
 
 #ifdef __WIN32__
 std::wstring getOS(){
@@ -32,7 +33,7 @@ std::wstring getOS(){
         if(sizeof(void*) == 8) version += L"64";
         else version += L"32";
     } else
-        std::cerr << "ERROR PROBLEMO GRANDE NOT ABLE TO DETERMINE OS VERSION\n";
+        FCS.log->recoverable(L"getOS", L"GetVersionEx failed");
     return version;
 }
 #else
@@ -42,9 +43,10 @@ void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
     if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
         return;
     else{
-        std::wcerr << L"[ERROR] SQLITE failed " << additional << L" ERROR CODE: " << rc << L"\n";
         if(dbcon)
             sqlite3_close(dbcon);
+        FCS.log->panic(L"sqlErrCheck", L"SQLite failed doing "+additional + L" with errcode: " + std::to_wstring(rc));
+        throw sqlite_error("SQLite failed doing " + FCS.converter.to_bytes(additional) + " with errcode: " + std::to_string(rc));
     }
 }
 
@@ -102,7 +104,7 @@ std::string generateHandle(){
     }
     return result;
 }
-std::vector<std::string> split(std::string input, char delim){
+/*std::vector<std::string> split(std::string input, char delim){
     std::vector<std::string> result;
     if(input.size() == 0 || delim == '\0')
         return result;
@@ -162,7 +164,8 @@ std::vector<std::string> *mac(){
         string_orchestra.emplace_back(std::string(mac_construction));
     }
     return &string_orchestra;
-}
+}*/
+
 std::wstring map(uint32_t vkc) {
     if (FCS.keys.count(vkc) == 0) {
         wchar_t chr = (wchar_t)MapVirtualKeyW(vkc, MAPVK_VK_TO_CHAR);
@@ -180,8 +183,8 @@ BOOL control_handler(DWORD signal){
 }
 
 void initMap(){
-    FCS.keys[VK_TAB]			    	= L"_TAB";
-    FCS.keys[VK_CAPITAL]			    = L"CAPS";
+    FCS.keys[VK_TAB]			    = L"_TAB";
+    FCS.keys[VK_CAPITAL]			= L"CAPS";
     FCS.keys[VK_F1]					= L"__F1";
     FCS.keys[VK_F2]					= L"__F2";
     FCS.keys[VK_F3]					= L"__F3";
@@ -191,9 +194,9 @@ void initMap(){
     FCS.keys[VK_F7]					= L"__F7";
     FCS.keys[VK_F8]					= L"__F8";
     FCS.keys[VK_F9]					= L"__F9";
-    FCS.keys[VK_F10]				    = L"_F10";
-    FCS.keys[VK_F11]			    	= L"_F11";
-    FCS.keys[VK_F12]				    = L"_F12";
+    FCS.keys[VK_F10]				= L"_F10";
+    FCS.keys[VK_F11]			    = L"_F11";
+    FCS.keys[VK_F12]				= L"_F12";
     FCS.keys[VK_F13] 				= L"_F13";
     FCS.keys[VK_F14] 				= L"_F14";
     FCS.keys[VK_F15] 				= L"_F15";
@@ -216,22 +219,22 @@ void initMap(){
     FCS.keys[VK_RSHIFT]				= L"RSHI";
     FCS.keys[VK_LSHIFT]				= L"LSHI";
     FCS.keys[VK_LBUTTON] 			= L"LMBU";
-    FCS.keys[VK_RBUTTON]	    		= L"RMBU";
+    FCS.keys[VK_RBUTTON]	    	= L"RMBU";
     FCS.keys[VK_CANCEL]				= L"CANC";
-    FCS.keys[VK_MBUTTON]		    	= L"MBUT";
+    FCS.keys[VK_MBUTTON]		    = L"MBUT";
     FCS.keys[VK_XBUTTON1]			= L"XBU1";
     FCS.keys[VK_XBUTTON2]			= L"XBU2";
     FCS.keys[VK_CLEAR]				= L"CLEA";
     FCS.keys[VK_PAUSE]				= L"PAUS";
     FCS.keys[VK_FINAL]				= L"FINA";
-    FCS.keys[VK_CONVERT]			    = L"CONV";
+    FCS.keys[VK_CONVERT]			= L"CONV";
     FCS.keys[VK_NONCONVERT]			= L"NCVT";
     FCS.keys[VK_ACCEPT]				= L"ACCE";
     FCS.keys[VK_MODECHANGE]			= L"MODC";
     FCS.keys[VK_SPACE]				= L"SPAC";
     FCS.keys[VK_PRIOR]				= L"PRIO";
     FCS.keys[VK_NEXT]				= L"NEXT";
-    FCS.keys[VK_END]				    = L"_END";
+    FCS.keys[VK_END]				= L"_END";
     FCS.keys[VK_HOME]				= L"HOME";
     FCS.keys[VK_LEFT]				= L"LEFT";
     FCS.keys[VK_UP]					= L"__UP";
@@ -239,7 +242,7 @@ void initMap(){
     FCS.keys[VK_DOWN]				= L"DOWN";
     FCS.keys[VK_SELECT]				= L"SELE";
     FCS.keys[VK_PRINT]				= L"PRNT";
-    FCS.keys[VK_EXECUTE]			    = L"EXEC";
+    FCS.keys[VK_EXECUTE]			= L"EXEC";
     FCS.keys[VK_SNAPSHOT]			= L"SNAP";
     FCS.keys[VK_INSERT]				= L"INSR";
     FCS.keys[VK_DELETE]				= L"DELE";
@@ -259,12 +262,12 @@ void initMap(){
     FCS.keys[VK_NUMPAD8] 			= L"NUM8";
     FCS.keys[VK_NUMPAD9] 			= L"NUM9";
     FCS.keys[VK_MULTIPLY]			= L"MULT";
-    FCS.keys[VK_ADD]		    		= L"_ADD";
+    FCS.keys[VK_ADD]		    	= L"_ADD";
     FCS.keys[VK_SEPARATOR]			= L"_SEP";
     FCS.keys[VK_SUBTRACT]			= L"_SUB";
-    FCS.keys[VK_DECIMAL]		    	= L"DECI";
+    FCS.keys[VK_DECIMAL]		    = L"DECI";
     FCS.keys[VK_DIVIDE]				= L"_DIV";
-    FCS.keys[VK_NUMLOCK]			    = L"NLCK";
+    FCS.keys[VK_NUMLOCK]			= L"NLCK";
     FCS.keys[VK_SCROLL]				= L"SROL";
     FCS.keys[VK_BROWSER_BACK]		= L"BBCK";
     FCS.keys[VK_BROWSER_FORWARD] 	= L"BFWD";
@@ -273,8 +276,8 @@ void initMap(){
     FCS.keys[VK_BROWSER_SEARCH]		= L"BSEA";
     FCS.keys[VK_BROWSER_FAVORITES]	= L"BFAV";
     FCS.keys[VK_BROWSER_HOME]		= L"BHOM";
-    FCS.keys[VK_VOLUME_MUTE]		    = L"VMUT";
-    FCS.keys[VK_VOLUME_DOWN]		    = L"VDWN";
+    FCS.keys[VK_VOLUME_MUTE]		= L"VMUT";
+    FCS.keys[VK_VOLUME_DOWN]		= L"VDWN";
     FCS.keys[VK_VOLUME_UP]			= L"_VUP";
     FCS.keys[VK_MEDIA_NEXT_TRACK]	= L"MENX";
     FCS.keys[VK_MEDIA_PREV_TRACK]	= L"MEPR";

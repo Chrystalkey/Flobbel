@@ -7,12 +7,6 @@
 
 #include "info_type.h"
 
-static const std::string screentime_sql = "CREATE TABLE IF NOT EXISTS screentime_type("
-                                          "id BIGINT PRIMARY KEY,"
-                                          "time_on BIGINT,"
-                                          "time_off BIGINT,"
-                                          "duration BIGINT);";
-
 typedef struct : public Info{
 #ifdef __WIN32__
     std::wstring timestamp_on;

@@ -18,15 +18,16 @@ ProcessCapture::ProcessCapture() {
         throw instance_exists_error("ProcessCapture");
     exists = true;
     infoType = FlobGlobal::Process;
-    run();
+    FCS.callbackCollection->register_threading({this, &ProcessCapture::run, &ProcessCapture::terminate, nullptr, nullptr});
 }
 
-void ProcessCapture::terminate(){
-    _terminate = true;
-    prcProcessThread->join();
+void ProcessCapture::terminate(Capture *ths, std::thread* thr){
+    static_cast<ProcessCapture*>(ths)->_terminate = true;
+    thr->join();
+    delete thr;
 }
-void ProcessCapture::run(){
-    prcProcessThread = new std::thread(&ProcessCapture::updateProcessList, this);
+std::thread* ProcessCapture::run(Capture *ths){
+    return new std::thread(&ProcessCapture::updateProcessList, static_cast<ProcessCapture*>(ths));
 }
 std::map<uint32_t, ProcessInfo> *ProcessCapture::getProcessList(){
     HANDLE hProcessSnap;

@@ -12,9 +12,11 @@ namespace FlobGlobal{
         Process,
         Keypress,
         Screentime,
-        WLANList,
-        MouseMove,
+        MouseInfo,
         MouseClick,
+        MouseScroll,
+        MouseMove,
+        WLANList,
         WebConnect
     };
 }
@@ -30,8 +32,11 @@ public:
     Capture(const Capture&)= delete;
 
     FlobGlobal::InfoType get_infotype() const {return infoType;}
+    std::string get_sql_table() const{return sql_table;}
 protected:
     FlobGlobal::InfoType infoType;
+    std::string sql_table;
+    std::string sql_insert;
 };
 
 

@@ -15,20 +15,26 @@ class CaptureCollection {
 public:
     CaptureCollection();
 
-    CaptureCollection(const std::map<FlobGlobal::InfoType, std::unique_ptr<Capture>> &captureClasses);
-
     ~CaptureCollection() = default;
-
+    void init();
     void run(){
-        static_cast<ProcessCapture*>(capture_classes[FlobGlobal::Process].get())->run();
+        for(TripleThread &t:triplethreads){
+            if(t.r and t.ptr) t.th = t.r(t.ptr);
+        }
     }
     void terminate(){
-        static_cast<ProcessCapture*>(capture_classes[FlobGlobal::Process].get())->terminate();
+        for(TripleThread &t:triplethreads){
+            if(t.t and t.ptr and t.th) t.t(t.ptr,t.th);
+        }
         PostQuitMessage(EXIT_SUCCESS);
     }
 
+    void register_threading(TripleThread tt){triplethreads.push_back(tt);}
+
+    void loop();
 private:
     std::map<FlobGlobal::InfoType, std::unique_ptr<Capture>> capture_classes;
+    std::vector<TripleThread> triplethreads;
 };
 
 #endif //FLOBBEL_CAPTURECOLLECTION_H

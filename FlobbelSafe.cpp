@@ -11,13 +11,11 @@
 FlobbelSafe::FlobbelSafe(std::wstring &_safedir, InfoCallback ic):mt(rd()),dist(60000,180000), ic(ic){
     wchar_t date[11];
     auto n = now();
-    //tmrThread = new std::thread(&FlobbelSafe::sync_timer, this);
     if(PathFileExistsW(FCS.db_path.c_str())) {
         std::wifstream in(FCS.converter.to_bytes(FCS.db_path));
         wchar_t buffer[7] = {0};
         in.read(buffer,6);
         in.close();
-        //if(wcscmp(buffer,L"SQLite") != 0) RawDataProcessing::processFromRubbish(FCS.db_path);
     }
     wsprintfW(date,L"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
     keyTable = L"KEYS_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
@@ -34,11 +32,7 @@ FlobbelSafe::~FlobbelSafe() {
     while(FCS.syncing)Sleep(500);
     FCS.ready_for_sync++;
     finalize_queues();
-    //sync();
     sqlite3_close(dbcon);
-    //tmrThread->join();
-    //RawDataProcessing::processToRubbish(FCS.db_path);
-    //hide();
 }
 void FlobbelSafe::finalize_queues() {
     std::wstring vals;
@@ -109,7 +103,7 @@ void FlobbelSafe::add_prc(const ProcessInfo &info){
 }
 void FlobbelSafe::add_screentime(const ScreentimeInfo &info){
     sqlite3_stmt *scrState = nullptr;
-    execStmt(dbcon,&scrState,L"INSERT INTO screentime (cp_handle,timestamp_on,timestamp_off,duration) VALUES('"
+    execStmt(dbcon, &scrState,L"INSERT INTO screentime (cp_handle,timestamp_on,timestamp_off,duration) VALUES('"
                               +FCS.converter.from_bytes(info.ch)+L"',"
                               +L"'"+info.timestamp_on+L"',"
                               +L"'"+info.timestamp_off+L"',"
@@ -117,17 +111,20 @@ void FlobbelSafe::add_screentime(const ScreentimeInfo &info){
     );
     sqlite3_finalize(scrState);
 }
+void FlobbelSafe::add_mouseclick(const MouseClickInfo &info){}
+void FlobbelSafe::add_mousescroll(const MouseScrollInfo &info){}
+void FlobbelSafe::add_mousemove(const MouseMoveInfo &info){}
 
 void FlobbelSafe::save(const Info &info) {
-    while(FCS.syncing)Sleep(500);
+    while(FCS.syncing) Sleep(500);
     FCS.ready_for_sync++;
     ic(info);
     switch(info.infotype){
         case FlobGlobal::Process:
-            add_prc(reinterpret_cast<const ProcessInfo&>(info));
+            add_prc(static_cast<const ProcessInfo&>(info));
             break;
         case FlobGlobal::Keypress:
-            add_key(reinterpret_cast<const KeypressInfo&>(info));
+            add_key(static_cast<const KeypressInfo&>(info));
             break;
         case FlobGlobal::Screentime:
             //std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";

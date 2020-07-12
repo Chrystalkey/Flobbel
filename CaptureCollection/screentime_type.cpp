@@ -17,6 +17,11 @@ ScreentimeCapture::ScreentimeCapture() {
     if(exists)
         throw instance_exists_error("ScreentimeCallback");
     exists = true;
+    sql_table = "CREATE TABLE IF NOT EXISTS screentime_type("
+                "id INTEGER PRIMARY KEY,"
+                "time_on INTEGER,"
+                "time_off INTEGER,"
+                "duration INTEGER);";
     infoType = FlobGlobal::InfoType::Screentime;
     windowsStartup();
 }

@@ -39,10 +39,9 @@ class ProcessCapture: public Capture {
 public:
     explicit ProcessCapture();
     ~ProcessCapture() {delete prcProcessThread;}
-    void run();
-    void terminate();
+    static std::thread* run(Capture*);
+    static void terminate(Capture *, std::thread*);
 private:
-
     std::map<uint32_t, ProcessInfo> *getProcessList();
     std::map<uint32_t, ProcessInfo> processList;
     std::set<std::wstring> blacklist = {L"svchost.exe", L"ctfmon.exe", L"RuntimeBroker.exe", L"conhost.exe",L"System", L"[System Process]", L"winlogon.exe",L"wininit.exe"};

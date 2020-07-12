@@ -46,46 +46,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d06fd318-0f26-4bbd-a1ee-f348c8c08bc7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileManagement.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileManagement.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/FileServerDB.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/NetworkRequests.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/NetworkRequests.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FileServerBackend/main.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_constants.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelBackbone/global_functions.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelCallbackCollection/flobcallbackcollection.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelSafe/rawdataprocessing.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlobbelWebStuff/FlobWS.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/PHPScripts.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/dataSources.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/php.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/sqldialects.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/blacklist.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/dbstructure.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/fillup.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PHPScripts/register.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/capturetypes.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturetypes.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/info_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/info_type.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/keypress_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/keypress_type.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/keypress_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/keypress_type.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/process_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/process_type.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/process_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/process_type.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/screentime_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/screentime_type.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/screentime_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/screentime_type.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_constants.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -129,6 +106,9 @@
     <option name="directoryName" value="UWiJycfV" />
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="0-Debug-Flobbel" />
+  </component>
   <component name="ProjectId" id="1OYQKx8yNjlPuDPHRvrRceiIegW" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -261,7 +241,8 @@
       <workItem from="1593691323915" duration="2925000" />
       <workItem from="1593718221755" duration="5130000" />
       <workItem from="1593961621298" duration="4957000" />
-      <workItem from="1594043968016" duration="5741000" />
+      <workItem from="1594043968016" duration="13056000" />
+      <workItem from="1594540498394" duration="25048000" />
     </task>
     <servers />
   </component>
@@ -288,42 +269,50 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="742" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047136557" />
+    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog" timestamp="1594553134949">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594553134949" />
+    <state x="715" y="222" key="#xdebugger.evaluate" timestamp="1594547751279">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="715" y="222" key="#xdebugger.evaluate/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594547751279" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1593692409190">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593692409190" />
-    <state width="1400" height="345" key="GridCell.Tab.0.bottom" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.0.bottom" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.0.center" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.0.center" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.0.left" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.0.left" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.0.right" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.0.right" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.1.bottom" timestamp="1594048147626">
+    <state width="1560" height="218" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.1.bottom" timestamp="1594566337017">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147626" />
-    <state width="1400" height="345" key="GridCell.Tab.1.center" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337017" />
+    <state width="1560" height="218" key="GridCell.Tab.1.center" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.1.left" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.1.left" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
-    <state width="1400" height="345" key="GridCell.Tab.1.right" timestamp="1594048147625">
+    <state width="1560" height="218" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1560" height="218" key="GridCell.Tab.1.right" timestamp="1594566337016">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1400" height="345" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594048147625" />
+    <state width="1560" height="218" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
     <state x="461" y="164" key="SettingsEditor" timestamp="1594048253821">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -336,10 +325,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047794744" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1593435529692">
+    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1594553918093">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593435529692" />
+    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594553918093" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1594558887151">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594558887151" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -347,6 +340,8 @@
         <watch expression="FCS" language="ObjectiveC" />
         <watch expression="callbackCollection" />
         <watch expression="FCS.callbackCollection" language="ObjectiveC" />
+        <watch expression="FCS.callbackCollection" language="ObjectiveC" />
+        <watch expression="src" />
       </configuration>
     </watches-manager>
   </component>

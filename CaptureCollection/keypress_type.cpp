@@ -17,7 +17,15 @@ KeyboardCapture::KeyboardCapture() {
         throw instance_exists_error("Keyboard Capture");
     exists = true;
     infoType = FlobGlobal::Keypress;
-    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook,NULL,0);
+    sql_table = "CREATE TABLE IF NOT EXISTS keypress_type("
+                "id INTEGER PRIMARY KEY,"
+                "up INTEGER,"
+                "scancode INTEGER,"
+                "vkcode INTEGER,"
+                "char VARCHAR(4),"
+                "time INTEGER);";
+
+    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, NULL,0);
 }
 
 KeyboardCapture::~KeyboardCapture() {

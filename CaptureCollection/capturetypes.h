@@ -9,5 +9,6 @@
 #include "process_type.h"
 #include "keypress_type.h"
 #include "screentime_type.h"
+#include "mouse_type.h"
 
 #endif //FLOBBEL_CAPTURETYPES_H

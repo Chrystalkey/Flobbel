@@ -8,54 +8,44 @@
 #include "capturecollection.h"
 #include "FlobbelSafe.h"
 #include "capturetypes.h"
+#include "logging.h"
 
 bool FlobConstants::exists = false;
 FlobConstants FCS;
 
-void run();
-
-void infoCallback(std::shared_ptr<Info> info_struct);
-
+void safe_info_callback(const Info&);
 bool processArguments(int argc, char **argv);
 void initialize_flobbel();
 void keySequence(DWORD vkCode);
 
+//TODO: put data safe-classes into capture-headers & use FlobSafe as a hub like CaptureCollection
+//TODO: unify exceptions and logging
+
 int main(int argc, char**argv) {
     if(argc > 1)
-        if(!processArguments(argc, argv)) return 1;
-    initialize_flobbel();
-    if(!SetConsoleCtrlHandler(control_handler, TRUE)) std::cerr << "ERROR Doing SetConsoleCtrlHandler in main()\n";
+        if(!processArguments(argc, argv)) {
+            FCS.log->panic(L"main", L"Argument Processing failed");
+            return 1;
+        }
+    try{
+        initialize_flobbel();
+    }catch(std::exception){
+        FCS.log->panic(L"main", L"initialize_flobbel failed. Terminating Program.");
+        delete FCS.callbackCollection;
+        delete FCS.safe;
+        delete FCS.log;
+    }
+    if(!SetConsoleCtrlHandler(control_handler, TRUE)) FCS.log->recoverable(L"main",L"SetConsoleCtrlHandler failed");
 
-    run();
+    FCS.callbackCollection->run();
+    FCS.callbackCollection->loop();
 
     delete FCS.callbackCollection;
     delete FCS.safe;
+    delete FCS.log;
     return 0;
 }
 
-/*
-void process(ProcessInfo info){
-    std::wcout << info.filename << L"|" << info.timestamp_on << L" to " << info.timestamp_off << L"\n";
-    FCS.safe->save(info, FlobGlobal::Process);
-}
-
-void keypress(KeypressInfo info){
-    std::wstring d(info.descr,4);
-    if(info.updown %2 == 0) {
-        std::wcout << d << L" " << FCS.converter.from_bytes(info.ch) << L"\n";
-        keySequence(info.vkcode);
-    }
-    FCS.safe->save(info, FlobGlobal::Keypress);
-}
-*/
-
-void run(){
-    MSG msg;
-    while(GetMessage(&msg, NULL, 0, 0)){
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }
-}
 bool processArguments(int argc, char **argv){
     std::vector<std::wstring> arguments(argc-1);
     for(int i = 1; i < argc; i++){
@@ -70,6 +60,7 @@ bool processArguments(int argc, char **argv){
         if(*it == L"-sd" || *it == L"--savedir"){
             if((it+1) == arguments.end()){
                 std::wcerr << L"Probably no savedirectory specified. Please restart.\n";
+                FCS.log->panic(L"processArguments", L"Probably no savedirectory specified. Please restart.");
                 return false;
             }
             FCS.savedirectory = *(it + 1);
@@ -105,17 +96,17 @@ void keySequence(DWORD vkCode){
     for(DWORD x : sequence)
         if(x != VK_ESCAPE)
             return;
-
+    FCS.log->info(L"keySequence", L"Terminating Sequence complete");
     FCS.callbackCollection->terminate();
 }
 
 void initialize_flobbel() {
     initMap();
-
+    FCS.log = new Log;
     //get uuid
     wchar_t appdataPath[MAX_PATH] = {0};
     if(SHGetFolderPathW(0,CSIDL_APPDATA, NULL, 0, appdataPath) != ERROR_SUCCESS){
-        std::cerr << "ERROR retrieving appdata Path\n";
+        FCS.log->panic(L"initialize_flobbel", L"SHGetFolderPathW failed getting %appdata%");
         exit(1);
     }
     FCS.savedirectory = std::wstring(appdataPath);
@@ -141,12 +132,18 @@ void initialize_flobbel() {
     if(FCS.cleanup){
         DeleteFileW(FCS.db_path.c_str());
         DeleteFileW(appdataPath);
+        FCS.log->info(L"initialize_flobbel", L"finished cleanup");
         exit(0);
     }
 
     FCS.safe = new FlobbelSafe(FCS.savedirectory, safe_info_callback);
 
     FCS.callbackCollection = new CaptureCollection();
+    try{
+        FCS.callbackCollection->init();
+    }catch(std::exception e){
+        FCS.log->panic(L"initialize_flobbel", L"error while initializing Captures: "+FCS.converter.from_bytes(e.what()));
+        throw std::exception(e);
+    }
+    FCS.log->info(L"initialize_flobbel", L"init finished");
 }
-
-//TODO: correctly destruct captureClasses

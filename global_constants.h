@@ -6,11 +6,29 @@
 #include <codecvt>
 #include <iostream>
 #include <string>
+#include <thread>
+#include <windows.h>
+#include "flob_exceptions.h"
+
+class Capture;
 
 typedef unsigned char u_char;
 typedef unsigned int UINT;
 
 typedef std::string ComputerHandle;
+typedef std::wstring Timestamp;
+
+typedef std::thread* (*Runner)(Capture*);
+typedef void (*Terminator)(Capture*, std::thread*);
+typedef void (*MSGCallback)(Capture*, MSG &);
+
+typedef struct{
+    Capture* ptr = nullptr;
+    Runner r = nullptr;
+    Terminator t = nullptr;
+    MSGCallback cb = nullptr;
+    std::thread *th = nullptr;
+} TripleThread;
 
 typedef union {
     u_char* data[6] = {0};
@@ -26,7 +44,7 @@ typedef union {
 
 class CaptureCollection;
 class FlobbelSafe;
-class FlobWS;
+class Log;
 
 class FlobConstants{
 public:
@@ -46,24 +64,15 @@ public:
     bool cleanup = false;
     bool syncing = false;
     uint16_t ready_for_sync = 0; //0=ready, writing functions add up when writing, subtract when finished
-    //FlobBase base;
+
+    Log *log = nullptr;
     CaptureCollection *callbackCollection = nullptr;
     FlobbelSafe *safe = nullptr;
-    FlobWS *flobWS = nullptr;
 private:
     static bool exists;
 };
 
+
 extern FlobConstants FCS;
-
-class synchro_failed_error: public std::runtime_error {
-public:
-    synchro_failed_error(std::string what): std::runtime_error("Synchro Failed ERROR: "+what){}
-};
-
-class instance_exists_error : public std::runtime_error{
-public:
-    instance_exists_error(std::string e):std::runtime_error("Only one instance permitted: "+e){}
-};
 
 #endif //FLOBBEL_GLOBAL_CONSTANTS_H

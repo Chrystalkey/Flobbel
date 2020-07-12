@@ -10,8 +10,10 @@ set(CC_SRC capturecollection.h
         process_type.cpp
         keypress_type.h
         keypress_type.cpp
+        screentime_type.h
         screentime_type.cpp
-        screentime_type.cpp
+        mouse_type.h
+        mouse_type.cpp
         )
 
 add_library(CaptureCollection STATIC ${CC_SRC})

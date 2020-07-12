@@ -9,15 +9,6 @@
 #include "info_type.h"
 #include "windows.h"
 
-static const std::string keypress_sql = "CREATE TABLE IF NOT EXISTS keypress_type("
-                                        "id BIGINT PRIMARY KEY,"
-                                        "up VARCHAR(1),"
-                                        "scancode BIGINT,"
-                                        "vkcode BIGINT,"
-                                        "char VARCHAR(3),"
-                                        "description VARCHAR(256),"
-                                        "time BIGINT);";
-
 typedef struct:public Info{
     uint8_t updown = 0; // down == updown%2 == 0; up == updown%2 == 1
     uint32_t scancode = 0;

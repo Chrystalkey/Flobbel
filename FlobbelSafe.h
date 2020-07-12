@@ -16,19 +16,23 @@
 #include "global_functions.h"
 #include "capturetypes.h"
 
-
 typedef void (*InfoCallback)(const Info&);
 
 class FlobbelSafe {
 public:
     explicit FlobbelSafe(std::wstring &_safedir, InfoCallback ic);
     ~FlobbelSafe();
+    void buildTable(const std::string& sql);
+
     void save(const Info& info);
 
 private: // INFOSTRUCT-PROCESSING FUNCTIONS
     void add_key(const KeypressInfo &);
     void add_prc(const ProcessInfo &);
     void add_screentime(const ScreentimeInfo &);
+    void add_mouseclick(const MouseClickInfo &info);
+    void add_mousescroll(const MouseScrollInfo &);
+    void add_mousemove(const MouseMoveInfo &);
 
     InfoCallback ic;
 
@@ -53,6 +57,7 @@ private: // TIMER VARIABLES
     std::random_device rd;
     std::mt19937_64 mt;
     std::uniform_int_distribution<uint32_t> dist;
+
 };
 
 #endif //FLOBBEL_FLOBBELSAFE_H
