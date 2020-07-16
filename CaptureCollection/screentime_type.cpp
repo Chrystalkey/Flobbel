@@ -19,14 +19,24 @@ ScreentimeCapture::ScreentimeCapture() {
     exists = true;
     sql_table = "CREATE TABLE IF NOT EXISTS screentime_type("
                 "id INTEGER PRIMARY KEY,"
-                "time_on INTEGER,"
-                "time_off INTEGER,"
+                "time_on TEXT,"
+                "time_off TEXT,"
                 "duration INTEGER);";
     infoType = FlobGlobal::InfoType::Screentime;
+    FCS.safe->buildTable(sql_table);
     windowsStartup();
 }
 ScreentimeCapture::~ScreentimeCapture(){
     wmshutdownCallback();
+}
+void ScreentimeCapture::sql_action(const Info *info) {
+    auto pack = (const ScreentimeInfo*) info;
+    FCS.safe->insert_data(L"INSERT INTO screentime_type(time_on,time_off,duration) VALUES (?,?,?)",
+                          {
+                            new sql_str(pack->timestamp_on),
+                            new sql_str(pack->timestamp_off),
+                            new sql_int(pack->duration)
+                          });
 }
 void ScreentimeCapture::windowsStartup() {
     NET_API_STATUS nStatus;

@@ -5,8 +5,8 @@
 #include <iostream>
 #include <windows.h>
 #include <shlwapi.h>
+#include <cassert>
 #include "FlobbelSafe.h"
-//#include "FlobWS.h"
 
 FlobbelSafe::FlobbelSafe(std::wstring &_safedir, InfoCallback ic):mt(rd()),dist(60000,180000), ic(ic){
     wchar_t date[11];
@@ -115,97 +115,44 @@ void FlobbelSafe::add_mouseclick(const MouseClickInfo &info){}
 void FlobbelSafe::add_mousescroll(const MouseScrollInfo &info){}
 void FlobbelSafe::add_mousemove(const MouseMoveInfo &info){}
 
-void FlobbelSafe::save(const Info &info) {
-    while(FCS.syncing) Sleep(500);
-    FCS.ready_for_sync++;
-    ic(info);
-    switch(info.infotype){
-        case FlobGlobal::Process:
-            add_prc(static_cast<const ProcessInfo&>(info));
-            break;
-        case FlobGlobal::Keypress:
-            add_key(static_cast<const KeypressInfo&>(info));
-            break;
-        case FlobGlobal::Screentime:
-            //std::wcout << L"Screentime: <on> " << info.timestamp_on << L" <off> " << info.timestamp_off << L" <duration> "<< std::dec << info.duration << L" seconds\n";
-            add_screentime(reinterpret_cast<const ScreentimeInfo&>(info));
-            break;
-        default:
-            std::cerr << "ERROR no other type possible @FlobbelSafe::save \n";
-    }
-    FCS.ready_for_sync--;
-}
-/*
-void FlobbelSafe::sync_timer() {
-    uint32_t current_leap = 0;
-    uint32_t current_rotation = 0;
-    while(!end_timer){
-        current_leap = dist(mt);
-        current_rotation = 0;
-        while(current_rotation < current_leap){
-            if(end_timer)break;
-            current_rotation+=500;
-            Sleep(500);
+#define intbind sqlite3_bind_int64(stmt, idx++, sqlite3_int64(arg));
+#define strbind sqlite3_bind_text16(stmt,idx++,argtmp.c_str(),-1,nullptr);
+void FlobbelSafe::insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt) {
+    if(sql.substr(0,11) == L"INSERT INTO"){
+        sqlite3_stmt *statement = nullptr;
+        wchar_t unused[256] = {0};
+        prep_statement(dbcon, sql, &statement, unused);
+        int32_t idx = 1;
+        while(!bt.empty()){
+            bind_arg(statement, idx++, bt.front());
+            bt.pop_front();
         }
-        sync();
-    }
-}
-
-void FlobbelSafe::sync() {
-    while(FCS.ready_for_sync) Sleep(100);
-    FCS.syncing = true; //lock
-    //open temporary DB for transfer
-    if(!PathFileExistsW((FCS.db_path+ L".tmp").c_str())){ // file not there
-        if( !createNInitDB(FCS.db_path + L".tmp", &uploadDBCon)){
-            std::cerr << "ERROR creating upload sqliteDB\n";
-            FCS.syncing = false;
-            return;
-        }
-        CopyFileW(FCS.db_path.c_str(), (FCS.db_path+L".tmp").c_str(),false);
-    }else{ // file already exists
-        if(!createNInitDB(FCS.db_path + L".tmp", &uploadDBCon)){
-            std::cerr << "ERROR connecting to existing uploadSqliteDB\n";
-            FCS.syncing = false;
-            return;
-        }
-
-        //Transfer Data from static to tmp DB
-        sqlite3_stmt *uniState = nullptr;
-        execStmt(uploadDBCon, &uniState, L"ATTACH '"+FCS.db_path+L"' AS srcDB;");
-
-        execStmt(uploadDBCon, &uniState, L"INSERT INTO " + keyTable + L" SELECT * FROM srcDB."+keyTable);
-        execStmt(uploadDBCon, &uniState, L"INSERT INTO " + proTable + L" SELECT * FROM srcDB."+proTable);
-        execStmt(uploadDBCon, &uniState, L"INSERT INTO screentime SELECT * FROM srcDB.screentime");
-        sqlite3_finalize(uniState);
-
-        sqlite3_close(dbcon);
-    }
-
-    //Delete old DB
-    DeleteFileW(FCS.db_path.c_str());
-
-    // re-initialize new static DB
-    wchar_t date[11];
-    auto n = now();
-    wsprintfW(date,L"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
-    keyTable = L"KEYS_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
-    proTable = L"PROC_"+std::wstring(date)+L"_"+std::wstring(computerHandleStr())+L"_CPACTIVITY";
-
-    //upload Database
-    if( !createNInitDB(FCS.db_path + L".tmp", &uploadDBCon)){
-        std::cerr << "ERROR creating nextGen Default sqliteDB\n";
-        FCS.syncing = false;
-        return;
-    }
-    if(!FCS.flobWS->upload(FCS.db_path+L".tmp")){
-        std::cerr << "ERROR: Uploading File\n";
+        int rc = sqlite3_step(statement);
+        sqlErrCheck(rc, L"Stepping test insert. unused: "+ std::wstring(unused),dbcon);
     }else{
-        DeleteFileW((FCS.db_path+L".tmp").c_str());
+        throw(sqlite_error("not an \"insert\"-query @insert_data"));
     }
-    std::wcerr << "Syncing\n";
-    FCS.syncing = false; // unlock
 }
-*/
+
+void FlobbelSafe::bind_arg(sqlite3_stmt *stmt, int32_t idx, const sql_basetype *bt) {
+    if(bt->type() == SQLPassingType::Integer){
+        sqlite3_bind_int64(stmt, idx, sqlite3_int64(*(sql_int*)bt));
+         delete(sql_int*)bt;
+    }else{
+        std::wstring arg = *(sql_str*)bt;
+        sqlite3_bind_text16(stmt,idx, arg.c_str(), sizeof(wchar_t)*(arg.length()), nullptr);
+        delete(sql_str*)bt;
+    }
+}
+
+void FlobbelSafe::buildTable(const std::string& sql){
+    if(sql.substr(0,26) == "CREATE TABLE IF NOT EXISTS"){
+
+    }else{
+        throw sqlite_error("Not a table-creation string at buildTable");
+    }
+}
+
 bool FlobbelSafe::createNInitDB(const std::wstring &path, sqlite3 **dbptr) {
     int rc = 0;
     sqlite3_stmt *uniState = nullptr;

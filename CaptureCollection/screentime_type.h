@@ -23,6 +23,7 @@ class ScreentimeCapture: public Capture {
 public:
     explicit ScreentimeCapture();
     ~ScreentimeCapture();
+    void sql_action(const Info*);
 private:
     void wmshutdownCallback();
     void windowsStartup();

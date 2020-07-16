@@ -47,22 +47,23 @@
   <component name="ChangeListManager">
     <list default="true" id="d06fd318-0f26-4bbd-a1ee-f348c8c08bc7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturecollection.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CaptureCollection/capturetypes.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/capturetypes.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/info_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/info_type.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/keypress_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/keypress_type.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/keypress_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/keypress_type.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/mouse_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/mouse_type.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CaptureCollection/mouse_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/mouse_type.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/process_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/process_type.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/process_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/process_type.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/screentime_type.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/screentime_type.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CaptureCollection/screentime_type.h" beforeDir="false" afterPath="$PROJECT_DIR$/CaptureCollection/screentime_type.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelSafe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FlobbelSafe.h" beforeDir="false" afterPath="$PROJECT_DIR$/FlobbelSafe.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flob_exceptions.h" beforeDir="false" afterPath="$PROJECT_DIR$/flob_exceptions.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/global_constants.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_constants.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/global_functions.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/global_functions.h" beforeDir="false" afterPath="$PROJECT_DIR$/global_functions.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -243,6 +244,9 @@
       <workItem from="1593961621298" duration="4957000" />
       <workItem from="1594043968016" duration="13056000" />
       <workItem from="1594540498394" duration="25048000" />
+      <workItem from="1594631599087" duration="6473000" />
+      <workItem from="1594640341322" duration="11092000" />
+      <workItem from="1594651587410" duration="4524000" />
     </task>
     <servers />
   </component>
@@ -269,50 +273,50 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="742" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047136557" />
-    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog" timestamp="1594553134949">
+    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog" timestamp="1594652109986">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594553134949" />
-    <state x="715" y="222" key="#xdebugger.evaluate" timestamp="1594547751279">
+    <state x="881" y="272" width="326" height="495" key="#xdebugger.XInspectDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594652109986" />
+    <state x="1137" y="158" key="#xdebugger.evaluate" timestamp="1594652108872">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="715" y="222" key="#xdebugger.evaluate/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594547751279" />
+    <state x="1137" y="158" key="#xdebugger.evaluate/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594652108872" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1593692409190">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593692409190" />
-    <state width="1560" height="218" key="GridCell.Tab.0.bottom" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.0.bottom" timestamp="1594656124539">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.0.center" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124539" />
+    <state width="1527" height="249" key="GridCell.Tab.0.center" timestamp="1594656124539">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.0.left" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.0.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124539" />
+    <state width="1527" height="249" key="GridCell.Tab.0.left" timestamp="1594656124539">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.0.right" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.0.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124539" />
+    <state width="1527" height="249" key="GridCell.Tab.0.right" timestamp="1594656124539">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.1.bottom" timestamp="1594566337017">
+    <state width="1527" height="249" key="GridCell.Tab.0.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124539" />
+    <state width="1527" height="249" key="GridCell.Tab.1.bottom" timestamp="1594656124540">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337017" />
-    <state width="1560" height="218" key="GridCell.Tab.1.center" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.1.bottom/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124540" />
+    <state width="1527" height="249" key="GridCell.Tab.1.center" timestamp="1594656124540">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.1.left" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.1.center/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124540" />
+    <state width="1527" height="249" key="GridCell.Tab.1.left" timestamp="1594656124540">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
-    <state width="1560" height="218" key="GridCell.Tab.1.right" timestamp="1594566337016">
+    <state width="1527" height="249" key="GridCell.Tab.1.left/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124540" />
+    <state width="1527" height="249" key="GridCell.Tab.1.right" timestamp="1594656124540">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1560" height="218" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594566337016" />
+    <state width="1527" height="249" key="GridCell.Tab.1.right/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594656124540" />
     <state x="461" y="164" key="SettingsEditor" timestamp="1594048253821">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -321,27 +325,29 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1593692409191" />
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594047794744">
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1594643630022">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594047794744" />
-    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1594553918093">
+    <state x="769" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594643630022" />
+    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1594644432638">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594553918093" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1594558887151">
+    <state x="472" y="180" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594644432638" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1594653384948">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594558887151" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-1920.-494.1920.1040/1920.-871.1200.1880@0.0.1920.1040" timestamp="1594653384948" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="CidrExceptionBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
         <watch expression="FCS" language="ObjectiveC" />
-        <watch expression="callbackCollection" />
-        <watch expression="FCS.callbackCollection" language="ObjectiveC" />
-        <watch expression="FCS.callbackCollection" language="ObjectiveC" />
-        <watch expression="src" />
+        <watch expression="dbcon" />
       </configuration>
     </watches-manager>
   </component>

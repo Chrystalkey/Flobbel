@@ -45,6 +45,10 @@ std::wstring getOS();
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon = nullptr);
 void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused);
 void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt);
+template <class T>
+void variprint(T arg);
+template<class T, class ...Ts>
+void variprint(T arg, Ts... args);
 
 BOOL control_handler(DWORD signal);
 #else

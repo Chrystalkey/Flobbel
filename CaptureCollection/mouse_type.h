@@ -72,6 +72,7 @@ public:
     ~MouseCapture();
     static std::thread *run(Capture*ths);
     static void terminate(Capture *ths, std::thread*thr){static_cast<MouseCapture*>(ths)->_terminate=true;thr->join();delete thr;}
+    void sql_action(const Info*);
 private:
     static LRESULT llMouseHook(int nCode, WPARAM wParam, LPARAM lParam);
 

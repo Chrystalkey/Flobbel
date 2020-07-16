@@ -10,13 +10,6 @@
 #include <set>
 #include <thread>
 
-static const std::string process_sql = "CREATE TABLE IF NOT EXISTS process_type("
-                                       "id BIGINT PRIMARY KEY,"
-                                       "filename VARCHAR(256),"
-                                       "description VARCHAR(256),"
-                                       "time_on BIGINT,"
-                                       "time_off BIGINT);";
-
 typedef struct: public Info{
 #ifdef __WIN32__
     std::wstring filename;
@@ -41,6 +34,7 @@ public:
     ~ProcessCapture() {delete prcProcessThread;}
     static std::thread* run(Capture*);
     static void terminate(Capture *, std::thread*);
+    void sql_action(Info*);
 private:
     std::map<uint32_t, ProcessInfo> *getProcessList();
     std::map<uint32_t, ProcessInfo> processList;
@@ -49,6 +43,7 @@ private:
     void detectChanges(std::map<uint32_t, ProcessInfo> *list);
     void finishProcessList();
 
+    static ProcessCapture *self;
     bool _terminate = false;
     const std::wstring placeholder = L"platzhalterwobbel"; // platzhalterkonstante
     bool runsAtPrgmStart = false;

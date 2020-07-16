@@ -10,11 +10,13 @@
 #include <string>
 #include <random>
 #include <thread>
+#include <queue>
 
 #include "dependencies/sqlite/sqlite3.h"
 
 #include "global_functions.h"
 #include "capturetypes.h"
+#include "Ritualkacke/sqlpassingtypes.h"
 
 typedef void (*InfoCallback)(const Info&);
 
@@ -26,7 +28,10 @@ public:
 
     void save(const Info& info);
 
+    void insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt);
 private: // INFOSTRUCT-PROCESSING FUNCTIONS
+    void bind_arg(sqlite3_stmt*stmt, int32_t idx, const sql_basetype *bt);
+
     void add_key(const KeypressInfo &);
     void add_prc(const ProcessInfo &);
     void add_screentime(const ScreentimeInfo &);
@@ -35,7 +40,6 @@ private: // INFOSTRUCT-PROCESSING FUNCTIONS
     void add_mousemove(const MouseMoveInfo &);
 
     InfoCallback ic;
-
 private: // PROCESSING QUEUES
     void finalize_queues();
     std::queue<std::wstring> keyQueue;

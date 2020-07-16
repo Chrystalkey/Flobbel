@@ -2,6 +2,7 @@
 // Created by Chrystalkey on 19.06.2019.
 //
 
+#include <windows.h>
 #include "capturecollection.h"
 #include "../logging.h"
 
@@ -13,8 +14,8 @@ void CaptureCollection::init(){
     FCS.log->add_capture(L"Process Uptime");
     capture_classes.emplace(FlobGlobal::Screentime, std::make_unique<ScreentimeCapture>());
     FCS.log->add_capture(L"Screentime ");
-    capture_classes.emplace(FlobGlobal::MouseInfo, std::make_unique<MouseCapture>());
-    FCS.log->add_capture(L"Mouse");
+    //capture_classes.emplace(FlobGlobal::MouseInfo, std::make_unique<MouseCapture>());
+    //FCS.log->add_capture(L"Mouse");
     FCS.log->finish_header();
 }
 

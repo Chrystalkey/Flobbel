@@ -18,8 +18,8 @@ bool processArguments(int argc, char **argv);
 void initialize_flobbel();
 void keySequence(DWORD vkCode);
 
-//TODO: put data safe-classes into capture-headers & use FlobSafe as a hub like CaptureCollection
 //TODO: unify exceptions and logging
+//TODO: write mouse sql_action, put table names as variable into captures
 
 int main(int argc, char**argv) {
     if(argc > 1)

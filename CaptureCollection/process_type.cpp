@@ -17,8 +17,29 @@ ProcessCapture::ProcessCapture() {
     if(exists)
         throw instance_exists_error("ProcessCapture");
     exists = true;
+    self = this;
+    sql_table = "CREATE TABLE IF NOT EXISTS process_type("
+                "id INTEGER PRIMARY KEY,"
+                "filename TEXT,"
+                "description TEXT,"
+                "pid INTEGER, "
+                "time_on TEXT,"
+                "time_off TEXT);";
+    FCS.safe->buildTable(sql_table);
     infoType = FlobGlobal::Process;
     FCS.callbackCollection->register_threading({this, &ProcessCapture::run, &ProcessCapture::terminate, nullptr, nullptr});
+}
+
+void ProcessCapture::sql_action(Info *info) {
+    auto pack = (const ProcessInfo*)info;
+    FCS.safe->insert_data(L"INSERT INTO process_type( filename, key, time_on, time_off) VALUES(?,?,?,?);",
+                          {
+                            new sql_str(pack->filename),
+                            new sql_str(pack->description),
+                            new sql_int(pack->PID),
+                            new sql_str(pack->timestamp_on),
+                            new sql_str(pack->timestamp_off)
+                          });
 }
 
 void ProcessCapture::terminate(Capture *ths, std::thread* thr){
@@ -121,6 +142,6 @@ void ProcessCapture::finishProcessList() {
     for(auto &x: processList){
         x.second.timestamp_off = timestmp;
         x.second.execAtPrgmStop = true;
-        FCS.safe->save(x.second);
+        sql_action(&x.second);
     }
 }

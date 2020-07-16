@@ -6,10 +6,23 @@
 #define FLOBBEL_CAPTURECOLLECTION_H
 
 #include "../global_functions.h"
-#include "capturetypes.h"
 #include <lm.h>
 #include <map>
 #include <memory>
+#include "capturetypes.h"
+
+typedef std::thread* (*Runner)(Capture*);
+typedef void (*Terminator)(Capture*, std::thread*);
+typedef void (*MSGCallback)(Capture*, const MSG &);
+
+typedef struct{
+    Capture* ptr = nullptr;
+    Runner r = nullptr;
+    Terminator t = nullptr;
+
+    MSGCallback cb = nullptr;
+    std::thread *th = nullptr;
+} TripleThread;
 
 class CaptureCollection {
 public:

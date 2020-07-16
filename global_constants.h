@@ -7,28 +7,14 @@
 #include <iostream>
 #include <string>
 #include <thread>
-#include <windows.h>
+//#include <windows.h>
 #include "flob_exceptions.h"
-
-class Capture;
 
 typedef unsigned char u_char;
 typedef unsigned int UINT;
 
 typedef std::string ComputerHandle;
 typedef std::wstring Timestamp;
-
-typedef std::thread* (*Runner)(Capture*);
-typedef void (*Terminator)(Capture*, std::thread*);
-typedef void (*MSGCallback)(Capture*, MSG &);
-
-typedef struct{
-    Capture* ptr = nullptr;
-    Runner r = nullptr;
-    Terminator t = nullptr;
-    MSGCallback cb = nullptr;
-    std::thread *th = nullptr;
-} TripleThread;
 
 typedef union {
     u_char* data[6] = {0};

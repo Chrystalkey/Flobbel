@@ -15,15 +15,23 @@ MouseCapture *MouseCapture::self = nullptr;
 MouseCapture::MouseCapture() {
     if(exists)
         throw instance_exists_error("Mouse Capture");
-    self = this;
     infoType = FlobGlobal::MouseInfo;
+    self = this;
     sql_table = mouse_click_sql+mouse_scroll_sql+mouse_move_sql;
+    FCS.safe->buildTable(sql_table);
     FCS.callbackCollection->register_threading({this, &MouseCapture::run, &MouseCapture::terminate});
     mouseLLHookHandle = SetWindowsHookExW(WH_MOUSE_LL, llMouseHook, 0, 0);
 }
 
 MouseCapture::~MouseCapture() {
     UnhookWindowsHookEx(mouseLLHookHandle);
+}
+
+void MouseCapture::sql_action(const Info *info) {
+    switch(info->infotype){
+        case FlobGlobal::MouseClick:
+            auto x = (const MouseClickInfo*)info;
+    }
 }
 
 std::thread* MouseCapture::run(Capture *ths) {

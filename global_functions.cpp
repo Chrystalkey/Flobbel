@@ -51,8 +51,10 @@ void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
 }
 
 void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused){
+    
     int rc = sqlite3_prepare16_v2(dbcon,(void*)stmt.c_str(),(stmt.size()+1)*sizeof(wchar_t), statement,(const void**)&unused);
     sqlErrCheck(rc,L"preparing "+stmt+L" unused: "+unused);
+
 }
 void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt){
     wchar_t unused[256];

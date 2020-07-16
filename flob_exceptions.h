@@ -7,7 +7,7 @@
 
 #include <exception>
 
-class instance_exists_error : public std::runtime_error{
+class instance_exists_error : public std::runtime_error {
 public:
     instance_exists_error(std::string e):std::runtime_error("Only one instance permitted: "+e){}
 };
@@ -15,6 +15,11 @@ public:
 class sqlite_error : public std::runtime_error{
 public:
     sqlite_error(std::string e):std::runtime_error(e){}
+};
+
+class sql_invalid_strerr : public sqlite_error{
+public:
+    sql_invalid_strerr(std::string e): sqlite_error(e){}
 };
 
 #endif //FLOBBEL_FLOB_EXCEPTIONS_H
