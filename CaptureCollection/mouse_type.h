@@ -20,27 +20,6 @@ enum MouseButton{
     ExtraButton2
 };
 
-static const std::string mouse_click_sql = "CREATE TABLE IF NOT EXISTS MouseClick("
-                              "id INTEGER PRIMARY KEY,"
-                              "xPos INTEGER,"
-                              "yPos INTEGER,"
-                              "clickDown INTEGER,"
-                              "windowTitle TEXT,"
-                              "time INTEGER,"
-                              "button TEXT);";
-static const std::string mouse_scroll_sql = "CREATE TABLE IF NOT EXISTS MouseScroll("
-                               "id INTEGER PRIMARY KEY,"
-                               "xPos INTEGER,"
-                               "yPos INTEGER,"
-                               "windowTitle TEXT,"
-                               "time INTEGER,"
-                               "mouseDelta INTEGER);";
-static const std::string mouse_move_sql = "CREATE TABLE IF NOT EXISTS MouseMove("
-                             "id INTEGER PRIMARY KEY,"
-                             "xPos INTEGER,"
-                             "yPos INTEGER,"
-                             "time INTEGER);";
-
 typedef struct : public Info{
     POINT position;
     bool click_down = false; //down=true;up==true
@@ -61,10 +40,10 @@ typedef struct :public Info {
     uint64_t timestamp;
 } MouseMoveInfo;
 
-struct MouseBatch{
+typedef struct{
     MSLLHOOKSTRUCT hs;
     WPARAM wParam;
-};
+} MouseBatch;
 
 class MouseCapture : public Capture {
 public:
@@ -81,9 +60,13 @@ private:
 
     static MouseCapture* self;
 private:
-    std::queue<struct MouseBatch> eventQueue;
+    std::string clickTable, scrollTable, moveTable;
     void evaluate();
     bool _terminate = false;
+private:
+    std::queue<MouseBatch> channelqueue;
+    std::queue<MouseMoveInfo> moveinfoqueue;
+    std::queue<MouseScrollInfo> scrollinfoqueue;
 };
 
 #endif //FLOBBEL_MOUSE_TYPE_H

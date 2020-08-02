@@ -38,7 +38,6 @@ protected:
     static Capture* self;
     FlobGlobal::InfoType infoType;
     std::string sql_table;
-    std::string sql_insert;
 };
 
 

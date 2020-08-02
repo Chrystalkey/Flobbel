@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
-//#include <windows.h>
+#include <windef.h>
 #include "flob_exceptions.h"
 
 typedef unsigned char u_char;
@@ -35,13 +35,11 @@ class Log;
 class FlobConstants{
 public:
     FlobConstants(){if(exists) std::cerr << "Please use only one instance of this\n";exists = true;}
-    //ComputerHandle globalHandle = -1;
     std::string handle = "";
 #ifdef __WIN32__
     std::wstring savedirectory;
     std::wstring db_path;
     std::unordered_map<UINT, std::wstring> keys;
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
 #else
     std::string savedirectory;
     std::string db_path;
@@ -50,10 +48,7 @@ public:
     bool cleanup = false;
     bool syncing = false;
     uint16_t ready_for_sync = 0; //0=ready, writing functions add up when writing, subtract when finished
-
-    Log *log = nullptr;
-    CaptureCollection *callbackCollection = nullptr;
-    FlobbelSafe *safe = nullptr;
+    DWORD mainthread_id = 0;
 private:
     static bool exists;
 };

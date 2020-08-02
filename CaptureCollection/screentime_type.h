@@ -29,5 +29,6 @@ private:
     void windowsStartup();
     ScreentimeInfo screentimeTracker;
     static bool exists;
+    std::string screentimeTable;
 };
 #endif //FLOBBEL_SCREENTIME_TYPE_H

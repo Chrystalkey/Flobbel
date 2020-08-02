@@ -34,7 +34,7 @@ public:
     ~ProcessCapture() {delete prcProcessThread;}
     static std::thread* run(Capture*);
     static void terminate(Capture *, std::thread*);
-    void sql_action(Info*);
+    void sql_action(const Info*);
 private:
     std::map<uint32_t, ProcessInfo> *getProcessList();
     std::map<uint32_t, ProcessInfo> processList;
@@ -49,6 +49,7 @@ private:
     bool runsAtPrgmStart = false;
     static bool exists;
     std::thread *prcProcessThread = nullptr;
+    std::string proTable;
 };
 
 

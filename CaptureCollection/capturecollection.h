@@ -5,10 +5,10 @@
 #ifndef FLOBBEL_CAPTURECOLLECTION_H
 #define FLOBBEL_CAPTURECOLLECTION_H
 
-#include "../global_functions.h"
 #include <lm.h>
 #include <map>
 #include <memory>
+#include "../global_functions.h"
 #include "capturetypes.h"
 
 typedef std::thread* (*Runner)(Capture*);
@@ -26,28 +26,32 @@ typedef struct{
 
 class CaptureCollection {
 public:
-    CaptureCollection();
+    static CaptureCollection *self;
+    ~CaptureCollection();
 
-    ~CaptureCollection() = default;
-    void init();
+    static void init();
     void run(){
         for(TripleThread &t:triplethreads){
             if(t.r and t.ptr) t.th = t.r(t.ptr);
         }
+        Log::self->runner_go(this, L"All threads' infocollection threads are running.");
     }
     void terminate(){
         for(TripleThread &t:triplethreads){
             if(t.t and t.ptr and t.th) t.t(t.ptr,t.th);
         }
-        PostQuitMessage(EXIT_SUCCESS);
+        Log::self->terminator_go(this, L"All threads' infocollection threads joined and terminated.");
     }
 
     void register_threading(TripleThread tt){triplethreads.push_back(tt);}
 
     void loop();
 private:
+    explicit CaptureCollection();
+
     std::map<FlobGlobal::InfoType, std::unique_ptr<Capture>> capture_classes;
     std::vector<TripleThread> triplethreads;
+    std::thread *exitWatchdogThread = nullptr;
 };
 
 #endif //FLOBBEL_CAPTURECOLLECTION_H

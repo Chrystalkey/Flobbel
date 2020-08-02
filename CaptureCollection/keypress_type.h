@@ -8,9 +8,10 @@
 #include "../global_constants.h"
 #include "info_type.h"
 #include "windows.h"
+#include <queue>
 
 typedef struct:public Info{
-    uint8_t updown = 0; // down == updown%2 == 0; up == updown%2 == 1
+    uint8_t clickdown = 0; // down == clickdown%2 == 0; up == clickdown%2 == 1
     uint32_t scancode = 0;
     uint32_t vkcode = 0;
 #ifdef __WIN32__
@@ -28,6 +29,10 @@ public:
     ~KeyboardCapture();
     void sql_action(const Info*);
 private:
+    std::string keyTable;
+
+    std::queue<KeypressInfo> accumulation_queue;
+
     static LRESULT llkeyhook(int nCode, WPARAM wParam, LPARAM lParam);
     static HHOOK keyboardHook;
     static bool exists;

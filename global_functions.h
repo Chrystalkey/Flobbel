@@ -27,14 +27,14 @@ void initMap();
 
 #ifdef __WIN32__
 std::wstring computerHandleStr();
-std::wstring hexStr(u_char *data, size_t len);
+std::wstring hexStr(const u_char *data, size_t len);
 #else
 std::string computerHandleStr();
 std::string hexStr(u_char *data, size_t len);
 #endif
 
 std::vector<std::string> *mac();
-tm *now();
+std::tm *now();
 std::string generateHandle();
 std::vector<std::wstring> wsplit(std::wstring input, wchar_t delim = L';');
 std::vector<std::string> split(std::string input, char delim = ';');
@@ -45,6 +45,9 @@ std::wstring getOS();
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon = nullptr);
 void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused);
 void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt);
+std::string from_wstring(const std::wstring &ws);
+std::wstring from_string(const std::string &s);
+
 template <class T>
 void variprint(T arg);
 template<class T, class ...Ts>

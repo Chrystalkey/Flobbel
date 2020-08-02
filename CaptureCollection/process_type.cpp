@@ -12,27 +12,35 @@
 #include "../FlobbelSafe.h"
 
 bool ProcessCapture::exists = false;
+ProcessCapture* ProcessCapture::self = nullptr;
 
 ProcessCapture::ProcessCapture() {
     if(exists)
-        throw instance_exists_error("ProcessCapture");
+        throw instance_exists_error("ProcessCapture::ProcessCapture");
     exists = true;
     self = this;
-    sql_table = "CREATE TABLE IF NOT EXISTS process_type("
+
+    auto n = now();
+    char date[11] = {0};
+    sprintf(date,"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
+    proTable = "Process_"+std::string(date)+"_"+from_wstring(computerHandleStr())+"_CPACTIVITY";
+
+    sql_table = "CREATE TABLE IF NOT EXISTS "+proTable+"("
                 "id INTEGER PRIMARY KEY,"
                 "filename TEXT,"
                 "description TEXT,"
                 "pid INTEGER, "
                 "time_on TEXT,"
                 "time_off TEXT);";
-    FCS.safe->buildTable(sql_table);
+    FlobbelSafe::self->buildTable(sql_table);
+    Log::self->info("ProcessCapture::ProcessCapture", "Table build verified: "+sql_table);
     infoType = FlobGlobal::Process;
-    FCS.callbackCollection->register_threading({this, &ProcessCapture::run, &ProcessCapture::terminate, nullptr, nullptr});
+    CaptureCollection::self->register_threading({this, &ProcessCapture::run, &ProcessCapture::terminate, nullptr, nullptr});
 }
 
-void ProcessCapture::sql_action(Info *info) {
+void ProcessCapture::sql_action(const Info *info) {
     auto pack = (const ProcessInfo*)info;
-    FCS.safe->insert_data(L"INSERT INTO process_type( filename, key, time_on, time_off) VALUES(?,?,?,?);",
+    FlobbelSafe::self->insert_data(L"INSERT INTO " + from_string(proTable) + L"( filename, description, pid, time_on, time_off) VALUES(?, ?, ?, ?, ?);",
                           {
                             new sql_str(pack->filename),
                             new sql_str(pack->description),
@@ -130,7 +138,7 @@ void ProcessCapture::detectChanges(std::map<uint32_t, ProcessInfo> *list) {
     for(auto x = processList.begin(); x != processList.end(); x++){
         if(!x->second.done){
             x->second.timestamp_off = timestamp();
-            FCS.safe->save(x->second);
+            sql_action(&(x->second));
             x = processList.erase(x);
         }
         x->second.done = false;

@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <chrono>
+#include <mutex>
 
 #include "sqlite/sqlite3.h"
 #include "FlobbelSafe.h"
@@ -33,25 +34,28 @@ std::wstring getOS(){
         if(sizeof(void*) == 8) version += L"64";
         else version += L"32";
     } else
-        FCS.log->recoverable(L"getOS", L"GetVersionEx failed");
+        Log::self->recoverable(L"getOS", L"GetVersionEx failed");
     return version;
 }
 #else
 #endif
 
+std::mutex sql_err_mtx;
+
 void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
     if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
         return;
     else{
-        if(dbcon)
+        if(dbcon) {
+            sql_err_mtx.lock();
             sqlite3_close(dbcon);
-        FCS.log->panic(L"sqlErrCheck", L"SQLite failed doing "+additional + L" with errcode: " + std::to_wstring(rc));
-        throw sqlite_error("SQLite failed doing " + FCS.converter.to_bytes(additional) + " with errcode: " + std::to_string(rc));
+            sql_err_mtx.unlock();
+        }
+        throw sqlite_error("sqlErrCheck", "SQLite failed doing " + from_wstring(additional) + " with errcode: " + std::to_string(rc));
     }
 }
 
 void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** statement, wchar_t *unused){
-    
     int rc = sqlite3_prepare16_v2(dbcon,(void*)stmt.c_str(),(stmt.size()+1)*sizeof(wchar_t), statement,(const void**)&unused);
     sqlErrCheck(rc,L"preparing "+stmt+L" unused: "+unused);
 
@@ -59,16 +63,36 @@ void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** sta
 void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt){
     wchar_t unused[256];
     prep_statement(dbcon,stmt,statement,unused);
-    int rc = sqlite3_step(*statement);
-    sqlErrCheck(rc,L"stepping stmt: " + stmt+L" Unused: " + unused);
+    int counter = 0;
+
+    sql_try:
+    try{
+        int rc = sqlite3_step(*statement);
+        sqlErrCheck(rc,L"stepping stmt: " + stmt+L" Unused: " + unused);
+    }catch(sqlite_error &sql_err){
+        if(++counter > 5){
+            throw flob_panic("void execStmt", std::string("giving up: ") + sql_err.what());
+        }else{
+            Sleep(100);
+            goto sql_try;
+        }
+    }
 }
 
-tm *now(){
-    time_t ltime;
-    ltime=std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    struct tm *tm;
-    tm=gmtime(&ltime);
-    return tm;
+std::wstring_convert<std::codecvt_utf8_utf16<wchar_t > > converter;
+
+std::string from_wstring(const std::wstring &ws){
+    return converter.to_bytes(ws);
+}
+
+std::wstring from_string(const std::string &s){
+    return converter.from_bytes(s);
+}
+
+std::tm *now(){
+    std::time_t t = std::time(0);
+    std::tm *nw = std::localtime(&t);
+    return nw;
 }
 std::wstring timestamp(){
     wchar_t timestamp[20];
@@ -79,19 +103,19 @@ std::wstring timestamp(){
     return retour;
 }
 
-constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+static constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
                            '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-std::wstring hexStr(u_char *data, size_t len){
+std::wstring hexStr(const u_char *data, size_t len){
     if(data == nullptr) return L"";
     std::string s(len*2,' ');
     for(int i = 0; i < len; ++i){
-        s[2*i]     = hexmap[(data[i]&0xF0)>>4];
-        s[2*i+1]   = hexmap[(data[i]&0x0F)];
+        s[2*i]     = hexmap[(data[i]&0xF0u)>>4u];
+        s[2*i+1]   = hexmap[(data[i]&0x0Fu)];
     }
-    return FCS.converter.from_bytes(s);
+    return from_string(s);
 }
 std::wstring computerHandleStr(){
-        return FCS.converter.from_bytes(FCS.handle);
+        return from_string(FCS.handle);
 }
 std::string generateHandle(){
     static const char alphanum[] = {
@@ -185,109 +209,110 @@ BOOL control_handler(DWORD signal){
 }
 
 void initMap(){
-    FCS.keys[VK_TAB]			    = L"_TAB";
-    FCS.keys[VK_CAPITAL]			= L"CAPS";
-    FCS.keys[VK_F1]					= L"__F1";
-    FCS.keys[VK_F2]					= L"__F2";
-    FCS.keys[VK_F3]					= L"__F3";
-    FCS.keys[VK_F4]					= L"__F4";
-    FCS.keys[VK_F5]					= L"__F5";
-    FCS.keys[VK_F6]					= L"__F6";
-    FCS.keys[VK_F7]					= L"__F7";
-    FCS.keys[VK_F8]					= L"__F8";
-    FCS.keys[VK_F9]					= L"__F9";
-    FCS.keys[VK_F10]				= L"_F10";
-    FCS.keys[VK_F11]			    = L"_F11";
-    FCS.keys[VK_F12]				= L"_F12";
-    FCS.keys[VK_F13] 				= L"_F13";
-    FCS.keys[VK_F14] 				= L"_F14";
-    FCS.keys[VK_F15] 				= L"_F15";
-    FCS.keys[VK_F16] 				= L"_F16";
-    FCS.keys[VK_F17] 				= L"_F17";
-    FCS.keys[VK_F18] 				= L"_F18";
-    FCS.keys[VK_F19] 				= L"_F19";
-    FCS.keys[VK_F20] 				= L"_F20";
-    FCS.keys[VK_F21] 				= L"_F21";
-    FCS.keys[VK_F22] 				= L"_F22";
-    FCS.keys[VK_F23] 				= L"_F23";
-    FCS.keys[VK_F24] 				= L"_F24";
-    FCS.keys[VK_BACK]				= L"BACK";
-    FCS.keys[VK_RETURN]				= L"RETU";
-    FCS.keys[VK_ESCAPE]				= L"ESCA";
-    FCS.keys[VK_LMENU]				= L"LMEN";
-    FCS.keys[VK_RMENU]				= L"RMEN";
-    FCS.keys[VK_LCONTROL]			= L"LCTR";
-    FCS.keys[VK_RCONTROL]			= L"RCTR";
-    FCS.keys[VK_RSHIFT]				= L"RSHI";
-    FCS.keys[VK_LSHIFT]				= L"LSHI";
-    FCS.keys[VK_LBUTTON] 			= L"LMBU";
-    FCS.keys[VK_RBUTTON]	    	= L"RMBU";
-    FCS.keys[VK_CANCEL]				= L"CANC";
-    FCS.keys[VK_MBUTTON]		    = L"MBUT";
-    FCS.keys[VK_XBUTTON1]			= L"XBU1";
-    FCS.keys[VK_XBUTTON2]			= L"XBU2";
-    FCS.keys[VK_CLEAR]				= L"CLEA";
-    FCS.keys[VK_PAUSE]				= L"PAUS";
-    FCS.keys[VK_FINAL]				= L"FINA";
-    FCS.keys[VK_CONVERT]			= L"CONV";
-    FCS.keys[VK_NONCONVERT]			= L"NCVT";
-    FCS.keys[VK_ACCEPT]				= L"ACCE";
-    FCS.keys[VK_MODECHANGE]			= L"MODC";
-    FCS.keys[VK_SPACE]				= L"SPAC";
-    FCS.keys[VK_PRIOR]				= L"PRIO";
-    FCS.keys[VK_NEXT]				= L"NEXT";
-    FCS.keys[VK_END]				= L"_END";
-    FCS.keys[VK_HOME]				= L"HOME";
-    FCS.keys[VK_LEFT]				= L"LEFT";
-    FCS.keys[VK_UP]					= L"__UP";
-    FCS.keys[VK_RIGHT]				= L"RIGH";
-    FCS.keys[VK_DOWN]				= L"DOWN";
-    FCS.keys[VK_SELECT]				= L"SELE";
-    FCS.keys[VK_PRINT]				= L"PRNT";
-    FCS.keys[VK_EXECUTE]			= L"EXEC";
-    FCS.keys[VK_SNAPSHOT]			= L"SNAP";
-    FCS.keys[VK_INSERT]				= L"INSR";
-    FCS.keys[VK_DELETE]				= L"DELE";
-    FCS.keys[VK_HELP]				= L"HELP";
-    FCS.keys[VK_LWIN]				= L"LWIN";
-    FCS.keys[VK_RWIN]				= L"RWIN";
-    FCS.keys[VK_APPS]				= L"APPS";
-    FCS.keys[VK_SLEEP]				= L"SLEE";
-    FCS.keys[VK_NUMPAD0] 			= L"NUM0";
-    FCS.keys[VK_NUMPAD1] 			= L"NUM1";
-    FCS.keys[VK_NUMPAD2] 			= L"NUM2";
-    FCS.keys[VK_NUMPAD3] 			= L"NUM3";
-    FCS.keys[VK_NUMPAD4] 			= L"NUM4";
-    FCS.keys[VK_NUMPAD5] 			= L"NUM5";
-    FCS.keys[VK_NUMPAD6] 			= L"NUM6";
-    FCS.keys[VK_NUMPAD7] 			= L"NUM7";
-    FCS.keys[VK_NUMPAD8] 			= L"NUM8";
-    FCS.keys[VK_NUMPAD9] 			= L"NUM9";
-    FCS.keys[VK_MULTIPLY]			= L"MULT";
-    FCS.keys[VK_ADD]		    	= L"_ADD";
-    FCS.keys[VK_SEPARATOR]			= L"_SEP";
-    FCS.keys[VK_SUBTRACT]			= L"_SUB";
-    FCS.keys[VK_DECIMAL]		    = L"DECI";
-    FCS.keys[VK_DIVIDE]				= L"_DIV";
-    FCS.keys[VK_NUMLOCK]			= L"NLCK";
-    FCS.keys[VK_SCROLL]				= L"SROL";
-    FCS.keys[VK_BROWSER_BACK]		= L"BBCK";
-    FCS.keys[VK_BROWSER_FORWARD] 	= L"BFWD";
-    FCS.keys[VK_BROWSER_REFRESH] 	= L"BREF";
-    FCS.keys[VK_BROWSER_STOP]		= L"BSTP";
-    FCS.keys[VK_BROWSER_SEARCH]		= L"BSEA";
-    FCS.keys[VK_BROWSER_FAVORITES]	= L"BFAV";
-    FCS.keys[VK_BROWSER_HOME]		= L"BHOM";
-    FCS.keys[VK_VOLUME_MUTE]		= L"VMUT";
-    FCS.keys[VK_VOLUME_DOWN]		= L"VDWN";
-    FCS.keys[VK_VOLUME_UP]			= L"_VUP";
-    FCS.keys[VK_MEDIA_NEXT_TRACK]	= L"MENX";
-    FCS.keys[VK_MEDIA_PREV_TRACK]	= L"MEPR";
-    FCS.keys[VK_MEDIA_STOP]			= L"MEST";
-    FCS.keys[VK_MEDIA_PLAY_PAUSE]	= L"MEPP";
-    FCS.keys[VK_LAUNCH_APP1] 		= L"APP1";
-    FCS.keys[VK_LAUNCH_APP2] 		= L"APP2";
-    FCS.keys[VK_LAUNCH_MAIL] 		= L"LMAI";
+    FCS.keys.insert({
+    {VK_TAB,L"_TAB"},
+    {VK_CAPITAL,L"CAPS"},
+    {VK_F1,L"__F1"},
+    {VK_F2,L"__F2"},
+    {VK_F3,L"__F3"},
+    {VK_F4,L"__F4"},
+    {VK_F5,L"__F5"},
+    {VK_F6,L"__F6"},
+    {VK_F7,L"__F7"},
+    {VK_F8,L"__F8"},
+    {VK_F9,L"__F9"},
+    {VK_F10,L"_F10"},
+    {VK_F11,L"_F11"},
+    {VK_F12,L"_F12"},
+    {VK_F13,L"_F13"},
+    {VK_F14,L"_F14"},
+    {VK_F15,L"_F15"},
+    {VK_F16,L"_F16"},
+    {VK_F17,L"_F17"},
+    {VK_F18,L"_F18"},
+    {VK_F19,L"_F19"},
+    {VK_F20,L"_F20"},
+    {VK_F21,L"_F21"},
+    {VK_F22,L"_F22"},
+    {VK_F23,L"_F23"},
+    {VK_F24,L"_F24"},
+    {VK_BACK,L"BACK"},
+    {VK_RETURN,L"RETU"},
+    {VK_ESCAPE,L"ESCA"},
+    {VK_LMENU,L"LMEN"},
+    {VK_RMENU,L"RMEN"},
+    {VK_LCONTROL,L"LCTR"},
+    {VK_RCONTROL,L"RCTR"},
+    {VK_RSHIFT,L"RSHI"},
+    {VK_LSHIFT,L"LSHI"},
+    {VK_LBUTTON,L"LMBU"},
+    {VK_RBUTTON,L"RMBU"},
+    {VK_CANCEL,L"CANC"},
+    {VK_MBUTTON,L"MBUT"},
+    {VK_XBUTTON1,L"XBU1"},
+    {VK_XBUTTON2,L"XBU2"},
+    {VK_CLEAR,L"CLEA"},
+    {VK_PAUSE,L"PAUS"},
+    {VK_FINAL,L"FINA"},
+    {VK_CONVERT,L"CONV"},
+    {VK_NONCONVERT,L"NCVT"},
+    {VK_ACCEPT,L"ACCE"},
+    {VK_MODECHANGE,L"MODC"},
+    {VK_SPACE,L"SPAC"},
+    {VK_PRIOR,L"PRIO"},
+    {VK_NEXT,L"NEXT"},
+    {VK_END,L"_END"},
+    {VK_HOME,L"HOME"},
+    {VK_LEFT,L"LEFT"},
+    {VK_UP,L"__UP"},
+    {VK_RIGHT,L"RIGH"},
+    {VK_DOWN,L"DOWN"},
+    {VK_SELECT,L"SELE"},
+    {VK_PRINT,L"PRNT"},
+    {VK_EXECUTE,L"EXEC"},
+    {VK_SNAPSHOT,L"SNAP"},
+    {VK_INSERT,L"INSR"},
+    {VK_DELETE,L"DELE"},
+    {VK_HELP,L"HELP"},
+    {VK_LWIN,L"LWIN"},
+    {VK_RWIN,L"RWIN"},
+    {VK_APPS,L"APPS"},
+    {VK_SLEEP,L"SLEE"},
+    {VK_NUMPAD0,L"NUM0"},
+    {VK_NUMPAD1,L"NUM1"},
+    {VK_NUMPAD2,L"NUM2"},
+    {VK_NUMPAD3,L"NUM3"},
+    {VK_NUMPAD4,L"NUM4"},
+    {VK_NUMPAD5,L"NUM5"},
+    {VK_NUMPAD6,L"NUM6"},
+    {VK_NUMPAD7,L"NUM7"},
+    {VK_NUMPAD8,L"NUM8"},
+    {VK_NUMPAD9,L"NUM9"},
+    {VK_MULTIPLY,L"MULT"},
+    {VK_ADD,L"_ADD"},
+    {VK_SEPARATOR,L"_SEP"},
+    {VK_SUBTRACT,L"_SUB"},
+    {VK_DECIMAL,L"DECI"},
+    {VK_DIVIDE,L"_DIV"},
+    {VK_NUMLOCK,L"NLCK"},
+    {VK_SCROLL,L"SROL"},
+    {VK_BROWSER_BACK,L"BBCK"},
+    {VK_BROWSER_FORWARD,L"BFWD"},
+    {VK_BROWSER_REFRESH,L"BREF"},
+    {VK_BROWSER_STOP,L"BSTP"},
+    {VK_BROWSER_SEARCH,L"BSEA"},
+    {VK_BROWSER_FAVORITES,L"BFAV"},
+    {VK_BROWSER_HOME,L"BHOM"},
+    {VK_VOLUME_MUTE,L"VMUT"},
+    {VK_VOLUME_DOWN,L"VDWN"},
+    {VK_VOLUME_UP,L"_VUP"},
+    {VK_MEDIA_NEXT_TRACK,L"MENX"},
+    {VK_MEDIA_PREV_TRACK,L"MEPR"},
+    {VK_MEDIA_STOP,L"MEST"},
+    {VK_MEDIA_PLAY_PAUSE,L"MEPP"},
+    {VK_LAUNCH_APP1,L"APP1"},
+    {VK_LAUNCH_APP2,L"APP2"},
+    {VK_LAUNCH_MAIL,L"LMAI"}});
     /*
 #define VK_OEM_1 0xBA
 #define VK_OEM_PLUS 0xBB

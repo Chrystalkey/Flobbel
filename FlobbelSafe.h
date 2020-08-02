@@ -22,22 +22,17 @@ typedef void (*InfoCallback)(const Info&);
 
 class FlobbelSafe {
 public:
-    explicit FlobbelSafe(std::wstring &_safedir, InfoCallback ic);
     ~FlobbelSafe();
     void buildTable(const std::string& sql);
+    static void init(std::filesystem::path _safedir, InfoCallback ic);
+    //void save(const Info& info);
+    static FlobbelSafe *self;
+    void insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt, int32_t module = 0);
+private:
 
-    void save(const Info& info);
+    explicit FlobbelSafe(const std::wstring &_safedir, InfoCallback ic);
 
-    void insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt);
-private: // INFOSTRUCT-PROCESSING FUNCTIONS
     void bind_arg(sqlite3_stmt*stmt, int32_t idx, const sql_basetype *bt);
-
-    void add_key(const KeypressInfo &);
-    void add_prc(const ProcessInfo &);
-    void add_screentime(const ScreentimeInfo &);
-    void add_mouseclick(const MouseClickInfo &info);
-    void add_mousescroll(const MouseScrollInfo &);
-    void add_mousemove(const MouseMoveInfo &);
 
     InfoCallback ic;
 private: // PROCESSING QUEUES
@@ -48,16 +43,9 @@ private: // PROCESSING QUEUES
 private: //DATABASE INTERNA
     sqlite3 *dbcon, *uploadDBCon = nullptr;
     std::wstring keyTable, proTable;
-    bool createNInitDB(const std::wstring &path, sqlite3 **dbptr);
-
-public: // TIMER FUNCTIONS
-    //void sync_timer();
-    //void sync();
+    static bool createNInitDB(const std::wstring &path, sqlite3 **dbptr);
 
 private: // TIMER VARIABLES
-    bool end_timer = false;
-    std::thread *tmrThread = nullptr;
-
     std::random_device rd;
     std::mt19937_64 mt;
     std::uniform_int_distribution<uint32_t> dist;

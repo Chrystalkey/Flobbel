@@ -15,15 +15,17 @@ bool ScreentimeCapture::exists = false;
 
 ScreentimeCapture::ScreentimeCapture() {
     if(exists)
-        throw instance_exists_error("ScreentimeCallback");
+        throw instance_exists_error("ScreentimeCapture::ScreentimeCapture");
     exists = true;
-    sql_table = "CREATE TABLE IF NOT EXISTS screentime_type("
+    screentimeTable = "Screentime_"+from_wstring(computerHandleStr());
+    sql_table = "CREATE TABLE IF NOT EXISTS "+screentimeTable+"("
                 "id INTEGER PRIMARY KEY,"
                 "time_on TEXT,"
                 "time_off TEXT,"
                 "duration INTEGER);";
     infoType = FlobGlobal::InfoType::Screentime;
-    FCS.safe->buildTable(sql_table);
+    FlobbelSafe::self->buildTable(sql_table);
+    Log::self->info("ScreentimeCapture::ScreentimeCapture", "Table build verified: "+sql_table);
     windowsStartup();
 }
 ScreentimeCapture::~ScreentimeCapture(){
@@ -31,7 +33,7 @@ ScreentimeCapture::~ScreentimeCapture(){
 }
 void ScreentimeCapture::sql_action(const Info *info) {
     auto pack = (const ScreentimeInfo*) info;
-    FCS.safe->insert_data(L"INSERT INTO screentime_type(time_on,time_off,duration) VALUES (?,?,?)",
+    FlobbelSafe::self->insert_data(L"INSERT INTO Screentime(time_on,time_off,duration) VALUES (?,?,?);",
                           {
                             new sql_str(pack->timestamp_on),
                             new sql_str(pack->timestamp_off),
@@ -47,7 +49,7 @@ void ScreentimeCapture::windowsStartup() {
     GetUserNameW(uName,&uNamen);
     nStatus = NetUserGetInfo(NULL,uName,2,(LPBYTE*)&ui2);
     if(nStatus == ERROR_ACCESS_DENIED)
-        std::cerr << "ERROR NetUserGetInfo failed becaus of access_denied error\n";
+        Log::self->warning("ScreentimeCapture::windowsStartup", "NetUserGetInfo faile because of access_denied error");
     time_t time = ui2->usri2_last_logon;
     NetApiBufferFree(ui2);
     wchar_t timestamp[20];
@@ -66,5 +68,5 @@ void ScreentimeCapture::wmshutdownCallback() {
     auto duration = std::chrono::system_clock::now() - std::chrono::system_clock::from_time_t(screentimeTracker.on);
     auto d = std::chrono::duration_cast<std::chrono::seconds>(duration);
     screentimeTracker.duration = d.count();
-    FCS.safe->save(screentimeTracker);
+    sql_action(&screentimeTracker);
 }

