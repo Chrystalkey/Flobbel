@@ -8,12 +8,11 @@
 #include <mutex>
 
 HHOOK MouseCapture::mouseLLHookHandle = nullptr;
-bool MouseCapture::exists = false;
 
 MouseCapture *MouseCapture::self = nullptr;
 
 MouseCapture::MouseCapture() {
-    if(exists)
+    if(self)
         throw instance_exists_error("MouseCapture::MouseCapture");
     infoType = FlobGlobal::MouseInfo;
     self = this;
@@ -101,7 +100,7 @@ void MouseCapture::sql_action(const Info *info) {
             arguments.push_back(new sql_int(sc.mouseDelta));
         }
 
-        FlobbelSafe::self->insert_data(sql_starter, arguments, 5);
+        FlobbelSafe::self->insert_data(sql_starter, arguments);
     }else if(info->infotype == FlobGlobal::MouseMove){
         MouseMoveInfo mv = *((const MouseMoveInfo*)info);
         moveinfoqueue.push(mv);
@@ -119,7 +118,7 @@ void MouseCapture::sql_action(const Info *info) {
             arguments.push_back(new sql_int(x.timestamp));
         }
 
-        FlobbelSafe::self->insert_data(sql_starter, arguments, 3);
+        FlobbelSafe::self->insert_data(sql_starter, arguments);
     }else{
         Log::self->warning(L"MouseCapture::sql_action", L"Unrecognized capture Type");
     }
@@ -127,6 +126,12 @@ void MouseCapture::sql_action(const Info *info) {
 
 std::thread* MouseCapture::run(Capture *ths) {
     return new std::thread(&MouseCapture::evaluate, dynamic_cast<MouseCapture*>(ths));
+}
+
+void MouseCapture::terminate(Capture *ths, std::thread *thr) {
+    self->_terminate=true;
+    thr->join();
+    delete thr;
 }
 
 std::mutex channel_lock;
@@ -171,24 +176,24 @@ void MouseCapture::evaluate(){
                 GetWindowTextW(temp, array, 1024);
                 mci.windowTitle = std::wstring(array);
 
-                mci.ch = FCS.handle;
-                mci.timestamp = src->time;
+                mci.ch = FCS::computer_handle;
+                mci.timestamp = time(nullptr);
                 self->sql_action(&mci);
             }else if(wParam == WM_MOUSEMOVE){
                 MouseMoveInfo mmi;
-                mmi.ch = FCS.handle;
+                mmi.ch = FCS::computer_handle;
                 mmi.infotype = FlobGlobal::MouseMove;
-                mmi.timestamp = src->time;
+                mmi.timestamp = time(nullptr);
                 mmi.pt = src->pt;
                 self->sql_action(&mmi);
             }else if( wParam == WM_MOUSEWHEEL ||
                       wParam == WM_MOUSEHWHEEL ){
                 MouseScrollInfo msi;
-                msi.ch = FCS.handle;
+                msi.ch = FCS::computer_handle;
                 msi.infotype = FlobGlobal::MouseScroll;
                 msi.position= src->pt;
                 msi.mouseDelta = ((int16_t)(src->mouseData>>16u))/120;
-                msi.timestamp = src->time;
+                msi.timestamp = time(nullptr);
                 self->sql_action(&msi);
             }
         }

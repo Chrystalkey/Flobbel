@@ -3,23 +3,22 @@
 //
 #include "global_functions.h"
 #include <time.h>
-#include <iostream>
 #include <string>
 
 #ifdef __WIN32__
 #include <windows.h>
-#include <iptypes.h>
-#include <iphlpapi.h>
+//#include <iptypes.h>
+//#include <iphlpapi.h>
 #include <versionhelpers.h>
 #endif
 
-#include <vector>
+//#include <vector>
 #include <chrono>
 #include <mutex>
 
 #include "sqlite/sqlite3.h"
 #include "FlobbelSafe.h"
-#include "logging.h"
+//#include "logging.h"
 
 #ifdef __WIN32__
 std::wstring getOS(){
@@ -46,12 +45,13 @@ void sqlErrCheck(int rc, const std::wstring& additional, sqlite3 *dbcon){
     if(rc == SQLITE_OK || rc == SQLITE_DONE || rc == SQLITE_ROW)
         return;
     else{
+        std::string message = "SQLite failed " + from_wstring(additional) + " with errcode: " + std::to_string(rc) + " and SQL errmsg: "+ sqlite3_errmsg(dbcon);
         if(dbcon) {
             sql_err_mtx.lock();
             sqlite3_close(dbcon);
             sql_err_mtx.unlock();
         }
-        throw sqlite_error("sqlErrCheck", "SQLite failed doing " + from_wstring(additional) + " with errcode: " + std::to_string(rc));
+        throw sqlite_error("sqlErrCheck", message);
     }
 }
 
@@ -62,20 +62,19 @@ void prep_statement(sqlite3* dbcon, const std::wstring &stmt, sqlite3_stmt** sta
 }
 void execStmt(sqlite3*dbcon, sqlite3_stmt**statement, const std::wstring &stmt){
     wchar_t unused[256];
-    prep_statement(dbcon,stmt,statement,unused);
-    int counter = 0;
-
-    sql_try:
-    try{
-        int rc = sqlite3_step(*statement);
-        sqlErrCheck(rc,L"stepping stmt: " + stmt+L" Unused: " + unused);
-    }catch(sqlite_error &sql_err){
-        if(++counter > 5){
-            throw flob_panic("void execStmt", std::string("giving up: ") + sql_err.what());
-        }else{
-            Sleep(100);
-            goto sql_try;
-        }
+    for (int counter = 0; counter < 6; counter++){
+        prep_statement(dbcon,stmt,statement,unused);
+        try{
+            int rc = sqlite3_step(*statement);
+            sqlErrCheck(rc,L"stepping stmt: " + stmt+L" unused: " + unused);
+        }catch(sqlite_error &sql_err){
+            if(counter >=5){
+                throw flob_panic("void execStmt", std::string("giving up: ") + sql_err.what());
+            }else{
+                Sleep(100);
+                sqlite3_reset(*statement);
+            }
+    }
     }
 }
 
@@ -104,18 +103,18 @@ std::wstring timestamp(){
 }
 
 static constexpr char hexmap[] = {'0', '1', '2', '3', '4', '5', '6', '7',
-                           '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+                                  '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 std::wstring hexStr(const u_char *data, size_t len){
     if(data == nullptr) return L"";
     std::string s(len*2,' ');
-    for(int i = 0; i < len; ++i){
+    for(size_t i = 0; i < len; ++i){
         s[2*i]     = hexmap[(data[i]&0xF0u)>>4u];
         s[2*i+1]   = hexmap[(data[i]&0x0Fu)];
     }
     return from_string(s);
 }
 std::wstring computerHandleStr(){
-        return from_string(FCS.handle);
+        return from_string(FCS::computer_handle);
 }
 std::string generateHandle(){
     static const char alphanum[] = {
@@ -130,75 +129,14 @@ std::string generateHandle(){
     }
     return result;
 }
-/*std::vector<std::string> split(std::string input, char delim){
-    std::vector<std::string> result;
-    if(input.size() == 0 || delim == '\0')
-        return result;
-    std::size_t start = 0;
-    char t = -1;
-    for(int i = 0; i < input.size(); i++){
-        t = input.at(i);
-        if(t == delim){
-            result.push_back(input.substr(start,i-start));
-            start = i+1;
-        }
-    }
-    result.push_back(input.substr(start, input.size()-start));
-
-    return result;
-}
-std::vector<std::wstring> wsplit(std::wstring input, wchar_t delim){
-    std::vector<std::wstring> result;
-    if(input.size() == 0 || delim == L'\0')
-        return result;
-    std::size_t start = 0;
-    wchar_t t = -1;
-    for(int i = 0; i < input.size(); i++){
-        t = input.at(i);
-        if(t == delim){
-            result.push_back(input.substr(start,i-start));
-            start = i+1;
-        }
-    }
-    result.push_back(input.substr(start, input.size()-start));
-
-    return result;
-}
-std::vector<std::string> *mac(){
-    static std::vector<MAC> addresses;
-    IP_ADAPTER_INFO adapterInfo[32];
-    DWORD dwBufLen = sizeof(adapterInfo);
-    DWORD dwStatus = GetAdaptersInfo(adapterInfo,&dwBufLen);
-    PIP_ADAPTER_INFO pipAdapterInfo = adapterInfo;
-    if(dwStatus != ERROR_SUCCESS){
-        std::wcerr << L"ERROR getting adapterInfo\n";
-        return nullptr;
-    }
-    while(pipAdapterInfo){
-        if(pipAdapterInfo->Type == MIB_IF_TYPE_ETHERNET || pipAdapterInfo->Type == IF_TYPE_IEEE80211){
-            MAC temp;
-            memcpy(temp.data,pipAdapterInfo->Address,6);
-            addresses.push_back(temp);
-        }
-        pipAdapterInfo = pipAdapterInfo->Next;
-    }
-    std::cout << "MAC_SIZE: " << addresses.size() << "\n";
-    char mac_construction[13] = {0};
-    static std::vector<std::string> string_orchestra(addresses.size());
-    for(MAC &m:addresses){
-        sprintf(mac_construction,"%02x%02x%02x%02x%02x%02x", m.b0, m.b1, m.b2,m.b3,m.b4,m.b5);
-        string_orchestra.emplace_back(std::string(mac_construction));
-    }
-    return &string_orchestra;
-}*/
 
 std::wstring map(uint32_t vkc) {
-    if (FCS.keys.count(vkc) == 0) {
+    if (FCS::vkcodes.count(vkc) == 0) {
         wchar_t chr = (wchar_t)MapVirtualKeyW(vkc, MAPVK_VK_TO_CHAR);
         if(chr==0) return L"mist";
         return std::wstring(L"___") + chr;
     }
-    return FCS.keys[vkc];
+    return FCS::vkcodes[vkc];
 }
 
 BOOL control_handler(DWORD signal){
@@ -209,7 +147,7 @@ BOOL control_handler(DWORD signal){
 }
 
 void initMap(){
-    FCS.keys.insert({
+    FCS::vkcodes.insert({
     {VK_TAB,L"_TAB"},
     {VK_CAPITAL,L"CAPS"},
     {VK_F1,L"__F1"},

@@ -31,10 +31,11 @@ typedef struct: public Info{
 class ProcessCapture: public Capture {
 public:
     explicit ProcessCapture();
-    ~ProcessCapture() {delete prcProcessThread;}
+    ~ProcessCapture() override = default;
+
     static std::thread* run(Capture*);
     static void terminate(Capture *, std::thread*);
-    void sql_action(const Info*);
+    void sql_action(const Info*) override;
 private:
     std::map<uint32_t, ProcessInfo> *getProcessList();
     std::map<uint32_t, ProcessInfo> processList;
@@ -48,7 +49,6 @@ private:
     const std::wstring placeholder = L"platzhalterwobbel"; // platzhalterkonstante
     bool runsAtPrgmStart = false;
     static bool exists;
-    std::thread *prcProcessThread = nullptr;
     std::string proTable;
 };
 

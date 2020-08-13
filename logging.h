@@ -23,7 +23,7 @@ public:
         Panic
     };
 private:
-    Log(std::filesystem::path dir);
+    explicit Log(std::filesystem::path dir);
 public:
     static void init(std::filesystem::path dir = L"floblog");
     static Log *self;

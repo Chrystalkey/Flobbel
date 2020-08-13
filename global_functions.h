@@ -9,8 +9,6 @@
 #include <ctime>
 #include <vector>
 #include <windef.h>
-#include <exception>
-#include <stdexcept>
 
 typedef struct sqlite3 sqlite3;
 typedef struct sqlite3_stmt sqlite3_stmt;
@@ -52,6 +50,8 @@ template <class T>
 void variprint(T arg);
 template<class T, class ...Ts>
 void variprint(T arg, Ts... args);
+
+class Capture;
 
 BOOL control_handler(DWORD signal);
 #else

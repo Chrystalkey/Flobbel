@@ -8,27 +8,25 @@
 #include "info_type.h"
 
 typedef struct : public Info{
-#ifdef __WIN32__
-    std::wstring timestamp_on;
-    std::wstring timestamp_off;
-#else
-    std::string timestamp_on;
-    std::string timestamp_off;
-#endif
-    time_t on;
-    uint32_t duration;
+    time_t timestamp_on;
+    time_t timestamp_off;
+    std::wstring user;
 } ScreentimeInfo;
 
 class ScreentimeCapture: public Capture {
 public:
     explicit ScreentimeCapture();
-    ~ScreentimeCapture();
-    void sql_action(const Info*);
+    ~ScreentimeCapture() override = default;
+
+    void sql_action(const Info*) override;
+    static void terminate(Capture*,std::thread*);
+
 private:
-    void wmshutdownCallback();
     void windowsStartup();
     ScreentimeInfo screentimeTracker;
     static bool exists;
     std::string screentimeTable;
+
+    static ScreentimeCapture *self;
 };
 #endif //FLOBBEL_SCREENTIME_TYPE_H

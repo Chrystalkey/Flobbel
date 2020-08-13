@@ -51,7 +51,7 @@ void ProcessCapture::sql_action(const Info *info) {
 }
 
 void ProcessCapture::terminate(Capture *ths, std::thread* thr){
-    static_cast<ProcessCapture*>(ths)->_terminate = true;
+    self->_terminate = true;
     thr->join();
     delete thr;
 }
@@ -66,13 +66,13 @@ std::map<uint32_t, ProcessInfo> *ProcessCapture::getProcessList(){
 
     hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if(hProcessSnap == INVALID_HANDLE_VALUE){
-        std::wcerr << L"ERROR while taking snapshot of processes\n";
+        Log::self->warning("ProcessCapture::getProcessList", "Failed taking snapshot of processes");
         return &pl;
     }
     pe32.dwSize = sizeof(PROCESSENTRY32W);
 
     if(!Process32FirstW(hProcessSnap, &pe32)){
-        std::wcerr << L"ERROR while executing Process32First\n";
+        Log::self->warning("ProcessCapture::getProcessList", "execution of Process32First failed");
         CloseHandle(hProcessSnap);
         return &pl;
     }
@@ -86,7 +86,7 @@ std::map<uint32_t, ProcessInfo> *ProcessCapture::getProcessList(){
                     break;
                 continue;
             }
-            pinfo.ch = FCS.handle;
+            pinfo.ch = FCS::computer_handle;
             pinfo.infotype = infoType;
             pinfo.PID = pe32.th32ProcessID;
             pinfo.timestamp_on = timestamp();
@@ -105,7 +105,7 @@ std::map<uint32_t, ProcessInfo> *ProcessCapture::getProcessList(){
                     break;
                 continue;
             }
-            pinfo.ch = FCS.handle;
+            pinfo.ch = FCS::computer_handle;
             pinfo.infotype = infoType;
             pinfo.PID = pe32.th32ProcessID;
             pinfo.timestamp_on = timestamp();

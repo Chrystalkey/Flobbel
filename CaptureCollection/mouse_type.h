@@ -48,14 +48,13 @@ typedef struct{
 class MouseCapture : public Capture {
 public:
     MouseCapture();
-    ~MouseCapture();
+    ~MouseCapture() override;
     static std::thread *run(Capture*ths);
-    static void terminate(Capture *ths, std::thread*thr){static_cast<MouseCapture*>(ths)->_terminate=true;thr->join();delete thr;}
-    void sql_action(const Info*);
+    static void terminate(Capture *ths, std::thread*thr);
+    void sql_action(const Info*) override;
 private:
     static LRESULT llMouseHook(int nCode, WPARAM wParam, LPARAM lParam);
 
-    static bool exists;
     static HHOOK mouseLLHookHandle;
 
     static MouseCapture* self;

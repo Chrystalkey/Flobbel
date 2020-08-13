@@ -6,6 +6,7 @@
 #define FLOBBEL_INFO_TYPE_H
 
 #include "../global_constants.h"
+#include <thread>
 
 namespace FlobGlobal{
     enum InfoType{
@@ -30,12 +31,12 @@ class Capture {
 public:
     Capture();
     Capture(const Capture&)= delete;
+    virtual ~Capture() = default;
 
     FlobGlobal::InfoType get_infotype() const {return infoType;}
     std::string get_sql_table() const{return sql_table;}
     virtual void sql_action(const Info *) = 0;
 protected:
-    static Capture* self;
     FlobGlobal::InfoType infoType;
     std::string sql_table;
 };

@@ -34,22 +34,22 @@ public:
         for(TripleThread &t:triplethreads){
             if(t.r and t.ptr) t.th = t.r(t.ptr);
         }
-        Log::self->runner_go(this, L"All threads' infocollection threads are running.");
+        Log::self->runner_go(this, L"All captures' infocollection threads are running.");
     }
     void terminate(){
         for(TripleThread &t:triplethreads){
-            if(t.t and t.ptr and t.th) t.t(t.ptr,t.th);
+            if(t.t and t.ptr) t.t(t.ptr, t.th);
         }
-        Log::self->terminator_go(this, L"All threads' infocollection threads joined and terminated.");
+        Log::self->terminator_go(this, L"All captures' infocollection threads joined and terminated.");
     }
 
     void register_threading(TripleThread tt){triplethreads.push_back(tt);}
 
-    void loop();
+    void loop(bool (*callback)(const MSG&));
 private:
     explicit CaptureCollection();
 
-    std::map<FlobGlobal::InfoType, std::unique_ptr<Capture>> capture_classes;
+    std::map<FlobGlobal::InfoType, std::shared_ptr<Capture>> capture_classes;
     std::vector<TripleThread> triplethreads;
     std::thread *exitWatchdogThread = nullptr;
 };
